@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE rss PUBLIC "-//Netscape Communications//DTD RSS 0.91//EN"
+"http://my.netscape.com/publish/formats/rss-0.91.dtd">
+<rss version="0.91">
+   <channel>
+
+<title>Site Title</title>
+     <link>http://site</link>
+     <description>Description of Site</description>
+     <language>en-us</language>
+
+<item>
+    <title>Title 1</title>
+    <link>http://title1</link>
+    <description>Description 1</description>
+</item>
+
+<item>
+    <title>Title 2</title>
+    <link>http://title2</link>
+    <description>Description 2</description>
+</item>
+
+<item>
+    <title>Title 3</title>
+    <link>http://title3</link>
+    <description>Description 3</description>
+</item>
+
+<item>
+    <title>Title 4</title>
+    <link>http://title4</link>
+    <description>Description 4</description>
+</item>
+
+<item>
+    <title>Title 5</title>
+    <link>http://title5</link>
+    <description>Description 5</description>
+</item>
+
+
+   </channel>
+</rss>

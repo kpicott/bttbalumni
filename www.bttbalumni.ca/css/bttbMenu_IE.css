@@ -1,0 +1,7 @@
+/* IE 6 doesn't respect the 'fixed' position so use absolute and a trick */
+.mainMenuHighlight	{ position	: absolute; }
+.menu				{ position	: absolute;
+					  background: url('/Menu/NewMenu_IE.png'); }
+.login				{ position	: absolute; }
+.subMenu			{ background: url('/Menu/SubMenu/SubMenu_IE.png'); }
+#clustrmap			{ position	: absolute; }

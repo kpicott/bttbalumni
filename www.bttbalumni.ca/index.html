@@ -1,0 +1,37 @@
+<link rel="shortcut icon" href="Favicon.ico"/>
+<script language='Javascript'>
+
+var redirect = '/cgi-bin/nav.cgi#home';
+if( window.location.hash.length > 1 )
+{
+	redirect = '/cgi-bin/nav.cgi' + window.location.hash;
+}
+document.write( "<META HTTP-EQUIV='REFRESH' CONTENT=\"0; URL=" + redirect + "\" />" );
+</script>
+<script language="Javascript">
+document.write( "<head>\n" );
+document.write( "<meta http-equiv='PRAGMA' content='NO-CACHE'>\n" );
+document.write( "</head>\n" );
+</script>
+<noscript>
+<body background='/background.jpg'>
+<img src='/Images/60thCelebration.png'><br>
+<img src='/Images/BTTBAlumni.png'>
+<h1>Warning: Javascript Required</h1>
+<p>
+Welcome to the BTTB Alumni website. Javascript is required to navigate this
+website, and it seems you have Javascript turned off.
+</p>
+<p>
+Many browsers and security programs do this automatically. You can override it
+by requesting to add this website to a <i>safe list</i>. Usually you do this
+through a warning line at the bottom or top of your browser.  Look for a
+button that says "<b>Options...</b>", or a menu item that says something
+like "<b>Allow scripts on www.bttbalumni.ca</b>".
+</p>
+<p>
+See <a href='/security.html'>the security page</a> for more information on
+Javascript and Cookies used by this website.
+</p>
+</body>
+</noscript>

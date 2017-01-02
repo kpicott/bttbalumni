@@ -1,0 +1,26 @@
+# Add new articles in groups by the following format:
+#	Unique ID
+#	Image file
+#	Thumbnail file
+#	Date
+#	Newspaper/Magazine
+#	Headline
+#
+# Lines beginning with '#' are ignored.
+# If there get to be a lot dump them into a database.
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+1
+PostArticle_112206.jpg
+PostArticle_112206_Small.jpg
+2006-11-22
+Burlington Post
+Big reunion planned for Teen Tour Band
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+2
+PostArticle_20070223.jpg
+PostArticle_20070223_Small.jpg
+2007-02-23
+Burlington Post
+Art Celebrates Teen Tour Band
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

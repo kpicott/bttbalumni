@@ -1,0 +1,166 @@
+<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<title>DHTML Test Page</title>
+<script type='text/javascript' src='js/prototype.js'></script>
+<script type='text/javascript' src='js/dhtmlHistory.js'></script>
+<STYLE type='text/css' media='all'>
+			@import url( '/css/bttbAlumni.css' );
+</STYLE>
+<!--[if lt IE 7]>
+	<STYLE type='text/css' media='all'>
+		@import url( '/css/bttbAlumni_IE.css' );
+	</STYLE>
+<![endif]-->
+<!------------------------------------------------------------------------>
+<script language='JavaScript'>
+<!--
+//
+// Print out a button from the navigation section.
+//
+var thisButton = 0;
+var _buttonWidth = 109;
+var _buttonHeight = 31;
+var _subButtonWidth = 77;
+var _subButtonHeight = 18;
+var __MENUPATH__ = "/Menu/";
+var __SUBMENUPATH__ = "/Menu/SubMenu/";
+
+//
+// Delay the submenu hiding to give the submenu mouse events a chance
+// to override. This seems like the easiest way to detect the difference
+// between moving the mouse into the submenu and moving it out of the
+// menu button into a neutral area.
+//
+var lastSubMenu = null;
+function hideSubMenu()
+{
+	if( lastSubMenu )
+	{
+		$(lastSubMenu).style.display = 'none';
+		lastSubMenu = null;
+	}
+}
+
+//
+// Mouse button image switches
+//
+function menuMouseOver(button, subMenu)
+{
+	$(button).src = __MENUPATH__ + button + "Over.png";
+	$(subMenu).style.display = 'block';
+}
+function menuMouseUp(button, subMenu)
+{
+	$(button).src = __MENUPATH__ + button + "Normal.png";
+	lastSubMenu = subMenu;
+	setTimeout( 'hideSubMenu()', 100 );
+}
+function menuMouseDown(button, subMenu)
+{
+	$(button).src = __MENUPATH__ + button + "Active.png";
+}
+
+//--------------------------------------------------------------------
+
+function subMenuMouseOver(button, subMenu)
+{
+	$(button).src = __SUBMENUPATH__ + button + "Over.png";
+	$(subMenu).style.display = 'block';
+	if( lastSubMenu == subMenu )
+	{
+		lastSubMenu = null;
+	}
+}
+function subMenuMouseUp(button)
+{
+	$(button).src = __SUBMENUPATH__ + button + "Normal.png";
+}
+function subMenuMouseDown(button, subMenu)
+{
+	$(button).src = __SUBMENUPATH__ + button + "Active.png";
+}
+
+//--------------------------------------------------------------------
+
+function printMenu(link,name,info,external)
+{
+	thisButton = thisButton + 1;
+	mouseParms = "('" + name + "', 'subMenu" + thisButton + "')";
+	document.write( "<div id='button" + thisButton + "'>\n" );
+	document.write( "<a title='" + info + "' href='" + link + "'\n" );
+	document.write( " onMouseOver=\"menuMouseOver" + mouseParms + "\"\n" );
+	document.write( " onMouseOut =\"menuMouseUp" + mouseParms + "\"\n" );
+	document.write( " onMouseDown=\"menuMouseDown" + mouseParms + "\"\n" );
+	document.write( " onMouseUp=\"menuMouseUp" + mouseParms + "\">\n" );
+	document.write( "<img src='" + __MENUPATH__ + name + "Normal.png'" );
+	document.write( " width='" + _buttonWidth + "' height='" + _buttonHeight + "' border='0'\n" );
+	document.write( " id='" + name + "'></a>\n" );
+	document.write( "</div>\n" );
+	//
+	document.write( "<div style='display:none;' id='subMenu" + thisButton + "'>" );
+	document.write( "<a title='" + info + "' href='" + link + "'\n" );
+	document.write( " onMouseOver=\"menuMouseOver" + mouseParms + "\"\n" );
+	document.write( " onMouseOut =\"menuMouseUp" + mouseParms + "\"\n" );
+	document.write( " onMouseDown=\"menuMouseDown" + mouseParms + "\"\n" );
+	document.write( " onMouseUp=\"menuMouseUp" + mouseParms + "\">\n" );
+	document.write( "<img src='" + __SUBMENUPATH__ + "SubMenu.png' border='0'>" );
+	document.write( "</a>\n" );
+	//
+	var subButton = 1;
+	subName = "Events";
+	document.write( "<div style='position: relative; top: 0px; left: 0px; display: block; z-index: 10;' id='subMenu'>" );
+	document.write( "<div id='subMenu" + thisButton + "-" + subButton + "'>" );
+	document.write( "<a title='" + info + "' href='" + link + "'\n" );
+	document.write( " onMouseOver=\"subMenuMouseOver('" + subName + "', 'subMenu" + thisButton + "');\"\n" );
+	document.write( " onMouseOut =\"subMenuMouseUp('" + subName + "');\"\n" );
+	document.write( " onMouseDown=\"subMenuMouseDown('" + subName + "');\"\n" );
+	document.write( " onMouseUp=\"subMenuMouseUp('" + subName + "');\">\n" );
+	document.write( "<img width='" + _subButtonWidth + "' height='" + _subButtonHeight + "'" );
+	document.write( " id='" + subName + "' src='" + __SUBMENUPATH__ + subName + "Normal.png'" );
+	document.write( " border='0'>" );
+	document.write( "</a>\n" );
+	document.write( "</div>\n" );
+	subButton = subButton + 1;
+	subName = "Tickets";
+	document.write( "<div id='subMenu" + thisButton + "-" + subButton + "'>" );
+	document.write( "<a title='" + info + "' href='" + link + "'\n" );
+	document.write( " onMouseOver=\"subMenuMouseOver('" + subName + "', 'subMenu" + thisButton + "');\"\n" );
+	document.write( " onMouseOut =\"subMenuMouseUp('" + subName + "');\"\n" );
+	document.write( " onMouseDown=\"subMenuMouseDown('" + subName + "');\"\n" );
+	document.write( " onMouseUp=\"subMenuMouseUp('" + subName + "');\">\n" );
+	document.write( "<img width='" + _subButtonWidth + "' height='" + _subButtonHeight + "'" );
+	document.write( " id='" + subName + "' src='" + __SUBMENUPATH__ + subName + "Normal.png'" );
+	document.write( " border='0'>" );
+	document.write( "</a>\n" );
+	document.write( "</div>\n" );
+	document.write( "</div>\n" );
+	//
+	document.write( "</div>\n" );
+}
+//-->
+</script>
+<!------------------------------------------------------------------------>
+</head>
+<body background='/background.jpg'>
+
+<div id='buttons'>
+	<script language='JavaScript'>
+	<!--
+	printMenu('/#home', 'Home', 'Main Page', 0);
+	printMenu('/#register', '60th', '60th Anniversary Celebration', 0);
+	printMenu('/#profiles', 'Alumni', 'General Alumni Information', 0);
+	printMenu('/#events', 'Memories', 'Take a Stroll Down Memory Lane', 0);
+	printMenu('http://teentourband.org', 'Links', 'Other Web Pages We Like', 1);
+	//-->
+	</script>
+</div>
+<div id='menu'>
+	<img border='0' width='120' height='433' src='/Menu/NewMenu.png'>
+</div>
+<div id='menuShadow'>
+	<img border='0' width='39' height='412' src='/Menu/IconHighlight.png'>
+</div>
+
+</body>
+</html>

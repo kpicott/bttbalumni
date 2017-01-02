@@ -1,0 +1,83 @@
+*
+{
+	font:			10.5pt/16pt Tahoma, Arial;
+	color:			#111;
+}
+b
+{
+	font:			10.5pt/16pt Tahoma, Arial;
+	font-weight:	bold;
+}
+ol
+{
+	padding:	0px 0px 10px 10px;
+}
+.indented
+{
+	padding:	10px 0px 0px 40px;
+}
+
+a:link.email
+{
+	font:	 	10.5pt/16pt Times New Roman;
+	font-style:	italic;
+	color:		#1155aa;
+}
+a:link
+{
+	font-variant:	small-caps;
+	color:			#1155aa;
+}
+a:active
+{
+	font-variant:	small-caps;
+	color:			#3399ff;
+}
+a:visited
+{
+	color:			#1155aa;
+}
+i
+{
+	font:		10.5pt/16pt Tahoma, Arial;
+	font-style:	italic;
+}
+h1
+{
+	font-size:		16pt;
+	font-weight:	bold;
+}
+h2
+{
+	font-size:		14pt;
+	font-weight:	bold;
+	margin:			0px 0px 15px 0px;
+}
+body
+{
+	background-image:		url('/background.jpg');
+	background-repeat:		no-repeat;
+	background-attachment:	fixed;
+	margin:		0;
+	height:		100%;
+	padding:	1em 1em 1em 1em;
+	font-size:	1em;
+}
+p
+{
+	margin: 18px auto
+}
+.subtext
+{
+	font: 8pt/12pt Tahoma, Arial;
+}
+.sectionBody
+{
+	margin-left:	3em;
+}
+.outlinedTitle
+{
+	border: 		#aa4444 3px;
+	border-style:	solid none solid none;
+	font:			16pt Verdana, Arial;
+}

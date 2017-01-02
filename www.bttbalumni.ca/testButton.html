@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<title>Button Test</title>
+<script type='text/javascript' src='js/prototype.js'></script>
+<script type='text/javascript' src='js/scriptaculous.js'></script>
+<!------------------------------------------------------------------------>
+<script language='JavaScript'>
+<!--
+CommitteeMember = Class.create();
+CommitteeMember.prototype = {
+	initialize: function(name, position) {
+		this.title = "<h2>" + name + "</h2> <i class='subtext'>" + position + "</i>";
+		this.text = [];	 // Text to appear in box below name/title
+	}
+,
+	setEmail: function(email) {
+		this.addLine("<a href='mailto:" + email + "'>" + email + "</a>");
+	}
+,
+	addLine: function(line) {
+		this.text.push(line);
+	}
+,
+	getTitle: function() {
+		return this.title;
+	}
+,
+	getText: function() {
+		return "<p>" + this.text.join("<br>") + "</p>";
+	}
+};
+
+var member = new CommitteeMember( "Ron Wilk", "Organizing Committee Co-Chair" );
+member.setEmail( "ronwilk@worldchat.com" );
+member.addLine( "580 Huron Drive" );
+member.addLine( "Burlington, ON" );
+member.addLine( "L7T 3V5" );
+member.addLine( "905 632-4207" );
+
+//-->
+</script>
+</head>
+<body>
+<!------------------------------------------------------------------------>
+<script language='JavaScript'>
+<!--
+document.write( "<table>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d2\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d2' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d3\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d3' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d4\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d4' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d5\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d5' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d6\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d6' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d7\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d7' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "<tr><td>" );
+document.write( "<a href='#' onclick='Effect.toggle(\"d8\",\"BLIND\"); return false;\'>" );
+document.write( member.getTitle() + "</a>\n" );
+document.write( "</td><td>" );
+document.write( "<div id='d8' style='display:none;'>\n" );
+document.write( "<div style='background-color:#ff8080;width:300px;border:2px solid red;padding:10px;'>\n" );
+document.write( member.getText() );
+document.write( "</div></div>\n" );
+document.write( "</tr>" );
+document.write( "</table>" );
+//-->
+</script>
+
+</body>

@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="shortcut icon" href="/Favicon.ico" type="image/x-icon" />
+<script type='text/javascript' src='/js/bttb.js'></script>
+<script type='text/javascript' src='/js/prototype.js'></script>
+<STYLE type='text/css' media='all'>
+	@import url( '/css/bttbAlumni.css' );
+</STYLE>
+<!--[if le IE 7]>
+<STYLE type='text/css' media='all'>
+	@import url( '/css/bttbAlumni_IE.css' );
+</STYLE>
+<![endif]-->
+<!--[if lt IE 7]>
+  <style media="all" type="text/css">
+	img.png		{ behavior: url("/pngbehavior.htc"); }
+  </style>
+<![endif]-->
+<title>BTTB 60th Anniversary Celebration</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAFAZTBvDNX2UFCOssEit8_BS_GtWMwBaCFPFEuFmohb1igxzrxhR7bHAnmuCfQ5NccfMEPZR1VYFKJg"
+      type="text/javascript"></script>
+<script type="text/javascript">
+    //<![CDATA[
+    function load()
+	{
+      if( GBrowserIsCompatible() )
+	  {
+        var map = new GMap2(document.getElementById("map"));
+		// Center on the music center
+        map.setCenter(new GLatLng(43.335752, -79.79162), 13);
+		map.addControl(new GSmallMapControl());
+		map.addControl(new GMapTypeControl());
+
+		var bandMemberIcon = new GIcon();
+		bandMemberIcon.image = "/Buttons/BandMemberIcon.png";
+		bandMemberIcon.shadow = "/Buttons/BandMemberIconShadow.png";
+		bandMemberIcon.iconSize = new GSize(36, 40);
+		bandMemberIcon.shadowSize = new GSize(36, 40);
+		bandMemberIcon.iconAnchor = new GPoint(12, 40);
+		bandMemberIcon.infoWindowAnchor = new GPoint(10, 1);
+
+        // Place a marker at the music center and start it open
+        var mcMarker = new GMarker(map.getCenter(), bandMemberIcon);
+        GEvent.addListener(mcMarker, "click", function() {
+          mcMarker.openInfoWindowHtml("Music Center");
+        });
+        map.addOverlay(mcMarker);
+        mcMarker.openInfoWindowHtml("Music Center");
+      }
+	  else
+	  {
+	  	alert( "Sorry, your browser is not capable of showing this map.\nMight we suggest Internet Explorer 7 or Firefox?" );
+	  }
+    }
+    //]]>
+</script>
+</head>
+<body onload="load()" onunload="GUnload()" background='/BandImages/ThroughTime.jpg'>
+<center>
+<img class='png' width='337' height='93' src='/Images/BTTBAlumni.png'><br>
+<img class='png' width='384' height='17' src='/Images/60thCelebration.png'><br>
+    <div id="map" style="width: 750px; height: 450px; border: 3px solid #aa4444;"></div>
+<p>
+</p>
+</center>
+</body>
+</html>

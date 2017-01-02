@@ -1,0 +1,65 @@
+<?xml version='1.0'?>
+<music>
+	<parts>
+		<piece name='Strike Up The Band' type='march'>
+			<instrument name='Flute' chair='1'/>
+			<instrument name='Piccolo' chair='1'/>
+			<instrument name='Clarinet' chair='1' chair='2'/>
+			<instrument name='Alto Sax' chair='1' chair='2'/>
+			<instrument name='Tenor Sax'/>
+			<instrument name='Trumpet' chair='1' chair='2' chair='3'/>
+			<instrument name='Trombone' chair='1' chair='2' chair='3'/>
+			<instrument name='French Horn' chair='2'/>
+			<instrument name='Euphonium'/>
+			<instrument name='Tuba'/>
+		</piece>
+
+		<piece name='The Hustle' type='march'>
+			<instrument name='Flute' chair='1'/>
+			<instrument name='Clarinet' chair='1' chair='2'/>
+			<instrument name='Alto Sax' chair='1' chair='2'/>
+			<instrument name='Tenor Sax' chair='1' chair='2' missing/>
+			<instrument name='Trumpet' chair='1' chair='2' chair='3'/>
+			<instrument name='Trombone'/>
+			<instrument name='French Horn' chair='1' chair='2'/>
+			<instrument name='Euphonium'/>
+			<instrument name='Tuba'/>
+		</piece>
+
+		<piece name='Thunderer' type='march'>
+			<instrument name='Flute' chair='1'/>
+			<instrument name='Piccolo' chair='1'/>
+			<instrument name='Clarinet' chair='1' chair='2/3'/>
+			<instrument name='Alto Sax'/>
+			<instrument name='Tenor Sax'/>
+			<instrument name='Trumpet' chair='1' chair='2/3'/>
+			<instrument name='Trombone' chair='1/2' chair='3'/>
+			<instrument name='French Horn' chair='1' chair='2'/>
+			<instrument name='Baritone'/>
+			<instrument name='Basses'/>
+		</piece>
+	</parts>
+	<download>
+		<march>
+			<instrument name='Flute' chair='1' file='/SheetMusic/Flute.pdf'/>
+			<instrument name='Piccolo' chair='1' file='/SheetMusic/Piccolor.pdf'/>
+			<instrument name='Clarinet' chair='1' file='/SheetMusic/Clarinet1.pdf'/>
+			<instrument name='Clarinet' chair='2' file='/SheetMusic/Clarinet2.pdf'/>
+			<instrument name='Clarinet' chair='3' file='/SheetMusic/Clarinet3.pdf'/>
+			<instrument name='Alto Sax' chair='1' file='/SheetMusic/AltoSax1.pdf'/>
+			<instrument name='Alto Sax' chair='2' file='/SheetMusic/AltoSax2.pdf'/>
+			<instrument name='Tenor Sax' file='/SheetMusic/TenorSax.pdf'/>
+			<instrument name='Trumpet' chair='1' file='/SheetMusic/Trumpet1.pdf'/>
+			<instrument name='Trumpet' chair='2' file='/SheetMusic/Trumpet2.pdf'/>
+			<instrument name='Trumpet' chair='3' file='/SheetMusic/Trumpet3.pdf'/>
+			<instrument name='Trombone' chair='1' file='/SheetMusic/Trombone1.pdf'/>
+			<instrument name='Trombone' chair='2' file='/SheetMusic/Trombone2.pdf'/>
+			<instrument name='Trombone' chair='3' file='/SheetMusic/Trombone3.pdf'/>
+			<instrument name='French Horn' chair='1' file='/SheetMusic/FHorn1.pdf'/>
+			<instrument name='French Horn' chair='2' file='/SheetMusic/FHorn2.pdf'/>
+			<instrument name='Baritone' file='/SheetMusic/Baritone.pdf'/>
+			<instrument name='Euphonium' file='/SheetMusic/Euphonium.pdf'/>
+			<instrument name='Basses' file='/SheetMusic/Basses.pdf'/>
+		</march>
+	</download>
+</music>

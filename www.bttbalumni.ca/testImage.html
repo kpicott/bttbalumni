@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<title>Button Test</title>
+<script type='text/javascript' src='js/prototype.js'></script>
+<script type='text/javascript' src='js/scriptaculous.js'></script>
+<!------------------------------------------------------------------------>
+<STYLE type='text/css' media='all'>@import url( 'css/bttbAlumni.css' );</STYLE>
+<!------------------------------------------------------------------------>
+<script language='JavaScript'>
+<!--
+CommitteeMember = Class.create();
+CommitteeMember.prototype = {
+	initialize: function(name, position) {
+		this.title = "<b>" + name + "</b><br><i class='subtext'>" + position + "</i>";
+		this.text = [];	 // Text to appear in box below name/title
+	}
+,
+	setEmail: function(email) {
+		this.addLine("<a href='mailto:" + email + "'>" + email + "</a>");
+	}
+,
+	addLine: function(line) {
+		this.text.push(line);
+	}
+,
+	getTitle: function() {
+		return this.title;
+	}
+,
+	getText: function() {
+		return "<p>" + this.text.join("<br>") + "</p>";
+	}
+};
+
+committee = []
+committee[1] = new CommitteeMember( "Ron Wilk", "Organizing Committee Co-Chair" );
+committee[1].setEmail( "ronwilk@worldchat.com" );
+committee[1].addLine( "580 Huron Drive" );
+committee[1].addLine( "Burlington, ON" );
+committee[1].addLine( "L7T 3V5" );
+committee[1].addLine( "905 632-4207" );
+
+committee[2] = new CommitteeMember( "Ron Wilk", "Organizing Committee Co-Chair" );
+committee[2].setEmail( "ronwilk@worldchat.com" );
+committee[2].addLine( "580 Huron Drive" );
+committee[2].addLine( "Burlington, ON" );
+committee[2].addLine( "L7T 3V5" );
+committee[2].addLine( "905 632-4207" );
+
+function showCommitteeMember(idx,top,left)
+{
+	var d = document;
+	d.write( "<div style='position:absolute; " );
+	d.write( " width:			200px; " );
+	d.write( " text-align:		center; ");
+	d.write( " vertical-align:	middle; ");
+	d.write( " top:				" + top + "px; ");
+	d.write( " left:			" + left + "px;' \n");
+	d.write( "	 onMouseOver='fadeInDetail(\"committee" + idx + "\");'\n" );
+	d.write( "	 onMouseOut='fadeOutDetail(\"committee" + idx + "\");'>\n" );
+	d.write( "	<div class='bioTitle' id='committee" + idx + "_title'>\n" );
+	d.write( "		<b>Ron Wilk</b><br><i class='subtext'>Organizing Committee Co-Chair</i>\n" );
+	d.write( "	</div>\n" );
+	d.write( "	<div style='display:none;' class='bioPic' id='committee" + idx + "_pic'>\n" );
+	d.write( "		<img border='0' src='Instruments/tenorSax.png'>\n" );
+	d.write( "	</div>\n" );
+	d.write( "	<div style='display:none;' class='bioDetail' id='committee" + idx + "_detail'>\n" );
+	d.write( "		<br> ronwilk@worldchat.com\n" );
+	d.write( "		<br> 580 Huron Drive\n" );
+	d.write( "		<br> Burlington, ON\n" );
+	d.write( "		<br> L7T 3V5\n" );
+	d.write( "		<br> 905 632-4207\n" );
+	document.write( "</div>\n" );
+	document.write( "/div>\n" );
+}
+
+function fadeInDetail(button)
+{
+	Effect.Appear(button + "_detail", { duration:1, from:0.3, to:1.0 });
+	Effect.Fade(button + "_pic", { duration:1, from:1.0, to:0.2 });
+}
+function fadeOutDetail(button)
+{
+	Effect.Fade(button + "_detail", { duration:1, from:1.0, to:0.3 });
+	Effect.Appear(button + "_pic", { duration:1, from:0.2, to:1.0 });
+}
+
+//-->
+</script>
+</head>
+<body>
+<!------------------------------------------------------------------------>
+<style type='text/css' media='all'>
+.bioRoot
+{
+	position:		absolute;
+	top:			0px;
+	left:			0px;
+	width:			200px;
+	vertical-align:	middle;
+	text-align:		center;
+}
+
+.bioTitle
+{
+	border:				1px solid #888888;
+	background-color:	#ccccff;
+	position:			relative;
+	top:				0px;
+	left:				0px;
+	width:				200px;
+	height:				50px;
+	z-index:			1;
+}
+
+.bioPic
+{
+	border:		1px solid #888888;
+	position:	absolute;
+	top:		50px;
+	left:		0px;
+	width:		200px;
+	height:		200px;
+	z-index:	1;
+}
+
+.bioDetail
+{
+	width:			200px;
+	height:			200px;
+	vertical-align:	middle;
+	text-align:		center;
+	z-index:		2;
+}
+</style>
+<!-----------------------------------------------------------------------
+Note that the display:none has to be a separate style element since that's
+what the scriptaculous library uses to do its effects.
+-------------------------------------------------------------------------->
+
+<div class='bioRoot'
+	 onMouseOver='fadeInDetail("committee1");'
+	 onMouseOut='fadeOutDetail("committee1");'>
+	<div class='bioTitle' id='committee1_title'>
+		<b>Ron Wilk</b><br><i class='subtext'>Organizing Committee Co-Chair</i>
+	</div>
+	<div style='display:none;' class='bioPic' id='committee1_pic'>
+		<img border='0' src='Instruments/tenorSax.png'>
+	</div>
+	<div style='display:none;' class='bioDetail' id='committee1_detail'>
+		<br> ronwilk@worldchat.com
+		<br> 580 Huron Drive
+		<br> Burlington, ON
+		<br> L7T 3V5
+		<br> 905 632-4207
+	</div>
+</div>
+
+<script language='Javascript'>
+<!--
+	Effect.Appear("committee1_detail", { duration:1, from:0.0, to:0.3 });
+	Effect.Appear("committee1_pic", { duration:1, from:0.0, to:1.0 });
+	Effect.toggle("committee1_detail",'slide');
+//-->
+</script>
+</body>

@@ -1,0 +1,158 @@
+*
+{
+	padding-right: 0px;
+	padding-left: 0px;
+	padding-bottom: 0px;
+	margin: 0px;
+	font: 10.5pt/16pt Tahoma, Arial;
+	color: #111;
+	padding-top: 0px
+}
+b
+{
+	font: 10.5pt/16pt Tahoma, Arial;
+	font-weight: bold;
+}
+
+a:link.email
+{
+	font:	 10.5pt/16pt Times New Roman;
+	color:	 #1155aa;
+}
+a:link
+{
+	font-variant:	small-caps;
+	color:			#1155aa;
+}
+a:active
+{
+	font-variant:	small-caps;
+	color:			#3399ff;
+}
+a:visited
+{
+	color:			#1155aa;
+}
+i
+{
+	font: 10.5pt/16pt Tahoma, Arial;
+	font-style: italic;
+}
+.date
+{
+	font-size:	 12pt;
+	font-weight: bold;
+	color:		 blue;
+	padding:	 10px 0px 0px 0px;
+}
+#copyright
+{
+	font-size:	 8pt;
+	font-weight: bold;
+	padding:	 20px 0px 0px 0px;
+	margin:		 0px 0px 0px 0px;
+}
+h1
+{
+	font-size: 16pt;
+	font-weight: bold;
+}
+h2
+{
+	font-size: 14pt;
+	font-weight: bold;
+	margin:		 0px 0px 15px 0px;
+}
+body
+{
+	background-image:		url('/background.jpg');
+	background-repeat:		no-repeat;
+	background-attachment:	fixed;
+	margin:		0;
+	height:		100%;
+	padding:	5em 1em 1em 16em;
+	font-size:	1em;
+	overflow:	hidden;
+}
+acronym
+{
+	border-bottom: #222 1px dotted
+}
+p
+{
+	margin: 18px auto
+}
+#disclaimer
+{
+	font: 8pt/12pt Tahoma, Arial;
+}
+.subtext
+{
+	font: 8pt/12pt Tahoma, Arial;
+}
+#buttons
+{
+	z-index:	4;
+	overflow:	hidden;
+	display:	block;
+	top:		150px;
+	left:		8px;
+	position:	fixed;
+	width:		163px;
+}
+#content
+{
+	overflow:	auto;
+	position:	fixed;
+	top:		40px;
+	left:		214px;
+	width:		900px;
+	height:		900px;
+	margin:		40px 0px 0px 0px;
+}
+#celebrationText
+{
+	z-index:	4;
+	top:		50px;
+	left:		337px;
+	position:	fixed;
+	width:		384px;
+	height:		17px
+}
+#titleText
+{
+	z-index:	4;
+	position:	fixed;
+	top:		67px;
+	left:		419px;
+	width:		337px;
+	height:		93px;
+}
+#topFade
+{
+	z-index:	3;
+	display:	block;
+	top:		0px;
+	left:		0px;
+	position:	fixed;
+	width:		1194px;
+	height:		103px;
+}
+.imageContainer
+{
+	position:	fixed;
+	top:		0px;
+	left:		0px;
+	z-index:	3;
+	width:		348px;
+	height:		239px;
+	z-index:	4;
+}
+.fade-box
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+	width:		348px;
+	height:		239px;	
+}

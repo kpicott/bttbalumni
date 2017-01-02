@@ -1,0 +1,106 @@
+<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<title>DHTML Test Page</title>
+<script type='text/javascript' src='js/prototype.js'></script>
+<script type='text/javascript' src='js/dhtmlHistory.js'></script>
+<!------------------------------------------------------------------------>
+<script language='JavaScript'>
+<!--
+// Our callback to receive history change events.
+var historyCount = 0;
+function historyChange(newLocation, historyData)
+{
+	if( dhtmlHistory.isFirstLoad() )
+	{
+		if( ! window.location.hash )
+		{
+			loadLink('home', "__CGIHREF__/home.cgi");
+		}
+		else
+		{
+			loadLink(newLocation, historyData);
+		}
+		$('history').innerHTML = historyData;
+		historyCount = 0;
+	}
+	else
+	{
+		$('history').innerHTML = historyCount;
+		historyCount = historyCount + 1;
+	}
+}
+
+// the onload event handler that starts the fading.
+function initialize()
+{
+	if( window.location.hash )
+	{
+		loadLink('hash', window.location.hash.substring(1) + window.location.search);
+	}
+	else
+	{
+		loadLink('default', '__CGIHREF__/home.cgi');
+	}
+ 
+	// subscribe to DHTML history change events
+	dhtmlHistory.addListener(historyChange);
+}
+
+//
+// Load the given page in the main frame area
+//
+function loadLink(name, page)
+{
+	dhtmlHistory.add(name, page);
+	var spacing = "<p>&nbsp;</p>";
+	new Ajax.Request("/thanks.html",
+	  {
+		method: 'get',
+		onComplete: function (req)
+		{
+			$('content').innerHTML = spacing + page;
+			window.location.hash = name;
+		}
+	  });
+}
+
+//
+// Print out a button from the navigation section.
+//
+var thisButton = 0;
+function printButton(link,name,external)
+{
+	thisButton = thisButton + 1;
+	document.write( "<a onclick='loadLink(\"" + name + "\", \"" + link + "\");'>\n" );
+	document.write( name );
+	document.write( "</a>\n" );
+}
+//-->
+</script>
+<!------------------------------------------------------------------------>
+</head>
+<body onload='initialize()'>
+
+<div id='buttons'>
+	<script language='JavaScript'>
+	<!--
+	printButton('__CGIHREF__/home.cgi', 'home', 0);
+	printButton('__CGIHREF__/register.cgi', 'register', 1);
+	printButton('__CGIHREF__/bttbProfiles.cgi', 'profiles', 0);
+	printButton('__CGIHREF__/events.cgi', 'events', 1);
+	printButton('__CGIHREF__/memorials.cgi', 'memorials', 0);
+	printButton('http://teentourband.org', 'bttb', 1);
+	printButton('http://teentourboosters.com', 'boosters', 1);
+	//-->
+	</script>
+</div>
+
+<div id='contentBox'>
+	HISTORY = <div id='history'>
+	</div>
+	CONTENT = <div id='content'>
+	</div>
+</div>
+</body>
+</html>
