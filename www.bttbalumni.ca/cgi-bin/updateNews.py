@@ -1,3 +1,4 @@
+#!env python
 """
 Keeper of new, old, and obsolete news articles
 """
@@ -488,6 +489,56 @@ class bttbUpdateNews:
 		news.sort( lambda x,y: cmp(y[0], x[0]) )
 		self.insertNews( news )
 
+	def update20170128(self):
+		#
+		# News array format:
+		#    DatePosted,Title,Text,Type (0=current, 1=obsolete, 2=broken)
+		news = [
+			(datetime(2017,1,28), 'Save The Date!', MapLinks( """
+			<p>
+			The 70<sup>th</sup> Anniversary is coming up fast so be sure to
+			mark your calendar - Friday June 16<sup>th</sup> to Sunday
+			June 18<sup>th</sup>. These are the kinds of things you can
+			expect to be happening:
+			<ul>
+				<li>Golf Tournament at Indian Wells - play a round, or just
+				come for dinner</li>
+				<li>A practice or two to shake the rust off</li>
+				<li>Informal social gatherings Friday and Sunday afternoon</li>
+				<li>Catered get-together for all decades Saturday night</li>
+				<li>Massive Alumni band playing Saturday morning in the Sound
+				of Music Festival Parade</li>
+				<li>Sitting in with the current BTTB at a their annual
+				concert-in-the-park on Sunday.</li>
+				<li>Golf shirt and hat, for golf and as the official Alumni
+				uniform, featuring fancy new logos for the 70<sup>th</sup>.</li>
+				<li>After the glow of the reunion subsides we are hoping to keep
+				the alumni organization alive and thriving so if you want to
+				get involved or just stay in touch we'd love to hear your
+				ideas!</li>
+			</ul>
+			</p>
+			<p>
+			Join the conversation to help spread the word and build the buzz at the
+			link:(https://www.facebook.com/groups/2218469082/, Alumni Facebook Page).
+			</p>
+			<p>
+			Once we get everything in place (real soon now) you'll be able to
+			order your tickets for events and swag right here. Check back in a
+			bit or look for the announcement on Facebook or in your email.
+			</p>
+			"""), 0),
+			(datetime(2017,1,28), 'Treasurer Sought', MapLinks( """
+			<p>
+			The 70<sup>th</sup> Anniversary wants you, to help out in managing
+			the funds for our Anniversary celebration. Contact us at
+			send:(info@bttbalumni.ca) for more details.
+			</p>
+			"""), 0)
+			]
+		news.sort( lambda x,y: cmp(y[0], x[0]) )
+		self.insertNews( news )
+
 	def insertNews(self, news):
 		#===================================================================
 		for when, title, article, status in news:
@@ -513,6 +564,8 @@ if __name__ == '__main__':
 	#updater.update20120602()
 	#updater.update20121028()
 	updater.update20130123()
+	updater.update20170128()
+	print '<HTML><BODY><H1>News updated</H1></BODY></HTML>'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

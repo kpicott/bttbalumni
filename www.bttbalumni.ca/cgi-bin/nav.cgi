@@ -1,4 +1,4 @@
-#!env python
+#!python
 """
 Master file which loads the correct page based on URL parameters
 """
@@ -59,7 +59,7 @@ class bttbNavigation:
 			print "<div id='mainMenu'>"
 			print "<ul id='verticalMenu' class='menu'>"
 			print "<li>"
-			print MapLinks( "button:(#music, Music, Download music for 65th anniversary parade)" )
+			print MapLinks( "button:(#music, Music, Download music for 70th anniversary parade)" )
 			print "</li>"
 			print "<li>"
 			print MapLinks( "button:(#profiles, Alumni, Keep in touch with other alumni)" )
@@ -67,7 +67,7 @@ class bttbNavigation:
 			print MapLinks( "buttonSub:(#register, Register, Register yourself to keep in touch)" )
 			print MapLinks( "buttonSub:(#profiles, Profiles, See all of the registered alumni)" )
 			print MapLinks( "buttonSub:(#register, MyProfile, Edit yur profile information)" )
-			print MapLinks( "buttonSub:(http://www.facebook.com/group.php?gid=2218469082, Forum, Chat with other alumni in our interactive Facebook forum)" )
+			print MapLinks( "buttonSub:(http://www.facebook.com/groups/2218469082, Forum, Chat with other alumni in our interactive Facebook forum)" )
 			print MapLinks( "buttonSub:(#newsletters, Newsletters, See old Alumni newsletters)" )
 			print MapLinks( "buttonSub:(#security, Security, Website security information)" )
 	   		print "</ul>"
@@ -75,7 +75,7 @@ class bttbNavigation:
 			print "<li>"
 			print MapLinks( "button:(#memories, Memories, Take a stroll down memory lane)" )
 	   		print "<ul class='subMenu'>"
-			print MapLinks( "buttonSub:(#photos, Pictures, See images from the past 65 years)" )
+			print MapLinks( "buttonSub:(#photos, Pictures, See images from the past 70 years)" )
 			print MapLinks( "buttonSub:(#memories, Memories, Read exciting band stories or add your own)" )
 			print MapLinks( "buttonSub:(#drumMajors, DrumMajors, Past Drum Majors)" )
 			print MapLinks( "buttonSub:(#wallaceb, WallaceB, Wallace B. Wallace awards)" )
@@ -88,7 +88,7 @@ class bttbNavigation:
 	   		print "<ul class='subMenu'>"
 			print MapLinks( "buttonSub:(http://teentourband.org, BTTB, The band that started it all - still going strong)" )
 			print MapLinks( "buttonSub:(http://teentourboosters.com, Boosters, Support organization for the band)" )
-			print MapLinks( "buttonSub:(https://www.facebook.com/events/346445498740886, Parade, Facebook signup for the 65th Anniversary Band)" )
+			print MapLinks( "buttonSub:(https://www.facebook.com/groups/2218469082, Parade, Facebook signup for the 70th Anniversary Band)" )
 			print MapLinks( "buttonSub:(#committee, Committee, For Committee use only)" )
 			print MapLinks( "buttonSub:(#johnNewby, JohnNewby, Artist commissioned to create a special band painting)" )
 			print MapLinks( "buttonSub:(http://archives.cbc.ca/IDC-1-68-2352-13715/arts_entertainment/canadian_comics/clip7, DougWright, Canadian cartoonist responsible for the characters in the band logo)" )
@@ -268,3 +268,4 @@ else:
 # third  parties  or  duplicated or  copied,  in whole  or in  part,
 # without   the  prior  written   consent  of  Kevin  Peter  Picott.
 # ==================================================================
+

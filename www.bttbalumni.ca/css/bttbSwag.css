@@ -1,0 +1,124 @@
+/*
+	Image styles that will allow a change in image when you hover over it.
+	The image is set up as double width, where the original and hover images
+	are side-by-side. This allows loading of both images in one shot so that
+	there is no delay on the first hover.
+
+	    Full Image    Default View     Hover View
+	    +---+---+        +---+           +---+
+		| X | Y |        | X |           | Y |
+	    +---+---+        +---+           +---+
+
+	Full layout looks like this, with 10px gap between images:
+
+		<---------- 1600 ----------->
+		+---------------------------+   ^    +==========+
+		|                           |   |    |   cart   |
+		|          allin            |  600   |          |
+		|                           |   |    |          |
+		+---------------------------+   v    |          |
+		+-------------+-------------+        |          |
+		|             |             |        |          |
+		|   parade    |  saturday   |        |          |
+		|             |             |        |          |
+		+-------------+-------------+        |          |
+		+------+------+-------------+        |          |
+		|      |      |             |        |          |
+		| hat  |shirt |    golf     |<- 20 ->|          |
+		|      |      |             |        |          |
+		+------+------+-------------+        +==========+
+*/
+#allin
+{
+	width:		800px;
+	height:		300px;
+	position:	absolute;
+	top:		110px;
+	left:		10px;
+	background:	url('/Images70th/merch_inclusive.jpg') no-repeat left top;
+}
+#allin:hover
+{
+	background-position: -800px 0px;
+}
+
+#parade
+{
+	width:		395px;
+	height:		180px;
+	position:	absolute;
+	top:		420px;
+	left:		10px;
+	background:	url('/Images70th/merch_parade.jpg') no-repeat left top;
+}
+#parade:hover
+{
+	background-position: -395px 0px;
+}
+
+#saturday
+{
+	width:		395px;
+	height:		180px;
+	position:	absolute;
+	top:		420px;
+	left:		415px;
+	background:	url('/Images70th/merch_saturday.jpg') no-repeat left top;
+}
+#saturday:hover
+{
+	background-position: -395px 0px;
+}
+
+#hat
+{
+	width:		190px;
+	height:		180px;
+	position:	absolute;
+	top:		610px;
+	left:		10px;
+	background:	url('/Images70th/merch_hat.jpg') no-repeat left top;
+}
+#hat:hover
+{
+	background-position: -190px 0px;
+}
+
+#shirt
+{
+	width:		190px;
+	height:		180px;
+	position:	absolute;
+	top:		610px;
+	left:		215px;
+	background:	url('/Images70th/merch_shirt.jpg') no-repeat left top;
+}
+#shirt:hover
+{
+	background-position: -190px 0px;
+}
+
+#golf
+{
+	width:		395px;
+	height:		180px;
+	position:	absolute;
+	top:		610px;
+	left:		415px;
+	background:	url('/Images70th/golf.jpg') no-repeat left top;
+}
+#golf:hover
+{
+	background-position: -395px 0px;
+}
+
+#cart
+{
+	width:		395px;
+	height:		980px;
+	position:	absolute;
+	top:		10px;
+	left:		830px;
+	background:	url('/Images70th/cart.png') left top;
+}
+

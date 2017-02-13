@@ -127,6 +127,7 @@ def MapLinks(original):
 					.replace('__BIOIMAGESPATH__', BioImagesPath())		\
 					.replace('__INSTRUMENTPATH__', InstrumentPath())	\
 					.replace('__MUSICPATH__', MusicPath())				\
+					.replace('__REUNION70THPATH__', Reunion70thPath())	\
 					.replace('__SHEETMUSICPATH__', SheetMusicPath())	\
 					.replace('__JAVASCRIPTPATH__', JavascriptPath())	\
 					.replace('__CELEBRATIONPATH__', CelebrationPath())	\
@@ -368,6 +369,12 @@ def MusicPath():
 	Return the path to the music samples
 	"""
 	return HOMEHREF + '/Music'
+
+def Reunion70thPath():
+	"""
+	Return the path to the images for the 70th anniversary reunion
+	"""
+	return HOMEHREF + '/Images70th'
 
 def SheetMusicPath():
 	"""
