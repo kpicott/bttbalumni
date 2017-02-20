@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/python
 """
 Master file which loads the correct page based on URL parameters
 """
@@ -139,7 +139,7 @@ class bttbNavigation:
 		"""
 		print MapLinks( """
 		<div id='logo'>
-			link:(#profiles, <img border='0' src='__IMAGEPATH__/50thLogo.png' width='123' height='110'>)
+			link:(#profiles, <img border='0' src='__IMAGEPATH__/SiteLogo.png' width='123' height='110'>)
 		</div>
 		""" )
 

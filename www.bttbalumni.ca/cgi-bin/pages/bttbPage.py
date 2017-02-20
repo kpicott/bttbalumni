@@ -14,8 +14,8 @@ class bttbPage:
 	def setParams(self, params):	self.params = params
 	def setRequestor(self, who):	self.requestor = who
 	def setLastLogin(self, when):	self.lastLogin = when
-	def title(self):		return 'BTTB Alumni : 60th Anniversary Celebration'
-	def content(self):		return 'BTTB Alumni : 60th Anniversary Celebration'
+	def title(self):		return 'BTTB Alumni'
+	def content(self):		return 'BTTB Alumni'
 
 	def scripts(self):
 		"""

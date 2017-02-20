@@ -1,0 +1,151 @@
+/*
+	The shopping cart has two different display modes, one for Paypal and one
+	for paying by cheque.
+
+	Paypal maintains all of the current cart information on its own website so
+	there is no option to edit the cart, only an option to add a new item to
+	the cart. The page splits into two parts. The upper part provides access
+	to the current cart and a simple indicator as to whether any selections
+	have been added to the cart yet:
+
+	    +-----------------------------------------------+
+		|  Add Items To Cart using the buttons below    |
+		|                           +-----------+       |
+		|  See current cart status: | View Cart |       |
+		|                           +-----------+       |
+	    +-----------------------------------------------+
+	
+	The section beneath contains a table with all of the available cart
+	items. The table has four columns for each item:
+
+		+--------------+--------------------+----------------+---------------+
+		|  Item Image  |  Item Description  |  Item Options  |  Add To Cart  |
+		+--------------+--------------------+----------------+---------------+
+	
+	Item Description will include the unit price of the item.
+	Item Options contains all available options for the item.
+	Add To Cart is just a button, linking directly to Paypal. It will continue
+	a "return to shopping" link that comes back here.
+
+
+	For those paying by cheque all of the operations will be performed within
+	the page. Instead of a "View Cart" at the top it will contain the current
+	contents of the cart, including item name, options, and price.
+
+		+-------------------------------------------------------------------+
+		|   Cart Contents:                                                  |
+		+----------------------+------------+--------------------+----------+
+		|   Item               |  Options   | Price (with tax)   |  Remove  |
+		+----------------------+------------+--------------------+----------+
+		|                      |            |                    |    []    |
+		+----------------------+------------+--------------------+----------+
+		                             .
+		                             .
+		                             .
+		+----------------------+------------+--------------------+----------+
+		+----------------------+------------+--------------------+----------+
+		|   Total              |XXXXXXXXXXXX|                    |XXXXXXXXXX+
+		+----------------------+------------+--------------------+----------+
+
+		Mailing Address:    Blah            +------------------+
+		                    Blah            | Print Order Form |
+		                    Blah            +------------------+
+
+	The table of options will look the same as for PayPal.  When you hit the
+	"Add To Cart" button it will add it to the table above.
+
+	Hitting the "Print Order Form" button will create a new page containing
+	the cart contents, the mailing address, blank fields for the person's
+	name and contact information (pre-populated if they are logged in), and
+	instructions on what to do with the form.
+*/
+
+/*----------------------------------------------------------------------
+	Simple box around an element
+*/
+#box
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/*----------------------------------------------------------------------
+	Table formatting for the available store contents.
+*/
+#store
+{
+    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+#store td, #store th
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#store tr:nth-child(even)
+{
+	background-color: #f2f2f2;
+}
+
+#store tr:hover
+{
+	background-color: #ddd;
+}
+
+#store th
+{
+    padding-top:		12px;
+    padding-bottom:		12px;
+    text-align:			left;
+    background-color:	#AF4C50;
+    color:				white;
+}
+
+/*----------------------------------------------------------------------
+	Table formatting for the current cart contents when paying by cheque.
+*/
+#cart
+{
+    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+	background:	     url('/Images70th/cart.png') left top;
+}
+
+#cart td, #cart th
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#cart tr:nth-child(even)
+{
+	background-color: #f2f2f2;
+}
+
+#cart tr:hover
+{
+	background-color: #ddd;
+}
+
+#cart th
+{
+    padding-top:		12px;
+    padding-bottom:		12px;
+    text-align:			left;
+    background-color:	#AF4C50;
+    color:				white;
+}
+
+#comingSoon
+{
+	width:			400px;
+	color:			red;
+	font-family:	"Trebuchet MS", Arial, Helvetica, sans-serif;
+	font-weight:	bold;
+	font-style:		italic;
+	font-size:		150%;
+	border-style:	solid;
+	border-width:	medium;
+}

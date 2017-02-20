@@ -13,7 +13,7 @@
 
 		<---------- 1600 ----------->
 		+---------------------------+   ^    +==========+
-		|                           |   |    |   cart   |
+		|                           |   |    |   info   |
 		|          allin            |  600   |          |
 		|                           |   |    |          |
 		+---------------------------+   v    |          |
@@ -112,13 +112,12 @@
 	background-position: -395px 0px;
 }
 
-#cart
+#info
 {
-	width:		395px;
+	width:		800px;
 	height:		980px;
 	position:	absolute;
-	top:		10px;
+	top:		110px;
 	left:		830px;
-	background:	url('/Images70th/cart.png') left top;
 }
 
