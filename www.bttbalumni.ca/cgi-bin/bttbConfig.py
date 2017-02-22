@@ -45,6 +45,7 @@ __all__ = [	"HomeHref",
 			"EmailLink",
 			"DownloadLink",
 			"PhoneFormat",
+			"PhoneParts",
 			"LoginRequired",
 			"EmbedJS",
 			"SortDictByValue",
@@ -612,6 +613,23 @@ def PhoneFormat(phone):
 		newPhone = phone
 	return newPhone
 
+def PhoneParts(phone):
+	"""
+	Analyze the phone number and return a list of two elements, comprising
+	[AREA_CODE, NUMBER]
+	"""
+	if phone == 'No Phone': return ['','','']
+	newPhone = re.sub( '[^0123456789]', '', phone )
+	digitCount = len(newPhone)
+	if digitCount == 7:
+		newPhone = ['905', newPhone[0:3], newPhone[3:]]
+	elif digitCount == 10:
+		newPhone = [newPhone[0:3], newPhone[3:6], newPhone[6:]]
+	else:
+        # Other formats are not understood by PayPal so just return blanks
+		newPhone = ['','','']
+	return newPhone
+
 def SortDictByValue(dict):
 	""" Returns the keys of the dictionary sorted by their values """
 	items = dict.items()
@@ -693,6 +711,19 @@ class testConfig(unittest.TestCase):
 		self.assertEqual( PhoneFormat('456-7890'), '(905) 456-7890' )
 		self.assertEqual( PhoneFormat('abcdefghijklj456789!@#0$%^&*()_-+='), '(905) 456-7890' )
 		self.assertEqual( PhoneFormat('---4---5---6---7---8---9-0--'), '(905) 456-7890' )
+		self.assertEqual( PhoneParts('1234567890'), ['123','456', '7890'] )
+		self.assertEqual( PhoneParts('011234567890'), ['','', ''] )
+		self.assertEqual( PhoneParts('011234567890123'), ['','', ''] )
+		self.assertEqual( PhoneParts('No Phone'), ['','', ''] )
+		self.assertEqual( PhoneParts('---1234567890'), ['123','456', '7890'] )
+		self.assertEqual( PhoneParts('123456-7890'), ['123','456', '7890'] )
+		self.assertEqual( PhoneParts('abcdefghijklj123456789!@#0$%^&*()_-+='), ['123','456', '7890'] )
+		self.assertEqual( PhoneParts('---1---2---3---4---5---6---7---8---9-0--'), ['123','456', '7890'] )
+		self.assertEqual( PhoneParts('4567890'), ['905','456', '7890'] )
+		self.assertEqual( PhoneParts('---4567890'), ['905','456', '7890'] )
+		self.assertEqual( PhoneParts('456-7890'), ['905','456', '7890'] )
+		self.assertEqual( PhoneParts('abcdefghijklj456789!@#0$%^&*()_-+='), ['905','456', '7890'] )
+		self.assertEqual( PhoneParts('---4---5---6---7---8---9-0--'), ['905','456', '7890'] )
 
 	def testLinks(self):
 		mail1 = EmailLink('bttb@picott.ca', 'bttb@picott.ca')

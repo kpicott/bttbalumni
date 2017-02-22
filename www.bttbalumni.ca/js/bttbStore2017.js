@@ -221,11 +221,8 @@ function print_cart()
     // Get the values of the hidden fields containing the logged-in member's
     // information. If they are not logged in this will be blank
     var name = document.getElementById( "member_name" ).value;
-    console.log( name );
     var email = document.getElementById( "member_email" ).value;
-    console.log( email );
     var phone = document.getElementById( "member_phone" ).value;
-    console.log( phone );
 
     // Populate the purchaser's information
     print_wnd.document.write( "<h2>Your Information</h2>\n" );
@@ -243,10 +240,7 @@ function print_cart()
     var cart_info = get_cart_contents();
     if( cart_info.length === 0 )
     {
-        var p = document.createElement( "p" );
-        p.className = "box";
-        p.innerHTML = "You have not ordered anything yet. Select an item below to join the fun!";
-        cart_element.appendChild( p );
+        print_wnd.document.write( "<p>You have not ordered anything yet. Select an item to join the fun!</p>" );
     }
     else
     {
@@ -391,6 +385,25 @@ function remove_cart_item(cart_item)
     }
 
     rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Validate that an item being ordered has had a shirt size selected.
+// item is the name of the item being ordered, in a display-friendly
+// format - it will be used in the alert if the size is missing.
+// shirt_id is the unique ID of the "select" field containing the shirt option.
+//
+var no_shirt_selected = "-- Select shirt size --"; // Same as in bttbStore2017.py
+function validate_shirt_size(item, shirt_id)
+{
+    var shirt_element = document.getElementById( shirt_id );
+	if( shirt_element.value === no_shirt_selected )
+	{
+		alert( 'Please select a shirt size for "' + item + '"' );
+		return false;
+	}
+	return true;
 }
 
 // ==================================================================

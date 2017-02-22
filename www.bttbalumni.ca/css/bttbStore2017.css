@@ -101,6 +101,39 @@
     text-align:			left;
     background-color:	#AF4C50;
     color:				white;
+	font-weight:		bold;
+}
+
+/*----------------------------------------------------------------------
+	Table formatting for the available store contents in PayPal format.
+*/
+#paypal_store
+{
+	width:			 800px;
+    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+}
+
+#paypal_store td, #paypal_store th
+{
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#paypal_store tr:hover
+{
+	background-color: #ddd;
+}
+
+#paypal_store th
+{
+    padding-top:		12px;
+    padding-bottom:		12px;
+    text-align:			left;
+    align:				center;
+    background-color:	#AF4C50;
+    color:				white;
+	font-weight:		bold;
 }
 
 /*----------------------------------------------------------------------
