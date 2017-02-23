@@ -7,7 +7,7 @@ from bttbPage import bttbPage
 __all__ = ['bttbStore2018']
 
 #======================================================================
-NO_SHIRT_SELECTED = "-- Select shirt size --"
+NO_SHIRT_SELECTED = "-- Select Shirt Size --"
 SHIRT_OPTIONS = [ [ "XXX", NO_SHIRT_SELECTED]
                 , [ "WXS", "Women's Extra Small"]
                 , [ "WS",  "Women's Small"]
@@ -32,7 +32,7 @@ def shirt_options(selector_name):
     :return: the HTML that implements the shirt dropdown selection
     '''
     html = '<select id="%s">' % selector_name
-    html += '<option value="">---Select Shirt Size---</option>'
+    html += '<option value="%s" selected="selected">%s</option>' % (NO_SHIRT_SELECTED, NO_SHIRT_SELECTED)
     for shirt_info in SHIRT_OPTIONS:
         html += '<option value="%s">%s</option>' % ( shirt_info[0], shirt_info[1] )
     html += '</select>'

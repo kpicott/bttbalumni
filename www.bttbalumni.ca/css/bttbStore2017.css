@@ -182,3 +182,284 @@
 	border-style:	solid;
 	border-width:	medium;
 }
+
+/*======================================================================
+	Styles for the fixed layout of the PayPal store.
+
+	The image styles will allow a change in image when you hover over it.
+	The image is set up as double width, where the original and hover images
+	are side-by-side. This allows loading of both images in one shot so that
+	there is no delay on the first hover.
+
+	    Full Image    Default View     Hover View
+	    +---+---+        +---+           +---+
+		| X | Y |        | X |           | Y |
+	    +---+---+        +---+           +---+
+
+	Each subsection of the image has a coloured background, with a
+	non-coloured gap between items so that the correspondence between image
+	item and "Add To Cart" button is obvious. Items requiring shirt size have
+	it laid out beside that button so that you can set it when ordering, and
+	it's obvious which items require a size.
+
+	Full layout looks like this, with 10px gap between image sections, where
+	SIZE is the shirt size selector, VIEW is the View Cart button, and ADD
+	are add-to-cart buttons:
+
+		<---------- 800 ------------>
+		PayPal Store             VIEW
+		+---------------------------+  ^
+		|                           |  |
+		|          allin            |  | 300px
+		|                           |  |
+		+---------------------------+  X
+		|       SIZE      ADD       |  | 50px
+		+---------------------------+  v
+		+-------------+-------------+  ^
+		|             |             |  |
+		|   parade    |  saturday   |  | 180px
+		|             |             |  |
+		+-------------+-------------+  X
+		|  SIZE   ADD |    ADD      |  |
+		+-------------+-------------+  v
+		+------+------+-------------+  ^
+		|      |      |             |  |
+		| hat  |shirt |    golf     |  | 180px
+		|      |      |             |  |
+		+------+------+-------------+  v
+		+------+------+-------------+  ^
+		| ADD  | SIZE |    ADD      |  | 100px
+		|      | ADD  |             |  |
+		+-------------+-------------+  v
+		+-------------+-------------+  ^
+		|             |             |  |
+		|  golfHole   | golfDinner  |  | 180px
+		|             |             |  |
+		+-------------+-------------+  X
+		|     ADD     |    ADD      |  | 50px
+		+-------------+-------------+  v
+*/
+
+/*========================================
+  Container wrapping around the entire store, to allow relative positioning
+*/
+div.container
+{
+	width:		800px;
+    position:	relative;
+}
+
+/*========================================
+  Each store item has a nicely shadowed, outlined, box
+*/
+div.box_shadow
+{
+  box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom:	10px;
+  border:			1px;
+  border-style:		solid;
+}
+
+/*========================================
+  Large element layout size - all-events
+*/
+div.large_buttons {
+    width:				800px;
+    height:				50px;
+	background-color:	#af4c50;
+    position:			absolute;
+    bottom:				0px;
+}
+div.large_image
+{
+  width:	800px;
+  height:	300px;
+}
+
+/*========================================
+  Medium element layout size - parade, saturday, and golf
+*/
+div.medium_button
+{
+    width:				395px;
+    height:				50px;
+	background-color:	#af4c50;
+    position:			absolute;
+    bottom:				0px;
+}
+div.medium_buttons_2
+{
+    width:				395px;
+    height:				80px;
+	background-color:	#af4c50;
+    position:			absolute;
+    bottom:				0px;
+}
+div.medium_image
+{
+  width:	395px;
+  height:	180px;
+}
+
+/*========================================
+  Small element layout size - hat and shirt
+*/
+div.small_buttons
+{
+    width:				190px;
+    height:				80px;
+	background-color:	#af4c50;
+    position:			absolute;
+    bottom:				0px;
+}
+div.small_image
+{
+  width:	190px;
+  height:	180px;
+}
+
+/*========================================
+  Each item is specifically positioned
+*/
+div.allin_item
+{
+  width:	800px;
+  height:	350px;
+  position:	absolute;
+  top:		0px;
+  left:		0px;
+}
+div.parade_item
+{
+  width:	395px;
+  height:	230px;
+  position:	absolute;
+  left:		0px;
+  top:		360px;
+}
+div.saturday_item
+{
+  width:	395px;
+  height:	230px;
+  position:	absolute;
+  left:		405px;
+  top:		360px;
+}
+div.shirt_item
+{
+  width:	190px;
+  height:	260px;
+  position:	absolute;
+  left:		0px;
+  top:		600px;
+}
+div.hat_item
+{
+  width:	190px;
+  height:	260px;
+  position:	absolute;
+  left:		205px;
+  top:		600px;
+}
+div.golf_item
+{
+  width:	395px;
+  height:	260px;
+  position:	absolute;
+  left:		405px;
+  top:		600px;
+}
+div.golfHole_item
+{
+  width:	395px;
+  height:	230px;
+  position:	absolute;
+  left:		0px;
+  top:		870px;
+}
+div.golfDinner_item
+{
+  width:	395px;
+  height:	230px;
+  position:	absolute;
+  left:		405px;
+  top:		870px;
+}
+
+/*========================================
+  Dropdown menu for shirt size is always top-left-ish.
+  Size is browser-dependent so using %+offset might not be consistent.
+*/
+.dropdown
+{
+    border-radius:		5px;
+    padding:			5px;
+    position:			absolute;
+    top:				10px;
+    left:				13px;
+    background-color:	#f2f2f2;
+}
+
+/*========================================
+  Add-to-cart button can be right edge or centered, but always vertically middle
+*/
+.addtocart
+{
+	position:	absolute;
+    top:		50%;
+    margin-top:	-10px;
+    right:		13px;
+}
+.addtocart_center
+{
+	position:		absolute;
+    left:			50%;
+    top:			50%;
+    margin-top:		-10px;
+    margin-left:	-48px;
+}
+.addtocart_center_2
+{
+	position:		absolute;
+    left:			50%;
+    bottom:			10px;
+    margin-left:	-48px;
+}
+
+/*========================================
+  Fix an element to the top left corner of its parent
+*/
+div.fix_top
+{
+	position:	absolute;
+    left:		0px;
+    top:		0px;
+}
+
+/*======================================================================
+ID sections for each of the store items
+*/
+#allin            { background:	url('http://bttbalumni.ca/Images70th/merch_inclusive.jpg') no-repeat left top; }
+#allin:hover      { background-position: -800px 0px; }
+/*----------------------------------------*/
+#parade           { background:	url('http://bttbalumni.ca/Images70th/merch_parade.jpg') no-repeat left top; }
+#parade:hover     { background-position: -395px 0px; }
+/*----------------------------------------*/
+#saturday         { background:	url('http://bttbalumni.ca/Images70th/merch_saturday.jpg') no-repeat left top; }
+#saturday:hover   { background-position: -395px 0px; }
+/*----------------------------------------*/
+#shirt            { background:	url('http://bttbalumni.ca/Images70th/merch_shirt.jpg') no-repeat left top; }
+#shirt:hover      { background-position: -190px 0px; }
+/*----------------------------------------*/
+#hat              { background:	url('http://bttbalumni.ca/Images70th/merch_hat.jpg') no-repeat left top; }
+#hat:hover        { background-position: -190px 0px; }
+/*----------------------------------------*/
+#golf             { background:	url('http://bttbalumni.ca/Images70th/golf.jpg') no-repeat left top; }
+#golf:hover       { background-position: -395px 0px; }
+/*----------------------------------------*/
+#golfHole         { background:	url('http://bttbalumni.ca/Images70th/golfHole.jpg') no-repeat left top; }
+#golfHole:hover   { background-position: -395px 0px; }
+/*----------------------------------------*/
+#golfDinner       { background:	url('http://bttbalumni.ca/Images70th/golfDinner.jpg') no-repeat left top; }
+#golfDinner:hover { background-position: -395px 0px; }
+

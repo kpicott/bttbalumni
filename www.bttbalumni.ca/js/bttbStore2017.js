@@ -394,7 +394,7 @@ function remove_cart_item(cart_item)
 // format - it will be used in the alert if the size is missing.
 // shirt_id is the unique ID of the "select" field containing the shirt option.
 //
-var no_shirt_selected = "-- Select shirt size --"; // Same as in bttbStore2017.py
+var no_shirt_selected = "-- Select Shirt Size --"; // Same as in bttbStore2017.py
 function validate_shirt_size(item, shirt_id)
 {
     var shirt_element = document.getElementById( shirt_id );
