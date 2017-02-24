@@ -8,12 +8,12 @@
 	to the current cart and a simple indicator as to whether any selections
 	have been added to the cart yet:
 
-	    +-----------------------------------------------+
-		|  Add Items To Cart using the buttons below    |
-		|                           +-----------+       |
-		|  See current cart status: | View Cart |       |
-		|                           +-----------+       |
-	    +-----------------------------------------------+
+	  +-----------------------------------------------+
+	  |  Add Items To Cart using the buttons below    |
+	  |                           +-----------+       |
+	  |  See current cart status: | View Cart |       |
+	  |                           +-----------+       |
+	  +-----------------------------------------------+
 	
 	The section beneath contains a table with all of the available cart
 	items. The table has four columns for each item:
@@ -63,77 +63,10 @@
 /*----------------------------------------------------------------------
 	Simple box around an element
 */
-#box
+.box
 {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-/*----------------------------------------------------------------------
-	Table formatting for the available store contents.
-*/
-#store
-{
-    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-}
-
-#store td, #store th
-{
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#store tr:nth-child(even)
-{
-	background-color: #f2f2f2;
-}
-
-#store tr:hover
-{
-	background-color: #ddd;
-}
-
-#store th
-{
-    padding-top:		12px;
-    padding-bottom:		12px;
-    text-align:			left;
-    background-color:	#AF4C50;
-    color:				white;
-	font-weight:		bold;
-}
-
-/*----------------------------------------------------------------------
-	Table formatting for the available store contents in PayPal format.
-*/
-#paypal_store
-{
-	width:			 800px;
-    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-}
-
-#paypal_store td, #paypal_store th
-{
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-#paypal_store tr:hover
-{
-	background-color: #ddd;
-}
-
-#paypal_store th
-{
-    padding-top:		12px;
-    padding-bottom:		12px;
-    text-align:			left;
-    align:				center;
-    background-color:	#AF4C50;
-    color:				white;
-	font-weight:		bold;
+	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
 }
 
 /*----------------------------------------------------------------------
@@ -141,15 +74,15 @@
 */
 #cart
 {
-    font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
+	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
 	background:	     url('/Images70th/cart.png') left top;
 }
 
 #cart td, #cart th
 {
-    border: 1px solid #ddd;
-    padding: 8px;
+	border: 1px solid #ddd;
+	padding: 8px;
 }
 
 #cart tr:nth-child(even)
@@ -164,23 +97,11 @@
 
 #cart th
 {
-    padding-top:		12px;
-    padding-bottom:		12px;
-    text-align:			left;
-    background-color:	#AF4C50;
-    color:				white;
-}
-
-#comingSoon
-{
-	width:			400px;
-	color:			red;
-	font-family:	"Trebuchet MS", Arial, Helvetica, sans-serif;
-	font-weight:	bold;
-	font-style:		italic;
-	font-size:		150%;
-	border-style:	solid;
-	border-width:	medium;
+	padding-top:		12px;
+	padding-bottom:		12px;
+	text-align:			left;
+	background-color:	#AF4C50;
+	color:				white;
 }
 
 /*======================================================================
@@ -191,10 +112,10 @@
 	are side-by-side. This allows loading of both images in one shot so that
 	there is no delay on the first hover.
 
-	    Full Image    Default View     Hover View
-	    +---+---+        +---+           +---+
-		| X | Y |        | X |           | Y |
-	    +---+---+        +---+           +---+
+	  Full Image    Default View     Hover View
+	  +---+---+        +---+           +---+
+	  | X | Y |        | X |           | Y |
+	  +---+---+        +---+           +---+
 
 	Each subsection of the image has a coloured background, with a
 	non-coloured gap between items so that the correspondence between image
@@ -206,15 +127,15 @@
 	SIZE is the shirt size selector, VIEW is the View Cart button, and ADD
 	are add-to-cart buttons:
 
-		<---------- 800 ------------>
-		PayPal Store             VIEW
-		+---------------------------+  ^
-		|                           |  |
-		|          allin            |  | 300px
-		|                           |  |
-		+---------------------------+  X
-		|       SIZE      ADD       |  | 50px
-		+---------------------------+  v
+		<---------- 800 ------------><-- 10px --><---------- 800 ------------>
+
+		+---------------------------+  ^         +---------------------------+
+		|                           |  |         |                           |
+		|          allin            |  | 300px   | View Cart / Cart Contents |
+		|                           |  |         |                           |
+		+---------------------------+  X                      .
+		|       SIZE      ADD       |  | 50px                 .
+		+---------------------------+  v                      .
 		+-------------+-------------+  ^
 		|             |             |  |
 		|   parade    |  saturday   |  | 180px
@@ -228,7 +149,7 @@
 		|      |      |             |  |
 		+------+------+-------------+  v
 		+------+------+-------------+  ^
-		| ADD  | SIZE |    ADD      |  | 100px
+		| ADD  | SIZE |    ADD      |  | 80px
 		|      | ADD  |             |  |
 		+-------------+-------------+  v
 		+-------------+-------------+  ^
@@ -241,225 +162,249 @@
 */
 
 /*========================================
-  Container wrapping around the entire store, to allow relative positioning
+	Container wrapping around the entire store, to allow relative positioning
 */
 div.container
 {
-	width:		800px;
-    position:	relative;
+	width:		1610px;
+	position:	relative;
+	margin-top:	50px;
 }
 
 /*========================================
-  Each store item has a nicely shadowed, outlined, box
+  Container wrapping around the entire store, to allow relative positioning
+*/
+div.store_container
+{
+	width:		800px;
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+}
+
+/*========================================
+  Positions the cart contents beside the store, when using the internal store
+*/
+div.cart_container
+{
+	width:		800px;
+    position:	absolute;
+	top:		0px;
+    left:		810px;
+}
+
+/*========================================
+	Each store item has a nicely shadowed, outlined, box
 */
 div.box_shadow
 {
-  box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  margin-bottom:	10px;
-  border:			1px;
-  border-style:		solid;
+	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	margin-bottom:	10px;
+	border:			1px;
+	border-style:	solid;
 }
 
 /*========================================
-  Large element layout size - all-events
+	Large element layout size - all-events
 */
-div.large_buttons {
-    width:				800px;
-    height:				50px;
+div.large_buttons
+{
+	width:				800px;
+	height:				50px;
 	background-color:	#af4c50;
-    position:			absolute;
-    bottom:				0px;
+	position:			absolute;
+	bottom:				-50px;
 }
 div.large_image
 {
-  width:	800px;
-  height:	300px;
+	width:	800px;
+	height:	300px;
 }
 
 /*========================================
-  Medium element layout size - parade, saturday, and golf
+	Medium element layout size - parade, saturday, and golf
 */
-div.medium_button
+div.medium_buttons
 {
-    width:				395px;
-    height:				50px;
+	width:				395px;
+	height:				50px;
 	background-color:	#af4c50;
-    position:			absolute;
-    bottom:				0px;
+	position:			absolute;
+	bottom:				-50px;
 }
 div.medium_buttons_2
 {
-    width:				395px;
-    height:				80px;
+	width:				395px;
+	height:				80px;
 	background-color:	#af4c50;
-    position:			absolute;
-    bottom:				0px;
+	position:			absolute;
+	bottom:				-80px;
 }
 div.medium_image
 {
-  width:	395px;
-  height:	180px;
+	width:	395px;
+	height:	180px;
 }
 
 /*========================================
-  Small element layout size - hat and shirt
+	Small element layout size - hat and shirt
 */
 div.small_buttons
 {
-    width:				190px;
-    height:				80px;
+	width:				190px;
+	height:				80px;
 	background-color:	#af4c50;
-    position:			absolute;
-    bottom:				0px;
+	position:			absolute;
+	bottom:				-80px;
 }
 div.small_image
 {
-  width:	190px;
-  height:	180px;
+	width:	190px;
+	height:	180px;
 }
 
 /*========================================
-  Each item is specifically positioned
+	Each item is specifically positioned
 */
 div.allin_item
 {
-  width:	800px;
-  height:	350px;
-  position:	absolute;
-  top:		0px;
-  left:		0px;
+	width:		800px;
+	height:		350px;
+	position:	absolute;
+	top:		0px;
+	left:		0px;
 }
 div.parade_item
 {
-  width:	395px;
-  height:	230px;
-  position:	absolute;
-  left:		0px;
-  top:		360px;
+	width:		395px;
+	height:		230px;
+	position:	absolute;
+	left:		0px;
+	top:		360px;
 }
 div.saturday_item
 {
-  width:	395px;
-  height:	230px;
-  position:	absolute;
-  left:		405px;
-  top:		360px;
+	width:		395px;
+	height:		230px;
+	position:	absolute;
+	left:		405px;
+	top:		360px;
 }
 div.shirt_item
 {
-  width:	190px;
-  height:	260px;
-  position:	absolute;
-  left:		0px;
-  top:		600px;
+	width:		190px;
+	height:		260px;
+	position:	absolute;
+	left:		0px;
+	top:		600px;
 }
 div.hat_item
 {
-  width:	190px;
-  height:	260px;
-  position:	absolute;
-  left:		205px;
-  top:		600px;
+	width:		190px;
+	height:		260px;
+	position:	absolute;
+	left:		205px;
+	top:		600px;
 }
 div.golf_item
 {
-  width:	395px;
-  height:	260px;
-  position:	absolute;
-  left:		405px;
-  top:		600px;
+	width:		395px;
+	height:		260px;
+	position:	absolute;
+	left:		405px;
+	top:		600px;
 }
 div.golfHole_item
 {
-  width:	395px;
-  height:	230px;
-  position:	absolute;
-  left:		0px;
-  top:		870px;
+	width:		395px;
+	height:		230px;
+	position:	absolute;
+	left:		0px;
+	top:		870px;
 }
 div.golfDinner_item
 {
-  width:	395px;
-  height:	230px;
-  position:	absolute;
-  left:		405px;
-  top:		870px;
+	width:		395px;
+	height:		230px;
+	position:	absolute;
+	left:		405px;
+	top:		870px;
 }
 
 /*========================================
-  Dropdown menu for shirt size is always top-left-ish.
-  Size is browser-dependent so using %+offset might not be consistent.
+	Dropdown menu for shirt size is always top-left-ish.
+	Size is browser-dependent so using %+offset might not be consistent.
 */
 .dropdown
 {
-    border-radius:		5px;
-    padding:			5px;
-    position:			absolute;
-    top:				10px;
-    left:				13px;
-    background-color:	#f2f2f2;
+	border-radius:		5px;
+	padding:			5px;
+	position:			absolute;
+	top:				10px;
+	left:				13px;
+	background-color:	#f2f2f2;
 }
 
 /*========================================
-  Add-to-cart button can be right edge or centered, but always vertically middle
+	Add-to-cart button can be right edge or centered, but always vertically middle
 */
 .addtocart
 {
 	position:	absolute;
-    top:		50%;
-    margin-top:	-10px;
-    right:		13px;
+	top:		50%;
+	margin-top:	-10px;
+	right:		13px;
 }
 .addtocart_center
 {
 	position:		absolute;
-    left:			50%;
-    top:			50%;
-    margin-top:		-10px;
-    margin-left:	-48px;
+	left:			50%;
+	top:			50%;
+	margin-top:		-10px;
+	margin-left:	-48px;
 }
 .addtocart_center_2
 {
 	position:		absolute;
-    left:			50%;
-    bottom:			10px;
-    margin-left:	-48px;
+	left:			50%;
+	margin-left:	-48px;
+	bottom:			10px;
 }
 
 /*========================================
-  Fix an element to the top left corner of its parent
+	Fix an element to the top left corner of its parent
 */
 div.fix_top
 {
 	position:	absolute;
-    left:		0px;
-    top:		0px;
+	left:		0px;
+	top:		0px;
 }
 
 /*======================================================================
 ID sections for each of the store items
 */
-#allin            { background:	url('http://bttbalumni.ca/Images70th/merch_inclusive.jpg') no-repeat left top; }
+#allin            { background:	url('/Images70th/merch_inclusive.jpg') no-repeat left top; }
 #allin:hover      { background-position: -800px 0px; }
 /*----------------------------------------*/
-#parade           { background:	url('http://bttbalumni.ca/Images70th/merch_parade.jpg') no-repeat left top; }
+#parade           { background:	url('/Images70th/merch_parade.jpg') no-repeat left top; }
 #parade:hover     { background-position: -395px 0px; }
 /*----------------------------------------*/
-#saturday         { background:	url('http://bttbalumni.ca/Images70th/merch_saturday.jpg') no-repeat left top; }
+#saturday         { background:	url('/Images70th/merch_saturday.jpg') no-repeat left top; }
 #saturday:hover   { background-position: -395px 0px; }
 /*----------------------------------------*/
-#shirt            { background:	url('http://bttbalumni.ca/Images70th/merch_shirt.jpg') no-repeat left top; }
+#shirt            { background:	url('/Images70th/merch_shirt.jpg') no-repeat left top; }
 #shirt:hover      { background-position: -190px 0px; }
 /*----------------------------------------*/
-#hat              { background:	url('http://bttbalumni.ca/Images70th/merch_hat.jpg') no-repeat left top; }
+#hat              { background:	url('/Images70th/merch_hat.jpg') no-repeat left top; }
 #hat:hover        { background-position: -190px 0px; }
 /*----------------------------------------*/
-#golf             { background:	url('http://bttbalumni.ca/Images70th/golf.jpg') no-repeat left top; }
+#golf             { background:	url('/Images70th/golf.jpg') no-repeat left top; }
 #golf:hover       { background-position: -395px 0px; }
 /*----------------------------------------*/
-#golfHole         { background:	url('http://bttbalumni.ca/Images70th/golfHole.jpg') no-repeat left top; }
+#golfHole         { background:	url('/Images70th/golfHole.jpg') no-repeat left top; }
 #golfHole:hover   { background-position: -395px 0px; }
 /*----------------------------------------*/
-#golfDinner       { background:	url('http://bttbalumni.ca/Images70th/golfDinner.jpg') no-repeat left top; }
+#golfDinner       { background:	url('/Images70th/golfDinner.jpg') no-repeat left top; }
 #golfDinner:hover { background-position: -395px 0px; }
 

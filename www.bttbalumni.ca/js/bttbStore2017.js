@@ -91,18 +91,12 @@ function add_tax(amount)
 //----------------------------------------------------------------------
 //
 // Using the current cart contents rebuild the HTML element in id
-// "cart-contents" to show the current list of items in the cart.
+// "cart_contents" to show the current list of items in the cart.
 //
 function rebuild_cart()
 {
-    var paypal_element = document.getElementById( "paypal-info" );
-	if( paypal_element !== null )
-	{
-		paypal_element.style.display = 'none';
-	}
-
     var cart_info = get_cart_contents();
-    var cart_element = document.getElementById( "cart-contents" );
+    var cart_element = document.getElementById( "cart_contents" );
 
     // Empty out any previous cart contents
     while( cart_element.hasChildNodes() )
@@ -219,10 +213,35 @@ function print_cart()
     <p><i>Please make cheques payable to 'Burlington Teen Tour Band Alumni Association'</i></p>" );
 
     // Get the values of the hidden fields containing the logged-in member's
-    // information. If they are not logged in this will be blank
-    var name = document.getElementById( "member_name" ).value;
-    var email = document.getElementById( "member_email" ).value;
-    var phone = document.getElementById( "member_phone" ).value;
+    // information. The odd format is to be consistent with the way PayPal
+	// requires these fields to be named.
+    var first_name = document.getElementById( "first_name" ).value;
+    var last_name = document.getElementById( "last_name" ).value;
+	var name = '';
+	if( first_name !== null )
+	{
+		name = first_name;
+		if( last_name !== null )
+		{
+			name = name + " " + last_name;
+		}
+	}
+    var email = document.getElementById( "email" ).value;
+    var phone = ''
+    var area = document.getElementById( "night_phone_a" ).value;
+    var exchange = document.getElementById( "night_phone_b" ).value;
+    var number = document.getElementById( "night_phone_c" ).value;
+	if( area !== null )
+	{
+		phone = "(" + area + ") ";
+	}
+	if( exchange !== null )
+	{
+		if( number !== null )
+		{
+			phone = phone + exchange + "-" + number;
+		}
+	}
 
     // Populate the purchaser's information
     print_wnd.document.write( "<h2>Your Information</h2>\n" );
@@ -277,7 +296,7 @@ function add_cart_item(cart_item)
     // Validate that shirt size was specified if required
     if( cart_item === "allin" )
     {
-        shirt_select = document.getElementById( "allin" );
+        shirt_select = document.getElementById( "allin_shirt" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {
@@ -288,7 +307,7 @@ function add_cart_item(cart_item)
     }
     else if( cart_item === "parade" )
     {
-        shirt_select = document.getElementById( "parade" );
+        shirt_select = document.getElementById( "parade_shirt" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {
@@ -299,7 +318,7 @@ function add_cart_item(cart_item)
     }
     else if( cart_item === "shirt" )
     {
-        shirt_select = document.getElementById( "shirt" );
+        shirt_select = document.getElementById( "shirt_shirt" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {

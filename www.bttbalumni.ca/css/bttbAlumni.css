@@ -118,7 +118,7 @@ body
 }
 .emphasis
 {
-	border-bottom: #222 1px dotted
+	border-bottom: #222 1px dotted;
 	font: 10pt/12pt Tahoma, Arial;
 	font-weight: bold;
 	color:		 #dd2222;
