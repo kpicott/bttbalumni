@@ -20,30 +20,41 @@ var shirt_sizes = [ [ "WXS", "Women's Extra Small"]
                   ];
 
 // Possible items for purchase
-var store_items = { "allin"      : [130, "All Events"]
-                  , "saturday"   : [80,  "Saturday Night Social Event"]
-                  , "parade"     : [70,  "Saturday Morning Parade"]
-                  , "hat"        : [15,  "70th Anniversary Hat"]
-                  , "golf"       : [125, "Early-Bird Entrance Into the 70th Anniversary Golf Tournament"]
-                  , "golfHole"   : [200, "Hole Sponsorship for the 70th Anniversary Golf Tournament"]
-                  , "golfDinner" : [50,  "70th Anniversary Golf Tournament, Dinner Only"]
+// Values are [COST, EARLYBIRD DISCOUNT, IS_TAXED, DESCRIPTION]
+var store_items = { "allin"      : [150, 20,  true, "All Events"]
+                  , "saturday"   : [80,   0,  true, "Saturday Night Social Event"]
+                  , "parade"     : [70,   0,  true, "Saturday Morning Parade"]
+                  , "hat"        : [15,   0,  true, "70th Anniversary Hat"]
+                  , "golf"       : [185, 10, false, "Early-Bird Entrance Into the 70th Anniversary Golf Tournament"]
+                  , "golfHole"   : [250,  0, false, "Hole Sponsorship for the 70th Anniversary Golf Tournament"]
+                  , "golfDinner" : [60,   0, false, "70th Anniversary Golf Tournament, Dinner Only"]
                   };
 
 // Append the list of shirt options to the cart options that include them
 for( var shirt_idx=0; shirt_idx<shirt_sizes.length; ++shirt_idx )
 {
     var shirt_info = shirt_sizes[shirt_idx];
-    store_items[shirt_info[0]] = [30, shirt_info[1] + " 70th Anniversary Shirt"];
-    store_items[shirt_info[0]+"_p"] = [0, shirt_info[1] + " 70th Anniversary Shirt (for Parade)"];
-    store_items[shirt_info[0]+"_a"] = [0, shirt_info[1] + " 70th Anniversary Shirt (for All Events)"];
+    store_items[shirt_info[0]] = [30, 0, true, shirt_info[1] + " 70th Anniversary Shirt"];
+    store_items[shirt_info[0]+"_p"] = [0, 0, true, shirt_info[1] + " 70th Anniversary Shirt (for Parade)"];
+    store_items[shirt_info[0]+"_a"] = [0, 0, true, shirt_info[1] + " 70th Anniversary Shirt (for All Events)"];
 }
 
 //----------------------------------------------------------------------
 //
+// Figure out if the early-bird discounts apply
+//
+var today, cutoff;
+today = new Date();
+cutoff = new Date();
+cutoff.setFullYear(2017, 3, 15);
+var apply_discounts = (cutoff > today);
+
+//----------------------------------------------------------------------
+//
 // Take a list of item IDs, which are the keywords of the store_items,
-// and return a list of [ [ID, DESCRIPTION, COST] ] elements for all
-// of the IDs in the list. Any IDs not recognized will not be added
-// to the return list
+// and return a list of [ [ID, DESCRIPTION, COST, DISCOUNT, TAXABLE] ]
+// elements for all of the IDs in the list. Any IDs not recognized will
+// not be added to the return list
 //
 function convert_ids_to_contents(id_list)
 {
@@ -52,7 +63,7 @@ function convert_ids_to_contents(id_list)
     {
         var id = id_list[idx];
         var store_item = store_items[id] || [0,"Unknown"];
-        contents.push( [id, store_item[1], store_item[0]] );
+        contents.push( [id, store_item[3], store_item[0], store_item[1], store_item[2]] );
     }
     return contents;
 }
@@ -60,7 +71,7 @@ function convert_ids_to_contents(id_list)
 //----------------------------------------------------------------------
 //
 // Return the current contents of the cart in JSON list of lists:
-//         [ [ID, DESCRIPTION, COST] ]
+//         [ [ID, DESCRIPTION, COST, DISCOUNT, TAXABLE] ]
 //
 function get_cart_contents()
 {
@@ -75,11 +86,17 @@ function get_cart_contents()
         }
         else
         {
-            cart_contents = []
+            cart_contents = [];
         }
     }
     return convert_ids_to_contents( cart_contents );
 }
+// Index values into the get_cart_contents values
+var idx_id  = 0;
+var idx_desc = 1;
+var idx_cost = 2;
+var idx_disc = 3;
+var idx_taxed = 4;
 
 //----------------------------------------------------------------------
 //
@@ -122,19 +139,24 @@ function rebuild_cart()
         var cart_table = document.createElement( "table" );
         cart_table.id = "cart";
 
+		var cart_row;
+		var description_col;
+		var cost_col;
+		var remove_col;
+
         // Table heading
         {
-            var cart_row = document.createElement( "tr" );
+            cart_row = document.createElement( "tr" );
 
-            var description_col = document.createElement( "th" );
+            description_col = document.createElement( "th" );
             description_col.innerHTML = "Description";
             cart_row.appendChild( description_col );
 
-            var cost_col = document.createElement( "th" );
+            cost_col = document.createElement( "th" );
             cost_col.innerHTML = "Cost (including HST)";
             cart_row.appendChild( cost_col );
 
-            var remove_col = document.createElement( "th" );
+            remove_col = document.createElement( "th" );
             remove_col.innerHTML = "Remove From Cart";
             cart_row.appendChild( remove_col );
 
@@ -147,20 +169,28 @@ function rebuild_cart()
         {
             var cart_item = cart_info[idx];
 
-            var cart_row = document.createElement( "tr" );
+            cart_row = document.createElement( "tr" );
 
-            var description_col = document.createElement( "td" );
-            description_col.innerHTML = cart_item[1];
+            description_col = document.createElement( "td" );
+            description_col.innerHTML = cart_item[idx_desc];
             cart_row.appendChild( description_col );
 
-            var cost_col = document.createElement( "td" );
-            var cost = add_tax(cart_item[2]);
+            cost_col = document.createElement( "td" );
+            var cost = cart_item[idx_cost];
+			if( apply_discounts )
+			{
+				cost = cost - cart_item[idx_disc];
+			}
+			if( cart_item[idx_taxed] )
+			{
+				cost = add_tax(cost);
+			}
             cost_col.innerHTML = "$" + cost.toFixed(2);
             total_cost = total_cost + cost;
             cart_row.appendChild( cost_col );
 
-            var remove_col = document.createElement( "td" );
-            remove_col.innerHTML = "<button onclick='remove_cart_item(\"" + cart_item[0] + "\");'>X</button>";
+            remove_col = document.createElement( "td" );
+            remove_col.innerHTML = "<button onclick='remove_cart_item(\"" + cart_item[idx_id] + "\");'>X</button>";
             remove_col.align = "center";
             cart_row.appendChild( remove_col );
 
@@ -169,17 +199,17 @@ function rebuild_cart()
 
         // Total line
         {
-            var cart_row = document.createElement( "tr" );
+            cart_row = document.createElement( "tr" );
 
-            var description_col = document.createElement( "td" );
+            description_col = document.createElement( "td" );
             description_col.innerHTML = "Total";
             cart_row.appendChild( description_col );
 
-            var cost_col = document.createElement( "td" );
+            cost_col = document.createElement( "td" );
             cost_col.innerHTML = "$" + total_cost.toFixed(2);
             cart_row.appendChild( cost_col );
 
-            var remove_col = document.createElement( "th" );
+            remove_col = document.createElement( "th" );
             remove_col.innerHTML = "";
             cart_row.appendChild( remove_col );
 
@@ -202,15 +232,8 @@ function rebuild_cart()
 function print_cart()
 {
     var print_wnd = window.open("about:blank", "cart");
-    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Shopping Cart</title></head> \
-    <h2>Print this form and mail to the address below</h2> \
-    <table> \
-    <tr><td rowspan='4'><img src='/Images/SiteLogo.png'/></td><td>BTTB Alumni Association</td></tr> \
-    <tr><td>426 Brant Street, P.O. Box 5013</td></tr> \
-    <tr><td>Burlington, Ontario</td></tr> \
-    <tr><td>L7R 3Z6</td></tr> \
-    </tr></table> \
-    <p><i>Please make cheques payable to 'Burlington Teen Tour Band Alumni Association'</i></p>" );
+    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Shopping Cart</title></head>\n" );
+    print_wnd.document.write( "<body><img src='/Images70th/PrintableFormHeader.jpg'/>\n" );
 
     // Get the values of the hidden fields containing the logged-in member's
     // information. The odd format is to be consistent with the way PayPal
@@ -227,7 +250,7 @@ function print_cart()
 		}
 	}
     var email = document.getElementById( "email" ).value;
-    var phone = ''
+    var phone = '';
     var area = document.getElementById( "night_phone_a" ).value;
     var exchange = document.getElementById( "night_phone_b" ).value;
     var number = document.getElementById( "night_phone_c" ).value;
@@ -249,7 +272,7 @@ function print_cart()
     print_wnd.document.write( "<tr><td width='100'>Name:</td><td>" + name + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Email:</td><td>" + email + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Phone:</td><td>" + phone + "</td></tr>\n" );
-    print_wnd.document.write( "<tr height='200'><td>Special<br/>Instructions:</td><td>&nbsp;</td></tr>\n" );
+    print_wnd.document.write( "<tr height='150'><td>Special<br/>Instructions:</td><td>&nbsp;</td></tr>\n" );
     print_wnd.document.write( "</table>" );
 
     print_wnd.document.write( "<h2>Your Order</h2>\n" );
@@ -257,6 +280,10 @@ function print_cart()
     print_wnd.document.write( "<tr><th>Description</th><th width='100'>Cost</th></tr>" );
     var total_cost = 0.0;
     var cart_info = get_cart_contents();
+	var discount = 0.0;
+	var had_golf = false;
+	var had_golf_dinner = false;
+	var had_golf_hole = false;
     if( cart_info.length === 0 )
     {
         print_wnd.document.write( "<p>You have not ordered anything yet. Select an item to join the fun!</p>" );
@@ -266,19 +293,73 @@ function print_cart()
         for( var idx=0; idx<cart_info.length; ++idx )
         {
             var cart_item = cart_info[idx];
-            var cost = add_tax(cart_item[2]);
+			if( cart_item[idx_id] === "golf" )
+			{
+				had_golf = true;
+			}
+			else if( cart_item[idx_id] === "golfDinner" )
+			{
+				had_golf_dinner = true;
+			}
+			else if( cart_item[idx_id] === "golfHole" )
+			{
+				had_golf_hole = true;
+			}
+            var cost = cart_item[idx_cost];
+			if( apply_discounts )
+			{
+				cost = cost - cart_item[idx_disc];
+				discount = discount + cart_item[idx_disc];
+			}
+			if( cart_item[idx_taxed] )
+			{
+				cost = add_tax(cost);
+				discount = discount + add_tax(cart_item[idx_disc]) - cart_item[idx_disc];
+			}
             print_wnd.document.write( "<tr>" );
-            print_wnd.document.write( "<td>" + cart_item[1] + "</td>" );
+            print_wnd.document.write( "<td>" + cart_item[idx_desc] + "</td>" );
             print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
             total_cost = total_cost + cost;
             print_wnd.document.write( "</tr>\n" );
         }
     }
-    print_wnd.document.write( "<tr bgcolor='#e2e2e2'>" );
+    print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
     print_wnd.document.write( "</tr>\n" );
     print_wnd.document.write( "</table>\n" );
+
+	// Congratulate them on their frugality
+	if( discount > 0 )
+	{
+    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " for being an early-bird!</i></p>\n" );
+	}
+
+	// Check to see if any further information is required for golf
+	if( had_golf )
+	{
+		print_wnd.document.write( "<table width='90%' cellpadding='5' border='1'>" );
+		print_wnd.document.write( "<tr><td width='200'>Golf Partner(s), if any?</td><td>&nbsp;</td></tr>\n" );
+		print_wnd.document.write( "</table>\n" );
+	}
+	if( had_golf || had_golf_dinner )
+	{
+		print_wnd.document.write( "<p><i>Golf is at Indian Wells Golf Course, 5377 Walker's Line, Burlington</i></p>\n" );
+		if( had_golf )
+		{
+			print_wnd.document.write( "<p><i>BBQ Lunch is at noon, shotgun start is at 1pm</i></p>\n" );
+		}
+	}
+	if( had_golf_dinner )
+	{
+		print_wnd.document.write( "<p><i>Dinner guests please arrive before 6:30pm for dinner. (Come earlier to watch the golfers!)</i></p>\n" );
+	}
+	if( had_golf_hole )
+	{
+		print_wnd.document.write( "<p><i>You will be contacted for further information" );
+		print_wnd.document.write( " regarding your hole sponsorship. Send email to" );
+		print_wnd.document.write( " golf@bttbalumni.ca if you are not contacted within a week.</i></p>\n" );
+	}
 
     print_wnd.document.write( "</body></html>" );
     print_wnd.document.close();
@@ -329,7 +410,7 @@ function add_cart_item(cart_item)
     }
     if( cart_contents === null )
     {
-        cart_contents = []
+        cart_contents = [];
     }
     cart_contents.push( cart_item );
     if( other_item !== null )

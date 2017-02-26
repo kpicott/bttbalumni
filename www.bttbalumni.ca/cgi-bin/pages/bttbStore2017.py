@@ -9,8 +9,8 @@ __all__ = ['bttbStore2017']
 #======================================================================
 # Compute the early-bird discounts
 DISCOUNT_ALL = 20
-DISCOUNT_GOLF = 50
-ALLIN_CUTOFF = datetime.datetime( 2017, 3, 15 )
+DISCOUNT_GOLF = 10
+ALLIN_CUTOFF = datetime.datetime( 2017, 4, 15 )
 GOLF_CUTOFF = datetime.datetime( 2017, 4, 15 )
 NOW = datetime.datetime.now()
 if NOW > ALLIN_CUTOFF:
@@ -27,13 +27,13 @@ PAYPAL_STORE = 'paypal'
 CART_IMAGES = {
                 'addtocart' :
                 {
-                    CHEQUE_STORE : 'https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_SM.gif'
-                ,   PAYPAL_STORE : 'https://www.sandbox.paypal.com/en_US/i/btn/btn_cart_SM.gif'
+                    CHEQUE_STORE : '/Images70th/AddToCart_BTTB.png'
+                ,   PAYPAL_STORE : '/Images70th/AddToCart_PayPal.png'
                 }
               , 'viewcart' :
                 {
-                    CHEQUE_STORE : 'https://www.sandbox.paypal.com/en_US/i/btn/btn_viewcart_LG.gif'
-                ,   PAYPAL_STORE : 'https://www.sandbox.paypal.com/en_US/i/btn/btn_viewcart_LG.gif'
+                    CHEQUE_STORE : '/Images70th/ViewCart_BTTB.png'
+                ,   PAYPAL_STORE : '/Images70th/ViewCart_PayPal.png'
                 }
               }
 
@@ -129,7 +129,7 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_HOST : '5PXQC8FHC4RVQ'
                              }
             , 'golf'       : { KEY_DESC : 'Early-Bird Entrance Into the 70th Anniversary Golf Tournament'
-                             , KEY_COST : 175
+                             , KEY_COST : 185
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : DISCOUNT_GOLF
@@ -137,7 +137,7 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_HOST : 'CX35JJNMJWZ7S'
                              }
             , 'golfHole'   : { KEY_DESC : 'Hole Sponsorship for the 70th Anniversary Golf Tournament'
-                             , KEY_COST : 200
+                             , KEY_COST : 250
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
@@ -145,7 +145,7 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_HOST : '28E57ZTCZN4YA'
                              }
             , 'golfDinner' : { KEY_DESC : '70th Anniverary Golf Tournament Dinner Only'
-                             , KEY_COST : 50
+                             , KEY_COST : 60
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
@@ -153,15 +153,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_HOST : 'ZG623EN63C7QN'
                              }
             }
-
-#======================================================================
-def add_tax(value):
-    '''
-    Add HST to a value, rounding it up.
-    :param value: Cost to which to add tax.
-    :return: value + HST, rounding to the nearest cent
-    '''
-    return int( value * 113 ) / 100
 
 #======================================================================
 #
@@ -222,6 +213,10 @@ class bttbStore2017(bttbPage):
         html += '<input type="hidden" name="cmd" value="_s-xclick">'
         html += '<input type="hidden" name="currency_code" value="CAD">'
         html += '<input type="hidden" name="shipping" value="0">'
+        html += '<input type="hidden" name="cancel_return" value="http://bttbalumni.ca/#store2017?payment=paypal">'
+        html += '<input type="hidden" name="cbt" value="Return to the BTTB 70th Anniversary Reunion Store">'
+        html += '<input type="hidden" name="return" value="http://bttbalumni.ca/#thanks2017">'
+        html += '<input type="hidden" name="image_url" value="http://bttbalumni.ca/Images2017/SiteLogo.png">'
         html += '<input type="hidden" name="shopping_url" value="http://bttbalumni.ca/#store2017?payment=paypal">'
         html += self.member_info()
         return html
