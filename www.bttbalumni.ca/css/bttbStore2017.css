@@ -169,7 +169,6 @@ div.container
 	position:	absolute;
 	top:		0px;
 	left:		0px;
-	width:		1610px;
 }
 
 /*========================================
@@ -177,7 +176,6 @@ div.container
 */
 div.store_container
 {
-	width:		800px;
 	position:	absolute;
 	top:		0px;
 	left:		0px;
@@ -188,10 +186,11 @@ div.store_container
 */
 div.cart_container
 {
-	width:		800px;
     position:	absolute;
 	top:		0px;
     left:		810px;
+	width:      800px;
+	display:	inline-block;
 }
 
 /*========================================
