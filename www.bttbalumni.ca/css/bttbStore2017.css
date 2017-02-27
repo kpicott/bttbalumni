@@ -166,8 +166,10 @@
 */
 div.container
 {
+	position:	absolute;
+	top:		0px;
+	left:		0px;
 	width:		1610px;
-	position:	relative;
 	margin-top:	50px;
 }
 

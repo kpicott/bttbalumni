@@ -14,13 +14,13 @@ window.dhtmlHistory = {
       // Basically, IE does not autofill form data until the page
       // is finished loading, which means historyStorage will not
       // work until onload has been fired.
-      if (this.isInternetExplorer() == false)
+      if (this.isInternetExplorer() === false)
 	  {
          return;
       }
          
       // if this is the first time this page has loaded...
-      if (historyStorage.hasKey("DhtmlHistory_pageLoaded") == false) {
+      if (historyStorage.hasKey("DhtmlHistory_pageLoaded") === false) {
          this.fireOnNewListener = false;
          this.firstLoad = true;
          historyStorage.put("DhtmlHistory_pageLoaded", true);
@@ -41,7 +41,7 @@ window.dhtmlHistory = {
       // if the page was just loaded and we
       // should not ignore it, fire an event
       // to our new listener now
-      if (this.fireOnNewListener == true) {
+      if (this.fireOnNewListener === true) {
          this.fireHistoryEvent(this.currentLocation);
          this.fireOnNewListener = false;
       }
@@ -68,8 +68,8 @@ window.dhtmlHistory = {
          // document, then the history action gets recorded
          // twice; throw a programmer exception if there is
          // an element with this ID
-         var idCheck = $(newLocation);
-         if (idCheck != undefined || idCheck != null)
+         var idCheck = document.getElementById(newLocation);
+         if (idCheck !== undefined && idCheck !== null)
 		 {
             var message = 
                "Exception: History locations can not have "
@@ -124,7 +124,7 @@ window.dhtmlHistory = {
    },
    
    /** public */ isFirstLoad: function() {
-      if (this.firstLoad == true) {
+      if (this.firstLoad === true) {
          return true;
       }
       else {
@@ -228,13 +228,11 @@ window.dhtmlHistory = {
       // set the amount of time to wait between add() requests
       if (this.isInternetExplorer())
 	  {
-         document.write("<iframe style='border: 0px; width: 1px; "
-                               + "height: 1px; position: absolute; bottom: 0px; "
-                               + "right: 0px; visibility: visible;' "
-                               + "name='DhtmlHistoryFrame' id='DhtmlHistoryFrame' "
-                               + "src='/blank.html?"
-							   + initialHash.replace(/\?/,'&') + "'>"
-                               + "</iframe>");
+         document.write("<iframe style='border: 0px; width: 1px; height: 1px;" +
+		 				" position: absolute; bottom: 0px; right: 0px;" +
+						" visibility: visible;' " +
+                        "name='DhtmlHistoryFrame' id='DhtmlHistoryFrame' src='/blank.html?" +
+						initialHash.replace(/\?/,'&') + "'></iframe>");
          // wait 400 milliseconds between history
          // updates on IE, versus 200 on Firefox
          this.WAIT_TIME = 400;
@@ -257,8 +255,8 @@ window.dhtmlHistory = {
       // we have no historyStorage at this point
       // in IE, which only exists after the page
       // is finished loading for that browser
-      if (this.isInternetExplorer() == false) {
-         if (historyStorage.hasKey("DhtmlHistory_pageLoaded") == false) {
+      if (this.isInternetExplorer() === false) {
+         if (historyStorage.hasKey("DhtmlHistory_pageLoaded") === false) {
             this.ignoreLocationChange = true;
             this.firstLoad = true;
             historyStorage.put("DhtmlHistory_pageLoaded", true);
@@ -286,7 +284,7 @@ window.dhtmlHistory = {
       }
       
       if (this.isInternetExplorer()) {
-            this.iframe = $("DhtmlHistoryFrame");
+            this.iframe = document.getElementById("DhtmlHistoryFrame");
       }                                                              
 
       // other browsers can use a location handler that checks
@@ -294,7 +292,6 @@ window.dhtmlHistory = {
       // we use it for Internet Explorer as well to handle
       // an important edge case; see checkLocation() for
       // details
-      var self = this;
       var locationHandler = function() {
          self.checkLocation();
       };
@@ -322,8 +319,8 @@ window.dhtmlHistory = {
    {
       // ignore any location changes that we made ourselves
       // for browsers other than Internet Explorer
-      if( (this.isInternetExplorer() == false)
-      &&  (this.ignoreLocationChange == true) )
+      if( (this.isInternetExplorer() === false)
+      &&  (this.ignoreLocationChange === true) )
 	  {
          this.ignoreLocationChange = false;
          return;
@@ -332,8 +329,8 @@ window.dhtmlHistory = {
       // if we are dealing with Internet Explorer
       // and we are in the middle of making a location
       // change from an iframe, ignore it
-      if( (this.isInternetExplorer() == true)
-      &&  (this.ieAtomicLocationChange == true))
+      if( (this.isInternetExplorer() === true)
+      &&  (this.ieAtomicLocationChange === true))
 	  {
          return;
       }
@@ -355,7 +352,7 @@ window.dhtmlHistory = {
       this.ieAtomicLocationChange = true;
       
       if( this.isInternetExplorer()
-      &&  (this.getIFrameHash() != hash.replace(/\?/,'&')) )
+      &&  (this.getIFrameHash() !== hash.replace(/\?/,'&')) )
 	  {
          this.iframe.src = "/blank.html?" + hash.replace(/\?/,'&');
       }
@@ -379,13 +376,13 @@ window.dhtmlHistory = {
    /** private */ getIFrameHash: function()
    {
       // get the new location
-      var historyFrame = $("DhtmlHistoryFrame");
+      var historyFrame = document.getElementById("DhtmlHistoryFrame");
       var doc = historyFrame.contentWindow.document;
       var hash = new String(doc.location.search);
 
-      if (hash.length == 1 && hash.charAt(0) == "?")
+      if (hash.length === 1 && hash.charAt(0) === "?")
          hash = "";
-      else if (hash.length >= 2 && hash.charAt(0) == "?")
+      else if (hash.length >= 2 && hash.charAt(0) === "?")
          hash = hash.substring(1); 
 
       return hash;
@@ -394,13 +391,13 @@ window.dhtmlHistory = {
    /** Removes any leading hash that might be on a location. */
    /** private */ removeHash: function(hashValue)
    {
-      if( hashValue == null || hashValue == undefined )
+      if( hashValue === null || hashValue === undefined )
          return null;
 
-      if( hashValue == "" )
+      if( hashValue === "" )
          return "";
 
-      if( hashValue.length == 1 && hashValue.charAt(0) == "#" )
+      if( hashValue.length === 1 && hashValue.charAt(0) === "#" )
          return "";
 
 	  var hashUrl = hashValue.split('#');
@@ -413,21 +410,21 @@ window.dhtmlHistory = {
    /** For IE, says when the hidden iframe has finished loading. */
    /** private */ iframeLoaded: function(newLocation) {
       // ignore any location changes that we made ourselves
-      if (this.ignoreLocationChange == true) {
+      if (this.ignoreLocationChange === true) {
          this.ignoreLocationChange = false;
          return;
       }
       
       // get the new location
       var hash = new String(newLocation.search);
-      if (hash.length == 1 && hash.charAt(0) == "?")
+      if (hash.length === 1 && hash.charAt(0) === "?")
          hash = "";
-      else if (hash.length >= 2 && hash.charAt(0) == "?")
+      else if (hash.length >= 2 && hash.charAt(0) === "?")
          hash = hash.substring(1);
       
       // move to this location in the browser location bar
       // if we are not dealing with a page load event
-      if (this.pageLoadEvent != true) {
+      if (this.pageLoadEvent !== true) {
          window.location.hash = hash;
       }
 
@@ -492,7 +489,7 @@ window.historyStorage = {
       
       var value = this.storageHash[key];
 
-      if (value == undefined)
+      if (value === undefined)
          return null;
       else
          return value; 
@@ -526,7 +523,7 @@ window.historyStorage = {
       // from the form
       this.loadHashTable();
       
-      if (typeof this.storageHash[key] == "undefined")
+      if (typeof this.storageHash[key] === "undefined")
          return false;
       else
          return true;
@@ -540,10 +537,10 @@ window.historyStorage = {
    /** public */ isValidKey: function(key) {
       // allow all strings, since we do not use XML serialization
       // format anymore
-      return (typeof key == "string");
+      return (typeof key === "string");
       
       /*
-      if (typeof key != "string")
+      if (typeof key !== "string")
          key = key.toString();
       
       
@@ -562,28 +559,24 @@ window.historyStorage = {
    /** private */ init: function() {
       // write a hidden form into the page
       var styleValue = "position: absolute; top: -1000px; left: -1000px;";
-      if (this.debugging == true) {
+      var styleField = styleValue;
+      if (this.debugging === true) {
          styleValue = "width: 30em; height: 30em;";
+         styleField = styleValue + " left: -1000px;";
       }   
       
-      var newContent =
-         "<form id='historyStorageForm' " 
-               + "method='GET' "
-               + "style='" + styleValue + "'>"
-            + "<textarea id='historyStorageField' "
-                      + "style='" + styleValue + "'"
-                              + "left: -1000px;' "
-                      + "name='historyStorageField'></textarea>"
-         + "</form>";
+      var newContent = "<form id='historyStorageForm' method='GET' style='" + styleValue + "'>" +
+            		   "<textarea id='historyStorageField' style='" + styleField + "' " +
+                       "name='historyStorageField'></textarea></form>";
       document.write(newContent);
       
-      this.storageField = $("historyStorageField");
+      this.storageField = document.getElementById("historyStorageField");
    },
    
    /** Asserts that a key is valid, throwing
        an exception if it is not. */
    /** private */ assertValidKey: function(key) {
-      if (this.isValidKey(key) == false) {
+      if (this.isValidKey(key) === false) {
          throw "Please provide a valid key for "
                + "window.historyStorage, key= "
                + key;
@@ -592,13 +585,13 @@ window.historyStorage = {
    
    /** Loads the hash table up from the form. */
    /** private */ loadHashTable: function() {
-      if (this.hashLoaded == false) {
+      if (this.hashLoaded === false) {
          // get the hash table as a serialized
          // string
          var serializedHashTable = this.storageField.value;
          
-         if (serializedHashTable != "" &&
-             serializedHashTable != null) {
+         if (serializedHashTable !== "" &&
+             serializedHashTable !== null) {
             // destringify the content back into a 
             // real JavaScript object
             this.storageHash = eval('(' + serializedHashTable + ')');  
@@ -643,10 +636,10 @@ var JSON = {
                         s += v;
                     }
                     return '[' + s + ']';
-                } else if (typeof arg.toString != 'undefined') {
+                } else if (typeof arg.toString !== 'undefined') {
                     for (i in arg) {
                         v = arg[i];
-                        if (typeof v != 'undefined' && typeof v != 'function') {
+                        if (typeof v !== 'undefined' && typeof v !== 'function') {
                             v = this.stringify(v);
                             if (s) {
                                 s += ',';
@@ -721,7 +714,7 @@ var JSON = {
         }
 
         function white() {
-            while (ch != '' && ch <= ' ') {
+            while (ch !== '' && ch <= ' ') {
                 next();
             }
         }
@@ -729,12 +722,12 @@ var JSON = {
         function str() {
             var i, s = '', t, u;
 
-            if (ch == '"') {
+            if (ch === '"') {
 outer:          while (next()) {
-                    if (ch == '"') {
+                    if (ch === '"') {
                         next();
                         return s;
-                    } else if (ch == '\\') {
+                    } else if (ch === '\\') {
                         switch (next()) {
                         case 'b':
                             s += '\b';
@@ -776,20 +769,20 @@ outer:          while (next()) {
         function arr() {
             var a = [];
 
-            if (ch == '[') {
+            if (ch === '[') {
                 next();
                 white();
-                if (ch == ']') {
+                if (ch === ']') {
                     next();
                     return a;
                 }
                 while (ch) {
                     a.push(val());
                     white();
-                    if (ch == ']') {
+                    if (ch === ']') {
                         next();
                         return a;
-                    } else if (ch != ',') {
+                    } else if (ch !== ',') {
                         break;
                     }
                     next();
@@ -802,26 +795,26 @@ outer:          while (next()) {
         function obj() {
             var k, o = {};
 
-            if (ch == '{') {
+            if (ch === '{') {
                 next();
                 white();
-                if (ch == '}') {
+                if (ch === '}') {
                     next();
                     return o;
                 }
                 while (ch) {
                     k = str();
                     white();
-                    if (ch != ':') {
+                    if (ch !== ':') {
                         break;
                     }
                     next();
                     o[k] = val();
                     white();
-                    if (ch == '}') {
+                    if (ch === '}') {
                         next();
                         return o;
-                    } else if (ch != ',') {
+                    } else if (ch !== ',') {
                         break;
                     }
                     next();
@@ -833,7 +826,7 @@ outer:          while (next()) {
 
         function num() {
             var n = '', v;
-            if (ch == '-') {
+            if (ch === '-') {
                 n = '-';
                 next();
             }
@@ -841,16 +834,16 @@ outer:          while (next()) {
                 n += ch;
                 next();
             }
-            if (ch == '.') {
+            if (ch === '.') {
                 n += '.';
                 while (next() && ch >= '0' && ch <= '9') {
                     n += ch;
                 }
             }
-            if (ch == 'e' || ch == 'E') {
+            if (ch === 'e' || ch === 'E') {
                 n += 'e';
                 next();
-                if (ch == '-' || ch == '+') {
+                if (ch === '-' || ch === '+') {
                     n += ch;
                     next();
                 }
@@ -870,20 +863,20 @@ outer:          while (next()) {
         function word() {
             switch (ch) {
                 case 't':
-                    if (next() == 'r' && next() == 'u' && next() == 'e') {
+                    if (next() === 'r' && next() === 'u' && next() === 'e') {
                         next();
                         return true;
                     }
                     break;
                 case 'f':
-                    if (next() == 'a' && next() == 'l' && next() == 's' &&
-                            next() == 'e') {
+                    if (next() === 'a' && next() === 'l' && next() === 's' &&
+                            next() === 'e') {
                         next();
                         return false;
                     }
                     break;
                 case 'n':
-                    if (next() == 'u' && next() == 'l' && next() == 'l') {
+                    if (next() === 'u' && next() === 'l' && next() === 'l') {
                         next();
                         return null;
                     }

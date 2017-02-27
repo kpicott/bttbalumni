@@ -236,6 +236,7 @@ BTTBUrl.BTTBURLParser.prototype.debug = function()
 		document.write( '<td>' + u1.assembledURL(false)[0] + '</td>\n' );
 		document.write( '</tr>\n' );
 	}
+	document.write( '</table\n' );
 }
 
 //----------------------------------------------------------------------

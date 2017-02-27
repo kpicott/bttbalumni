@@ -54,7 +54,8 @@ clustrMapError = function()
 {
     this.onError = null;
     this.src = 'http://clustrmaps.com/images/clustrmaps-back-soon.jpg';
-    $('clustrMapsLink').href = 'http://clustrmaps.com';
+	var clustrMapsLink = document.getElementById( 'clustrMapsLink' );
+    clustrMapsLink.href = 'http://clustrmaps.com';
     return true;
 }
 
@@ -62,7 +63,6 @@ clustrMapError = function()
 //
 // For opening up new pages in the content area
 //
-var _spacing = "<p>&nbsp;</p>";    // Padding for funky fading page top
 var _openingPage = false;
 openPage = function(url)
 {
@@ -87,17 +87,17 @@ openPage = function(url)
         {
             dhtmlHistory.add(hashUrl[0], pageUrl[1]);
         }
+		var content = document.getElementById( 'content' );
         if( _debug)
         {
-            $('content').innerHTML = _spacing + "<h2>AJAX</h2>" + pageUrl[0] + '<br>' + hashUrl[0];
+            content.innerHTML = "<h2>AJAX</h2>" + pageUrl[0] + '<br>' + hashUrl[0];
         }
         else
         {
-            $('content').innerHTML = _spacing + "Loading...";
+            content.innerHTML = "Loading...";
         }
-                if( _debug ) alert( "Making AJAX request for " + pageUrl[1] );
         new Ajax.Request(pageUrl[1],
-          {
+        {
             method: 'get',
             onComplete: function (req)
             {
@@ -111,13 +111,13 @@ openPage = function(url)
                     if( /MSIE/.test(navigator.userAgent) && !window.opera )
                     {
                         // Try to force IE to not cache this information
-                        $('content').innerHTML = "<META HTTP-EQUIV='Pragma' CONTENT='no-cache'>";
-                        $('content').innerHTML += "<META HTTP-EQUIV='Expires' CONTENT='-1'>";
-                        $('content').innerHTML += _spacing + response[2];
+                        content.innerHTML = "<META HTTP-EQUIV='Pragma' CONTENT='no-cache'>";
+                        content.innerHTML += "<META HTTP-EQUIV='Expires' CONTENT='-1'>";
+                        content.innerHTML += response[2];
                     }
                     else
                     {
-                        $('content').innerHTML = _spacing + response[2];
+                        content.innerHTML = response[2];
                     }
                     if( title.length > 0 ) document.title = title;
                     if( scriptList.length > 0 ) loadScripts( scriptList );
@@ -130,8 +130,8 @@ openPage = function(url)
                 }
                 else
                 {
-                    $('content').innerHTML = _spacing + '<div class="outlinedTitle">Page Load Error</div>' + req.responseText;
-                    $('content').innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
+                    content.innerHTML = '<div class="outlinedTitle">Page Load Error</div>' + req.responseText;
+                    content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
                     _openingPage = false;
                 }
             }
@@ -152,14 +152,15 @@ openPage = function(url)
 //
 openForm = function(url,parameters,followUp)
 {
+	var content = document.getElementById( 'content' );
     _openingPage = true;
     if( _debug)
     {
-        $('content').innerHTML = _spacing + "<h2>AJAX FORM</h2>" + url + '<br>' + parameters;
+        content.innerHTML = "<h2>AJAX FORM</h2>" + url + '<br>' + parameters;
     }
     else
     {
-        $('content').innerHTML = _spacing + "Processing...";
+        content.innerHTML = "Processing...";
     }
     // Force the POST method on forms since the general case will not know
     // how much data is being sent.
@@ -176,7 +177,7 @@ openForm = function(url,parameters,followUp)
                 _openingPage = false;
                 if( followUp )
                 {
-                    $('content').innerHTML = _spacing + 'Form accepted. Forwarding to ' + followUp
+                    content.innerHTML = 'Form accepted. Forwarding to ' + followUp
                     if( _debug ) alert( 'Following up to ' + followUp + '\nResults : ' + req.responseText );
                     openPage( followUp );
                 }
@@ -188,7 +189,7 @@ openForm = function(url,parameters,followUp)
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
                     var scriptList = response[1].split(' ');
-                    $('content').innerHTML = _spacing + response[2];
+                    content.innerHTML = response[2];
                     if( title.length > 0 ) document.title = title;
                     if( scriptList.length > 0 ) loadScripts( scriptList );
                     document.location.hash = hashUrl[0];
@@ -197,15 +198,15 @@ openForm = function(url,parameters,followUp)
             }
             else
             {
-                $('content').innerHTML = _spacing + '<div class="outlinedTitle">Forms Processing Error</div>' + req.responseText;
-                $('content').innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
+                content.innerHTML = '<div class="outlinedTitle">Forms Processing Error</div>' + req.responseText;
+                content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
                 _openingPage = false;
                 if( _debug ) alert( 'Check errors please' );
             }
         },
         onFailure: function (req)
         {
-            $('content').innerHTML = _spacing + 'ERROR: ' + req.responseText;
+            content.innerHTML = 'ERROR: ' + req.responseText;
             _openingPage = false;
             if( _debug ) alert( 'Check errors please' );
         }
@@ -347,7 +348,8 @@ initialize = function()
     // The main menu has a highlight along the edge. Randomly use one of 3
     // smooth transitions to make this highlight appear.
     //
-    if( $('mainMenuHighlight') )
+	var mainMenuHighlight = document.getElementById( 'mainMenuHighlight' );
+    if( mainMenuHighlight )
     {
         var rnd = Math.random() * 4;
         if( rnd < 2 )
@@ -393,6 +395,9 @@ onSizeChange = function()
     var content = document.getElementById('content');
     content.style.width = (myWidth - _contentXPadding) + 'px';
     content.style.height = (myHeight - _contentYPadding) + 'px';
+
+	// Force a redraw
+	content.className = content.className;
 }
 
 // the starting index in the group images array.
