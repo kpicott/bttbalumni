@@ -1,270 +1,294 @@
 *
 {
-	padding-top:	0px;
-	padding-right:	0px;
-	padding-left:	0px;
-	padding-bottom:	0px;
-	margin:			0px;
-	font:			10.5pt/16pt Tahoma, Arial;
-	color:			#111;
+    padding-top:    0px;
+    padding-right:  0px;
+    padding-left:   0px;
+    padding-bottom: 0px;
+    margin:         0px;
+    font:           10.5pt/16pt Tahoma, Arial;
+    color:          #111;
+}
+html
+{
+	height:		 100%;
+}
+body
+{
+    margin:      0;
+    padding:     5em 1em 1em 16em;
+    font-size:   1em;
+	height:		 100%;
+	overflow:    hidden;
+    background:  url('/Images/background.jpg') no-repeat top left;
 }
 b
 {
-	font:			10.5pt/16pt Tahoma, Arial;
-	font-weight:	bold;
+    font:        10.5pt/16pt Tahoma, Arial;
+    font-weight: bold;
 }
 ol
 {
-	padding:	0px 0px 10px 10px;
+    padding:    0px 0px 10px 10px;
 }
 .indented
 {
-	padding:	10px 0px 0px 40px;
+    padding:    10px 0px 0px 40px;
 }
 .quotable
 {
-	padding:	0px 60px 0px 60px;
-	color:		#111144;
-	font:	 	9pt Times New Roman;
-	font-style:	italic;
+    padding:    0px 60px 0px 60px;
+    color:      #111144;
+    font:       9pt Times New Roman;
+    font-style: italic;
 }
 .memorial
 {
-	padding:	0px 0px 10px 10px;
-	font:		20pt Aristocrat, Morpheus, Cursive, Tahoma, Arial;
-	color:		#eeeeee;
+    padding:    0px 0px 10px 10px;
+    font:       20pt Aristocrat, Morpheus, Cursive, Tahoma, Arial;
+    color:      #eeeeee;
 }
 .countdown
 {
-	padding:	0px 0px 10px 10px;
-	font:		20pt Aristocrat, Morpheus, Cursive, Tahoma, Arial;
-	color:		#662222;
+    padding:    0px 0px 10px 10px;
+    font:       20pt Aristocrat, Morpheus, Cursive, Tahoma, Arial;
+    color:      #662222;
 }
 
 a:link.email
 {
-	font:	 	10.5pt/16pt Times New Roman;
-	font-style:	italic;
-	color:		#1155aa;
+    font:         10.5pt/16pt Times New Roman;
+    font-style:   italic;
+    color:        #1155aa;
 }
 a:link
 {
-	font-variant:	small-caps;
-	color:			#1155aa;
+    font-variant: small-caps;
+    color:        #1155aa;
 }
 a:active
 {
-	font-variant:	small-caps;
-	color:			#3399ff;
+    font-variant: small-caps;
+    color:        #3399ff;
 }
 a:visited
 {
-	color:			#1155aa;
+    color:        #1155aa;
 }
 i
 {
-	font:		10.5pt/16pt Tahoma, Arial;
-	font-style:	italic;
+    font:        10.5pt/16pt Tahoma, Arial;
+    font-style:  italic;
 }
 .date
 {
-	font-size:	 12pt;
-	font-weight: bold;
-	color:		 blue;
-	padding:	 10px 0px 0px 0px;
+    font-size:   12pt;
+    font-weight: bold;
+    color:       blue;
+    padding:     10px 0px 0px 0px;
 }
 .copyright
 {
-	font-size:	 6pt;
-	font-weight: bold;
-	padding:	 40px 0px 0px 0px;
-	margin:		 0px 0px 0px 0px;
-	line-height: 60%;
+    font-size:   6pt;
+    font-weight: bold;
+    padding:     40px 0px 0px 0px;
+    margin:      0px 0px 0px 0px;
+    line-height: 60%;
 }
 h1
 {
-	font-size:		16pt;
-	font-weight:	bold;
+    font-size:   16pt;
+    font-weight: bold;
 }
 h2
 {
-	font-size:		14pt;
-	font-weight:	bold;
-	margin:			0px 0px 15px 0px;
+    font-size:   14pt;
+    font-weight: bold;
+    margin:      0px 0px 15px 0px;
 }
 h3
 {
-	font-size:		12pt;
-	font-weight:	bold;
-	margin:			0px 0px 0px 20px;
+    font-size:   12pt;
+    font-weight: bold;
+    margin:      0px 0px 0px 20px;
 }
 h4
 {
-	font-size:		10pt;
-	font-weight:	bold;
-	font-style:		italic;
-	margin:			0px 0px 0px 30px;
-}
-body
-{
-	background-image:		url('/background.jpg');
-	background-repeat:		no-repeat;
-	background-attachment:	fixed;
-	margin:		0;
-	height:		100%;
-	padding:	5em 1em 1em 16em;
-	font-size:	1em;
-	overflow:	hidden;
+    font-size:   10pt;
+    font-weight: bold;
+    font-style:  italic;
+    margin:      0px 0px 0px 30px;
 }
 .emphasis
 {
-	border-bottom: #222 1px dotted;
-	font: 10pt/12pt Tahoma, Arial;
-	font-weight: bold;
-	color:		 #dd2222;
+    border-bottom: #222 1px dotted;
+    font:          10pt/12pt Tahoma, Arial;
+    font-weight:   bold;
+    color:         #dd2222;
 }
 p
 {
-	margin: 18px auto
+    margin: 18px auto
 }
 .ph3
 {
-	margin: 0px 0px 5px 22px;
-	font:	10pt	Tahoma, Arial;
+    margin: 0px 0px 5px 22px;
+    font:   10pt    Tahoma, Arial;
 }
 .ph4
 {
-	margin: 0px 0px 5px 32px;
-	font:	10pt	Tahoma, Arial;
+    margin: 0px 0px 5px 32px;
+    font:   10pt    Tahoma, Arial;
 }
 #disclaimer
 {
-	font: 8pt/12pt Tahoma, Arial;
+    font: 8pt/12pt Tahoma, Arial;
 }
 .subtext
 {
-	font: 8pt/12pt Tahoma, Arial;
+    font: 8pt/12pt Tahoma, Arial;
 }
-#contentBox
+
+/*======================================================================
+
+  Lay out the elements of the page relative to the top-level div "page".
+  The general layout is:
+
+      +------------+--------------+--------------------------------+
+      |            |              |                                |
+      |   logo     |  mainTitle   |   subTitle                     |
+      |            |              |                                |
+      +------------+--------------+--------------------------------+
+       spacing (no div)
+      +------------+-----------------------------------------------+
+      |            |                                               |
+      |            |                                               |
+      |            |                                               |
+      |            |                                               |
+      | navigation | content                                       |
+      |            |                                               |
+      |            |                                               |
+      |            |                                               |
+      |            |                                               |
+      +------------+-----------------------------------------------+
+*/
+
+#page
 {
-	overflow:	hidden;
-	overflow-y:	auto;
-	position:	fixed;
-	display:	block;
-	top:		0px;
-	left:		130px;
-	z-index:	1;
+    position:   fixed;
+    top:        0px;
+    left:       0px;
 }
-#content
-{
-	overflow:	auto;
-	position:	fixed;
-	top:		20px;
-	left:		130px;
-	width:		900px;
-	height:		900px;
-	margin:		50px 0px 0px 0px;
-}
-#divTop
-{
-	z-index:	10;
-	display:	block;
-	top:		0px;
-	left:		0px;
-	position:	fixed;
-	width:		1194px;
-	height:		140px;
-}
-#mainTitle
-{
-	z-index:	11;
-	position:	fixed;
-	top:		15px;
-	left:		159px;
-	width:		300px;
-	height:		126px;
-}
-#subTitle
-{
-	z-index:	11;
-	position:	fixed;
-	top:		35px;
-	left:		480px;
-	width:		300px;
-	height:		57px;
-}
+
 #logo
 {
-	z-index:	12;
-	position:	fixed;
-	top:		5px;
-	left:		5px;
-	width:		123px;
-	height:		110px;
+    position:   absolute;
+    top:        5px;
+    left:       5px;
+    width:      123px;
+    height:     110px;
 }
+
+#mainTitle
+{
+    position:  absolute;
+    top:       5px;
+    left:      140px;
+    width:     300px;
+    height:    126px;
+	z-index:   10;
+}
+
+#subTitle
+{
+    position:  absolute;
+    top:       20px;
+    left:      460px;
+    width:     300px;
+    height:    57px;
+	z-index:   10;
+}
+
+#content
+{
+    position:   absolute;
+    top:        130px;
+    left:       140px;
+	overflow:	auto;
+}
+
+#navigation
+{
+    position:  absolute;
+    top:       160px;
+    left:      5px;
+	z-index:   1;
+}
+
+/*======================================================================*/
+
 .imageContainer
 {
-	position:	fixed;
-	top:		0px;
-	left:		5px;
-	z-index:	300;
-	width:		174px;
-	height:		119px;
+    position:   fixed;
+    top:        0px;
+    left:       5px;
+    z-index:    300;
+    width:      174px;
+    height:     119px;
 }
 .fade-box
 {
-	position:	absolute;
-	top:		0px;
-	left:		5px;
-	width:		174px;
-	height:		119px;	
+    position:   absolute;
+    top:        0px;
+    left:       5px;
+    width:      174px;
+    height:     119px;    
 }
 .newsTitle
 {
-	font-size:	 12pt;
-	font-weight: bold;
-	color:		 blue;
-	padding:	 0px 0px 0px 0px;
+    font-size:   12pt;
+    font-weight: bold;
+    color:       blue;
+    padding:     0px 0px 0px 0px;
 }
 .newsTitle .newsDate
 {
-	font-size:	 6pt;
-	color:		 blue;
-	padding:	 0px 0px 0px 10px;
+    font-size:   6pt;
+    color:       blue;
+    padding:     0px 0px 0px 10px;
 }
 .newsArticle
 {
-	font:		10.5pt/16pt Tahoma, Arial;
-	color:		#411;
-	margin:		0px 0px 10px 30px;
+    font:        10.5pt/16pt Tahoma, Arial;
+    color:       #411;
+    margin:      0px 0px 10px 30px;
 }
 .newsArticle p
 {
-	margin: 0px auto;
+    margin: 0px auto;
 }
 .sectionBody
 {
-	margin-left:	3em;
+    margin-left:    3em;
 }
 .outlinedTitle
 {
-	border: 		#aa4444 3px;
-	border-style:	solid none solid none;
-	font:			16pt Verdana, Arial;
+    border:         #aa4444 3px;
+    border-style:   solid none solid none;
+    font:           16pt Verdana, Arial;
 }
 .eventInfo
 {
-	padding-top:	0px;
-	padding-right:	0px;
-	padding-left:	30px;
-	padding-bottom:	10px;
-	font:			10.5pt/16pt Tahoma, Arial;
-	color:			#411;
+    padding-top:    0px;
+    padding-right:  0px;
+    padding-left:   30px;
+    padding-bottom: 10px;
+    font:           10.5pt/16pt Tahoma, Arial;
+    color:          #411;
 }
 b.eventInfo
 {
-	font:			10.5pt/16pt Tahoma, Arial;
-	color:			#411;
-	font-variant:	small-caps;
-	font-weight:	bold;
+    font:           10.5pt/16pt Tahoma, Arial;
+    color:          #411;
+    font-variant:   small-caps;
+    font-weight:    bold;
 }

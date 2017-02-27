@@ -15,24 +15,8 @@ Master file which loads the correct page based on URL parameters
 #
 # Only the last two will ever be seen in the browser address bar by the user.
 #
-# The page is divided into four zones, similar to frames:
+# See bttbAlumni.css for the page layout description.
 #
-#      +-----+--------------------------+
-#      |  1  |            2             |
-#      +-----+--------------------------+
-#      |     |                          |
-#      |     |                          |
-#      |  3  |            4             |
-#      |     |                          |
-#      |     |                          |
-#      +-----+--------------------------+
-#
-# 1 = Navigation
-# 2 = Title, including semi-transparent fade-out background
-# 3 = Title logo
-# 4 = Content, controlled by bttbPage contents
-#
-
 import os
 from bttbConfig import *
 import pages
@@ -56,6 +40,7 @@ class bttbNavigation:
         Display the navigation buttons with Javascript embedded
         """
         try:
+            print "<div id='navigation'>"
             print "<div id='mainMenu'>"
             print "<ul id='verticalMenu' class='menu'>"
             print "<li>"
@@ -103,6 +88,12 @@ class bttbNavigation:
             print "<div style='display:none;' class='mainMenuHighlight' id='mainMenuHighlight'>"
             print MapLinks( "    <img width='39' height='412' src='__MENUPATH__/IconHighlight.png'>" )
             print "</div>"
+            print "<div id='clustrmap'>"
+            print "<a href=\"http://www2.clustrmaps.com/counter/maps.php?url=http://www.bttbalumni.ca\""
+            print " id='clustrMapsLink'><img width='108' src='http://www2.clustrmaps.com/counter/index2.php?url=http://www.bttbalumni.ca'"
+            print " style='border:1px solid red;' alt='Locations of BTTB visitors' title='Locations of BTTB visitors'"
+            print " id='clustrMapsImg' onError='return clustrMapError();' /></a>"
+            print "</div>"
             print "</div>"
 
         except Exception, e:
@@ -114,18 +105,11 @@ class bttbNavigation:
         Display the title bar, assumed to be ignored by most
         """
         print MapLinks( """
-        <div id='divTop'>
-               <img src='__IMAGEPATH__/top_fade140.png' border='0' width='1194' height='140'>
-        </div>
         <div id='mainTitle'>
             <img src='__IMAGEPATH__/BTTBAlumni.png' border='0' width='300' height='126'>
         </div>
         <div id='subTitle'>
             <img src='__IMAGEPATH__/Reconnect.png' border='0' width='300' height='57'>
-        </div>
-        <div id='clustrmap'>
-        <a href="http://www2.clustrmaps.com/counter/maps.php?url=http://www.bttbalumni.ca" id="clustrMapsLink"><img width="108" src="http://www2.clustrmaps.com/counter/index2.php?url=http://www.bttbalumni.ca" style="border:1px solid red;" alt="Locations of BTTB visitors" title="Locations of BTTB visitors" id="clustrMapsImg" onError="return clustrMapError();" />
-        </a>
         </div>
         """ )
 
@@ -150,9 +134,7 @@ class bttbNavigation:
         only part that varies from page to page. Everything else is the same
         in the entire website.
         """
-        print "<div id='contentBox'>"
-        print "    <div id='content'>"
-        print """
+        print """<div id='content'>
         <NOSCRIPT>
         <p>&nbsp;</p>
         <p>&nbsp;</p>
@@ -165,9 +147,7 @@ class bttbNavigation:
         to turn it back on.
         </p>
         </NOSCRIPT>
-        """
-        print "       </div>"
-        print "</div>"
+        </div>"""
     
     #----------------------------------------------------------------------
     def showHead(self):
@@ -188,27 +168,7 @@ class bttbNavigation:
         <script type='text/javascript' src='__JAVASCRIPTPATH__/scriptaculous.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbMenu.js'></script>
         """ )
-        if 'HTTP_USER_AGENT' not in os.environ:
-            os.environ['HTTP_USER_AGENT'] = 'Firefox'
-        if os.environ['HTTP_USER_AGENT'].find('MSIE') >= 0:
-            if os.environ['HTTP_USER_AGENT'].find('MSIE 7') >= 0:
-                print MapLinks( """
-                <STYLE type='text/css' media='all'>
-                    @import url( '__CSSPATH__/bttbMenu_IE7.css' );
-                    @import url( '__CSSPATH__/bttbAlumni.css' );
-                </STYLE>
-                """ )
-            else:
-                print MapLinks( """
-                <STYLE type='text/css' media='all'>
-                    @import url( '__CSSPATH__/bttbMenu.css' );
-                    @import url( '__CSSPATH__/bttbAlumni.css' );
-                    @import url( '__CSSPATH__/bttbMenu_IE.css' );
-                    @import url( '__CSSPATH__/bttbAlumni_IE.css' );
-                </STYLE>
-                """ )
-        else:
-            print MapLinks( """
+        print MapLinks( """
             <STYLE type='text/css' media='all'>
                 @import url( '__CSSPATH__/bttbMenu.css' );
                 @import url( '__CSSPATH__/bttbAlumni.css' );
@@ -238,10 +198,23 @@ class bttbNavigation:
         """
         self.showHead()
         print '<body onresize="onSizeChange()" onload="initialize()">'
-        self.showTitle()
+
+        print '<div id="page">'
+
+        # Upper left
         self.showTitleLogo()
+
+        # Upper right
+        self.showTitle()
+
+        # Lower left
         self.showNavigation()
+
+        # Lower right
         self.showContent()
+
+        print '</div>'
+
         print '</body>'
 
 # ==================================================================
