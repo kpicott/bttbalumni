@@ -1,8 +1,8 @@
 /*  MAIN MENU HIGHLIGHT STYLE   */
 .mainMenuHighlight
 {
-	position		: fixed;
-	top				: 130px;
+	position		: absolute;
+	top				: 13px;
 	left			: 0px;
 	width			: 39px;
 	height			: 412px;
@@ -17,8 +17,8 @@
 	padding			: 0;
 	width			: 120px;
 	height			: 433px;
-	position		: fixed;
-	top				: 117px;
+	position		: absolute;
+	top				: 0px;
 	left			: 4px;
 	border			: 0px;
 	background		: url('/Menu/NewMenu.png') no-repeat;
@@ -154,8 +154,8 @@ label
 	padding			: 0;
 	width			: 120px;
 	height			: 133px;
-	position		: fixed;
-	top				: 407px;
+	position		: absolute;
+	top				: 294px;
 	left			: 18px;
 	border			: 0px;
 	z-index			: 7;
@@ -167,7 +167,7 @@ label
 	padding			: 0;
 	width			: 108px;
 	height			: 72px;
-	position		: fixed;
+	position		: absolute;
 	top				: 552px;
 	left			: 8px;
 	border			: 0px;

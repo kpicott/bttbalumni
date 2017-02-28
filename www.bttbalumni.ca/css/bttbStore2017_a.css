@@ -1,0 +1,379 @@
+/*
+	The shopping cart has two different display modes, one for Paypal and one
+	for paying by cheque.
+
+	Paypal maintains all of the current cart information on its own website so
+	there is no option to edit the cart, only an option to add a new item to
+	the cart. The page splits into two parts. The upper part provides access
+	to the current cart and a simple indicator as to whether any selections
+	have been added to the cart yet:
+
+	  +-----------------------------------------------+
+	  |  Add Items To Cart using the buttons below    |
+	  |                           +-----------+       |
+	  |  See current cart status: | View Cart |       |
+	  |                           +-----------+       |
+	  +-----------------------------------------------+
+	
+	The section beneath contains a table with all of the available cart
+	items. The table has four columns for each item:
+
+		+--------------+--------------------+----------------+---------------+
+		|  Item Image  |  Item Description  |  Item Options  |  Add To Cart  |
+		+--------------+--------------------+----------------+---------------+
+	
+	Item Description will include the unit price of the item.
+	Item Options contains all available options for the item.
+	Add To Cart is just a button, linking directly to Paypal. It will continue
+	a "return to shopping" link that comes back here.
+
+
+	For those paying by cheque all of the operations will be performed within
+	the page. Instead of a "View Cart" at the top it will contain the current
+	contents of the cart, including item name, options, and price.
+
+		+-------------------------------------------------------------------+
+		|   Cart Contents:                                                  |
+		+----------------------+------------+--------------------+----------+
+		|   Item               |  Options   | Price (with tax)   |  Remove  |
+		+----------------------+------------+--------------------+----------+
+		|                      |            |                    |    []    |
+		+----------------------+------------+--------------------+----------+
+		                             .
+		                             .
+		                             .
+		+----------------------+------------+--------------------+----------+
+		+----------------------+------------+--------------------+----------+
+		|   Total              |XXXXXXXXXXXX|                    |XXXXXXXXXX+
+		+----------------------+------------+--------------------+----------+
+
+		Mailing Address:    Blah            +------------------+
+		                    Blah            | Print Order Form |
+		                    Blah            +------------------+
+
+	The table of options will look the same as for PayPal.  When you hit the
+	"Add To Cart" button it will add it to the table above.
+
+	Hitting the "Print Order Form" button will create a new page containing
+	the cart contents, the mailing address, blank fields for the person's
+	name and contact information (pre-populated if they are logged in), and
+	instructions on what to do with the form.
+*/
+
+/*----------------------------------------------------------------------
+	Simple box around an element
+*/
+.box
+{
+	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+}
+
+/*----------------------------------------------------------------------
+	Table formatting for the current cart contents when paying by cheque.
+*/
+#cart
+{
+	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
+	border-collapse: collapse;
+	background:	     url('/Images70th/cart.png') left top;
+}
+
+#cart td, #cart th
+{
+	border: 1px solid #ddd;
+	padding: 8px;
+}
+
+#cart tr:nth-child(even)
+{
+	background-color: #f2f2f2;
+}
+
+#cart tr:hover
+{
+	background-color: #ddd;
+}
+
+#cart th
+{
+	padding-top:		12px;
+	padding-bottom:		12px;
+	text-align:			left;
+	background-color:	#AF4C50;
+	color:				white;
+}
+
+/*======================================================================
+	Styles for the fixed layout of the PayPal store.
+
+	The image styles will allow a change in image when you hover over it.
+	The image is set up as double width, where the original and hover images
+	are side-by-side. This allows loading of both images in one shot so that
+	there is no delay on the first hover.
+
+	  Full Image    Default View     Hover View
+	  +---+---+        +---+           +---+
+	  | X | Y |        | X |           | Y |
+	  +---+---+        +---+           +---+
+
+	The top area shows the instructions, the "View Cart" button and the
+	shirt size selector. Clicking on the image will add that item to the
+	cart immediately.
+
+	Full layout looks like this, with 10px gap between image sections, where
+	INFO is the instructions, SIZE is the shirt size selector, and VIEW is
+	the View Cart button.
+
+		<---------- 800 ------------><-- 10px --><---------- 800 ------------>
+
+		+------+------+-------------+  ^         +---------------------------+
+		| VIEW | SIZE |   INFO      |  | 50px    | Cart Contents             |
+		|      |      |             |  |         |                           |
+		+-------------+-------------+  v                      .
+		+---------------------------+  ^                      .
+		|                           |  |                      .
+		|          allin            |  | 300px
+		|                           |  |
+		+---------------------------+  X
+		+-------------+-------------+  ^
+		|             |             |  |
+		|   parade    |  saturday   |  | 180px
+		|             |             |  |
+		+-------------+-------------+  X
+		+------+------+-------------+  ^
+		|      |      |             |  |
+		| hat  |shirt |    golf     |  | 180px
+		|      |      |             |  |
+		+------+------+-------------+  v
+		+-------------+-------------+  ^
+		|             |             |  |
+		|  golfHole   | golfDinner  |  | 180px
+		|             |             |  |
+		+-------------+-------------+  v
+*/
+
+/*========================================
+	Container wrapping around the entire store, to allow relative positioning
+*/
+div.container
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+}
+
+/*========================================
+  Container wrapping around the entire store, to allow relative positioning
+*/
+div.store_container
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+}
+
+/*========================================
+  Store instructions and View Cart button
+*/
+div.store_info
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+}
+
+/*========================================
+  Image selectors in the store
+*/
+div.store_contents
+{
+	position:	absolute;
+	top:		50px;
+	left:		0px;
+}
+
+/*========================================
+  Positions the cart contents beside the store, when using the internal store
+*/
+div.cart_contents
+{
+    position:	absolute;
+	top:		0px;
+    left:		810px;
+	width:      800px;
+	display:	inline-block;
+}
+
+/*========================================
+	Each store item has a nicely shadowed, outlined, box
+*/
+div.box_shadow
+{
+	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	margin-bottom:	10px;
+	border:			1px;
+	border-style:	solid;
+}
+
+/*========================================
+	Large element layout size - all-events
+*/
+div.large_image
+{
+	width:	800px;
+	height:	300px;
+}
+
+/*========================================
+	Medium element layout size - parade, saturday, and golf
+*/
+div.medium_image
+{
+	width:	395px;
+	height:	180px;
+}
+
+/*========================================
+	Small element layout size - hat and shirt
+*/
+div.small_image
+{
+	width:	190px;
+	height:	180px;
+}
+
+/*========================================
+	Store instructions and View Cart button
+*/
+#view_cart_button
+{
+	position:	absolute;
+	top:		0px;
+	left:		0px;
+	width:		110px;
+}
+#shirt_size_selector
+{
+	position:	absolute;
+	top:		0px;
+	left:		110px;
+	width:		auto;
+}
+#store_instructions
+{
+	position:		absolute;
+	top:			0px;
+	left:			300px;
+	font-family:	"Trebuchet MS", Arial, Helvetica, sans-serif;
+	width:			540px;
+}
+
+/*========================================
+	Each store image item is specifically positioned
+*/
+#allin
+{
+	position:	absolute;
+	top:		50px;
+	left:		0px;
+	background:	url('/Images70th/merch_inclusive.jpg') no-repeat left top;
+}
+#allin:hover      { background-position: -800px 0px; }
+/**/
+#parade
+{
+	position:	absolute;
+	top:		360px;
+	left:		0px;
+	background:	url('/Images70th/merch_parade.jpg') no-repeat left top;
+}
+#parade:hover     { background-position: -395px 0px; }
+/**/
+#saturday
+{
+	position:	absolute;
+	top:		360px;
+	left:		405px;
+	background:	url('/Images70th/merch_saturday.jpg') no-repeat left top;
+}
+#saturday:hover   { background-position: -395px 0px; }
+/**/
+#shirt
+{
+	position:	absolute;
+	top:		550px;
+	left:		0px;
+	background:	url('/Images70th/merch_shirt.jpg') no-repeat left top;
+}
+#shirt:hover      { background-position: -190px 0px; }
+/**/
+#hat
+{
+	position:	absolute;
+	top:		550px;
+	left:		205px;
+	background:	url('/Images70th/merch_hat.jpg') no-repeat left top;
+}
+#hat:hover        { background-position: -190px 0px; }
+/**/
+#golf
+{
+	position:	absolute;
+	top:		550px;
+	left:		405px;
+	background:	url('/Images70th/golf.jpg') no-repeat left top;
+}
+#golf:hover       { background-position: -395px 0px; }
+/**/
+#golfHole
+{
+	position:	absolute;
+	top:		740px;
+	left:		0px;
+	background:	url('/Images70th/golfHole.jpg') no-repeat left top;
+}
+#golfHole:hover   { background-position: -395px 0px; }
+/**/
+#golfDinner
+{
+	position:	absolute;
+	top:		740px;
+	left:		405px;
+	background:	url('/Images70th/golfDinner.jpg') no-repeat left top;
+}
+#golfDinner:hover { background-position: -395px 0px; }
+
+/*======================================================================
+  Add to cart by clicking on an image, so adapt the click size to the whole image
+*/
+div.addtocart
+{
+	width:	100%;
+	height:	100%;
+}
+
+/*========================================
+	Dropdown menu for shirt size is always top-left-ish.
+	Size is browser-dependent so using %+offset might not be consistent.
+*/
+.dropdown
+{
+	border-radius:		5px;
+	padding:			5px;
+	position:			absolute;
+	top:				10px;
+	left:				13px;
+	background-color:	#f2f2f2;
+}
+
+/*========================================
+	Fix an element to the top left corner of its parent
+*/
+div.fix_top
+{
+	position:	absolute;
+	left:		0px;
+	top:		0px;
+}
+

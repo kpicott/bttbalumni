@@ -377,7 +377,7 @@ function add_cart_item(cart_item)
     // Validate that shirt size was specified if required
     if( cart_item === "allin" )
     {
-        shirt_select = document.getElementById( "allin_shirt" );
+        shirt_select = document.getElementById( "shirt_size" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {
@@ -388,7 +388,7 @@ function add_cart_item(cart_item)
     }
     else if( cart_item === "parade" )
     {
-        shirt_select = document.getElementById( "parade_shirt" );
+        shirt_select = document.getElementById( "shirt_size" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {
@@ -399,7 +399,7 @@ function add_cart_item(cart_item)
     }
     else if( cart_item === "shirt" )
     {
-        shirt_select = document.getElementById( "shirt_shirt" );
+        shirt_select = document.getElementById( "shirt_size" );
         shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
         if( shirt_option === "" )
         {
@@ -492,12 +492,11 @@ function remove_cart_item(cart_item)
 // Validate that an item being ordered has had a shirt size selected.
 // item is the name of the item being ordered, in a display-friendly
 // format - it will be used in the alert if the size is missing.
-// shirt_id is the unique ID of the "select" field containing the shirt option.
 //
 var no_shirt_selected = "-- Select Shirt Size --"; // Same as in bttbStore2017.py
-function validate_shirt_size(item, shirt_id)
+function validate_shirt_size(item)
 {
-    var shirt_element = document.getElementById( shirt_id );
+    var shirt_element = document.getElementById( 'shirt' );
 	if( shirt_element.value === no_shirt_selected )
 	{
 		alert( 'Please select a shirt size for "' + item + '"' );

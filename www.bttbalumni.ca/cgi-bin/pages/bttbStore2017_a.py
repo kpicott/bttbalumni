@@ -4,7 +4,7 @@ Web page showing the 70th anniversary reunion store
 import datetime
 from bttbConfig import *
 from bttbPage import bttbPage
-__all__ = ['bttbStore2017']
+__all__ = ['bttbStore2017_a']
 
 #======================================================================
 # Compute the early-bird discounts
@@ -25,20 +25,10 @@ if NOW > GOLF_CUTOFF:
 CHEQUE_STORE = 'cheque'
 PAYPAL_STORE = 'paypal'
 CART_IMAGES = {
-                'addtocart' :
-                {
-                    CHEQUE_STORE : '/Images70th/AddToCart_BTTB.png'
-                ,   PAYPAL_STORE : '/Images70th/AddToCart_PayPal.png'
-                }
-              , 'viewcart' :
+                'viewcart' :
                 {
                     CHEQUE_STORE : '/Images70th/ViewCart_BTTB.png'
                 ,   PAYPAL_STORE : '/Images70th/ViewCart_PayPal.png'
-                }
-              , 'addtocart_hover' :
-                {
-                    CHEQUE_STORE : '/Images70th/AddToCart_BTTB_On.png'
-                ,   PAYPAL_STORE : '/Images70th/AddToCart_PayPal_On.png'
                 }
               , 'viewcart_hover' :
                 {
@@ -107,16 +97,14 @@ KEY_DESC = 'description'
 KEY_COST = 'cost'
 KEY_SIZE = 'image_size'
 KEY_SHRT = 'has_shirt'
-KEY_BTNS = 'button_class'
 KEY_CART = 'cart_align'
 KEY_HOST = 'paypal_key'
 KEY_DSCT = 'paypal_key'
-ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
+ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Inclusive'
                              , KEY_COST : 150
                              , KEY_SIZE : 'large'
                              , KEY_SHRT : True
                              , KEY_DSCT : DISCOUNT_ALL
-                             , KEY_BTNS : 'large_buttons'
                              , KEY_HOST : '5CKSXSSXFDPNJ'
                              }
             , 'saturday'   : { KEY_DESC : 'Saturday Night Social Event'
@@ -124,7 +112,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'medium_buttons'
                              , KEY_HOST : 'PDSLC8SDDDJWC'
                              }
             , 'parade'     : { KEY_DESC : 'Saturday Morning Parade'
@@ -132,7 +119,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : True
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'medium_buttons'
                              , KEY_HOST : '5CKSXSSXFDPNJ'   #'J6H7RE9FU94AN'
                              }
             , 'hat'        : { KEY_DESC : '70th Anniversary Hat'
@@ -140,7 +126,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'small'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'small_buttons'
                              , KEY_HOST : '4YUPAHHC9HSJS'
                              }
             , 'shirt'      : { KEY_DESC : '70th Anniversary Golf Shirt'
@@ -148,7 +133,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'small'
                              , KEY_SHRT : True
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'small_buttons'
                              , KEY_HOST : '5PXQC8FHC4RVQ'
                              }
             , 'golf'       : { KEY_DESC : 'Early-Bird Entrance Into the 70th Anniversary Golf Tournament'
@@ -156,7 +140,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : DISCOUNT_GOLF
-                             , KEY_BTNS : 'medium_buttons_2'
                              , KEY_HOST : 'CX35JJNMJWZ7S'
                              }
             , 'golfHole'   : { KEY_DESC : 'Hole Sponsorship for the 70th Anniversary Golf Tournament'
@@ -164,7 +147,6 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'medium_buttons'
                              , KEY_HOST : '28E57ZTCZN4YA'
                              }
             , 'golfDinner' : { KEY_DESC : '70th Anniverary Golf Tournament Dinner Only'
@@ -172,9 +154,12 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
                              , KEY_SIZE : 'medium'
                              , KEY_SHRT : False
                              , KEY_DSCT : 0.0
-                             , KEY_BTNS : 'medium_buttons'
                              , KEY_HOST : 'ZG623EN63C7QN'
                              }
+            }
+SIZE_INFO = { 'large'  : { 'width' : 800, 'height' : 300 }
+            , 'medium' : { 'width' : 395, 'height' : 180 }
+            , 'small'  : { 'width' : 190, 'height' : 180 }
             }
 
 #======================================================================
@@ -182,7 +167,7 @@ ITEM_INFO = { 'allin'      : { KEY_DESC : 'All Events'
 # Page load is a simple template operation with generic pathnames replaced by
 # their configured equivalents.
 #
-class bttbStore2017(bttbPage):
+class bttbStore2017_a(bttbPage):
     def __init__(self):
         '''Initialize the page information'''
         bttbPage.__init__(self)
@@ -195,8 +180,8 @@ class bttbStore2017(bttbPage):
     #----------------------------------------
     def scripts(self):
         ''':return: List of Javascript and CSS scripts to be included in this page'''
-        return ['__CSSPATH__/bttbStore2017.css'
-               ,'__JAVASCRIPTPATH__/bttbStore2017.js'
+        return ['__CSSPATH__/bttbStore2017_a.css'
+               ,'__JAVASCRIPTPATH__/bttbStore2017_a.js'
                ]
 
     #----------------------------------------
@@ -223,24 +208,23 @@ class bttbStore2017(bttbPage):
         return html
 
     #----------------------------------------
-    def paypal_preamble(self, shirt_id, description):
+    def paypal_preamble(self, description):
         '''
-        :param shirt_id: Unique ID to identify the shirt selector in the page
         :param description: Description of the item owning the form, None if no validation is required
         :return: HTML for the form initialization and hidden fields appearing in all PayPal links
         '''
         html  = '<form target="_self" method="post"'
         if description is not None:
-            html += ' onsubmit="return validate_shirt_size(\'%s\', \'%s\');"' % (description, shirt_id)
+            html += ' onsubmit="return validate_shirt_size(\'%s\');"' % description
         html += ' action="https://www.sandbox.paypal.com/cgi-bin/webscr">'
         html += '<input type="hidden" name="cmd" value="_s-xclick">'
         html += '<input type="hidden" name="currency_code" value="CAD">'
         html += '<input type="hidden" name="shipping" value="0">'
-        html += '<input type="hidden" name="cancel_return" value="http://bttbalumni.ca/#store2017?payment=paypal">'
+        html += '<input type="hidden" name="cancel_return" value="http://bttbalumni.ca/#store2017_a?payment=paypal">'
         html += '<input type="hidden" name="cbt" value="Return to the BTTB 70th Anniversary Reunion Store">'
         html += '<input type="hidden" name="return" value="http://bttbalumni.ca/#thanks2017">'
         html += '<input type="hidden" name="image_url" value="http://bttbalumni.ca/Images2017/SiteLogo.png">'
-        html += '<input type="hidden" name="shopping_url" value="http://bttbalumni.ca/#store2017?payment=paypal">'
+        html += '<input type="hidden" name="shopping_url" value="http://bttbalumni.ca/#store2017_a?payment=paypal">'
         html += self.member_info()
         return html
 
@@ -272,32 +256,25 @@ class bttbStore2017(bttbPage):
         '''
         html = ''
         item_info = ITEM_INFO[item_type]
-
-        # No shirt option means the button floats to the center
-        add_to_cart_class = 'addtocart'
-        if not item_info[KEY_SHRT]:
-            add_to_cart_class += '_center'
-        elif item_type == 'shirt':
-            add_to_cart_class += '_center_2'
+        width = SIZE_INFO[item_info[KEY_SIZE]]['width']
+        height = SIZE_INFO[item_info[KEY_SIZE]]['height']
+        image_class = 'class="addtocart" width="%s" height="%s" border="0"' % (width, height)
 
         if store_type == PAYPAL_STORE:
             html += '<input type="hidden" name="hosted_button_id" value="%s">' % item_info[KEY_HOST]
             if item_info[KEY_DSCT] > 0:
                 html += '<input type="hidden" name="discount_amount" value="%s">' % item_info[KEY_DSCT]
-            html += '<input class="%s" align="center" type="image"' % add_to_cart_class
-            html += ' %s border="0" name="submit" alt="Add To Cart">' % cart_src('addtocart',PAYPAL_STORE)
-            # html += '<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">'
+            html += '<input %s align="center" type="image"' % image_class
+            html += ' src="/Images/clear.gif" name="submit" alt="Add To Cart">'
         else:
             html += '<a href="javascript:add_cart_item(\'%s\');">' % item_type
-            html += '<img alt="Add To Cart" class="%s"' % add_to_cart_class
-            html += ' border="0" %s></a>' % cart_src('addtocart',store_type)
+            html += '<img alt="Add To Cart" %s src="/Images/clear.gif"></a>' % image_class
 
         return html
 
     #----------------------------------------
-    def generate_shirt_options(self, shirt_id, store_type):
+    def generate_shirt_options(self, store_type):
         '''
-        :param shirt_id: Unique ID for the shirt selection list HTML element
         :param store_type: Type of store being built, CHEQUE_STORE or PAYPAL_STORE
         :return: HTML implementing a dropdown to select a shirt
         '''
@@ -311,7 +288,7 @@ class bttbStore2017(bttbPage):
             value_list = [[shirt_info[0], shirt_info[1]] for shirt_info in SHIRT_OPTIONS]
 
         # Paypal required name
-        html += '<select id="%s" class="dropdown" name="os0">\n' % shirt_id
+        html += '<select id="shirt_size" class="dropdown" name="os0">\n'
 
         for value in value_list:
             html += '<option value="%s">%s</option>\n' % (value[0], value[1])
@@ -333,41 +310,55 @@ class bttbStore2017(bttbPage):
         # The internal store will show the cart contents at the top. Create
         # a bootstrap location for it, to be populated by the rebuild_cart
         # Javascript function
-        html += '<div class="cart_container">\n'
         if store_type == CHEQUE_STORE:
-            html += '  <div id="cart_contents">\n'
+            html += '<div id="cart_contents" class="cart_contents"><p>Select an item and see your cart here</p></div>\n'
+
+        # Define the store half
+        html += '<div class="store_container">\n'
+
+        # The top of the store shows View Cart, Shirt Size, and instructions
+        html += '  <div class="store_info">\n'
+
+        html += '    <div id="view_cart_button">\n'
+        if store_type == CHEQUE_STORE:
             html += '    <input type="image" %s border="0" ' % cart_src('viewcart',store_type)
             html += '     onclick="rebuild_cart();" alt="View Cart">'
-            html += '  </div>\n'
         else:
             html += self.paypal_view_cart_button()
+        html += '    </div>\n'
+
+        html += '    <div id="shirt_size_selector">\n'
+        html += self.generate_shirt_options( store_type )
+        html += '    </div>\n'
+
+        html += '    <div id="store_instructions"><p>Click on the <i>View Cart</i> button to'
+        if store_type == CHEQUE_STORE:
+            html += ' see current cart contents.'
+        else:
+            html += ' jump to the Paypal cart.'
+        html += '<br>Select <i>Shirt Size</i> for All-Inclusive, Parade, or Shirt items.'
+        html += '<br>Hover over image for description, click on it to order.</p>'
         html += '</div>\n'
 
-        html += '<div class="store_container">'
+        html += '  </div>\n'
 
+        html += '  <div class="store_contents">\n'
         for (store_item,item_info) in ITEM_INFO.iteritems():
             # All store items are enclosed with an outlined box with a shadow
-            html += '  <div class="box_shadow %s_item">\n' % store_item
-            html += '    <div class="fix_top %s_image" id="%s">\n' % (item_info[KEY_SIZE], store_item)
-            html += '      <div class="%s">\n' % item_info[KEY_BTNS]
+            html += '    <div class="box_shadow %s_image" id="%s">\n' % (item_info[KEY_SIZE], store_item)
 
             if store_type == PAYPAL_STORE:
-                html += self.paypal_preamble( '%s_shirt' % store_item, item_info[KEY_DESC] )
-
-            if item_info[KEY_SHRT]:
-                html += self.generate_shirt_options( '%s_shirt' % store_item, store_type )
+                html += self.paypal_preamble( item_info[KEY_DESC] )
 
             html += self.generate_add_to_cart( store_item, store_type )
 
             if store_type == PAYPAL_STORE:
                 html += self.paypal_postamble()
 
-            html += '      </div>\n'
             html += '    </div>\n'
-            html += '  </div>\n'
+        html += '  </div>\n'
 
         html += '</div>\n'
-
         html += '</div>\n'
 
         # Paypal has to add the member information in multiple locations but
@@ -383,9 +374,9 @@ class bttbStore2017(bttbPage):
         
         return MapLinks('''<h2>Welcome to the Store, Please Choose Desired Payment Method</h2>
 <table cellpadding='10' width='800'><tr>
-<th>link:(/#store2017?payment=paypal,<img src='https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg' border='0' alt='PayPal Acceptance Mark'>)
+<th>link:(/#store2017_a?payment=paypal,<img src='https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg' border='0' alt='PayPal Acceptance Mark'>)
 <br>Pay Online with Paypal</th>
-<th>link:(/#store2017?payment=cheque,<img src='/Images70th/PayByCheque.jpg' border='0' alt='Mail a Cheque'>)
+<th>link:(/#store2017_a?payment=cheque,<img src='/Images70th/PayByCheque.jpg' border='0' alt='Mail a Cheque'>)
 <br>Mail a cheque with an order form.</th>
 </tr></table>''')
 
@@ -402,11 +393,11 @@ class bttbStore2017(bttbPage):
 # ==================================================================
 
 import unittest
-class testStore2017(unittest.TestCase):
+class testStore2017_a(unittest.TestCase):
     '''Simple test class to dump the contents of this page'''
     def testDump(self):
         '''Test method to show the contents of this page's frame'''
-        Store2017Page = bttbStore2017()
+        Store2017Page = bttbStore2017_a()
         print Store2017Page.show_all_store_items( PAYPAL_STORE )
         print Store2017Page.show_all_store_items( CHEQUE_STORE )
         print Store2017Page.content()
