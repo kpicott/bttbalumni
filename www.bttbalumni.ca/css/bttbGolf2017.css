@@ -14,15 +14,20 @@
 		|                                                                   |   |
 		|                                                                   |   |
 		+-------------------------------------------------------------------+   v
-		|                                                                   |
-		|                                                                   |  Rest is variable
-		|  Information about the tournament                                 |
-		|                                                                   |
-		|                                                                   |
+		<----------- 300px -------->|10| 100 |10| 100|10|<----- 270 px ----->
+		+-------------------------------------------------------------------+   v
+		|                              +-----+  +----+     +------------+   |
+		| Golf Info                    | CAR |  | $$ |     | Add Golfer |   |
+		|                              +-----+  +----+     +------------+   |
 		+-------------------------------------------------------------------+
-		|      +------------+  +-----------------+  +----------------+      |
-		|      | Add Golfer |  | Add Dinner-Only |  | Sponsor a Hole |      |
-		|      +------------+  +-----------------+  +----------------+      |
+		|                                       +----+  +-----------------+ |
+		| Dinner Info                           | $$ |  | Add Dinner Only | |
+		|                                       +----+  +-----------------+ |
+		+-------------------------------------------------------------------+
+		|                                       +----+  +-----------------+ |
+		| Hole Sponsorship Info                 | $$ |  | Sponsor A Hole  | |
+		|                                       +----+  +-----------------+ |
+		+-------------------------------------------------------------------+
 		+-------------------------------------------------------------------+
 		|  Your shopping cart is empty. Add items with the buttons above.   |
 		+--------------------------------------------------------+----------+
@@ -106,51 +111,59 @@ div.splash
 	display:	block;
 	width:		800px;
 	height:		300px;
+	z-index:	2;
+}
+div.splash_inset
+{
+	position:	absolute;
+	top:		10px;
+	left:		10px;
+	z-index:	1;
 }
 
 /*----------------------------------------
-  Section containing the instructions below
+  Section containing the items up for sale
 */
-div.instructions
+div.golf_item
 {
-	display:			block;
-	width:				800px;
-	padding:			10px 30px 10px 30px;
+	position:			relative;
+	width:				780px;
+	height:				110px;
+	padding:			10px 10px 10px 10px;
 	background-color:	white;
 }
-div.instructions item
+div.golf_info
 {
-	display:		inline-block;
-	position:		absolute;
-	left:			0px;
-	width:			300px;
+	float:			left;
+	width:			405px;
 	font-size:		16px;
 	text-align:		left;
-	font-weight:	bold;
 }
-div.instructions price
+div.golf_image
 {
-	position:		absolute;
-	left:			310px;
+	float:			left;
 	width:			100px;
+	height:			100px;
 	text-align:		center;
 }
-div.instructions image
+div.golf_price
 {
-	position:		absolute;
-	left:			420px;
+	float:			left;
 	width:			100px;
+	height:			100px;
 	text-align:		center;
+	padding-left:	10px;
+	padding-right:	10px;
 }
-div.instructions button
+div.golf_button_container
 {
-	position:		absolute;
-	left:			530px;
-	width:			270px;
-	font-size:		16px;
+	float:			left;
+	width:			155px;
+	height:			100px;
 	text-align:		center;
+	vertical-align:	middle;
 }
-div.instructions ul
+div.golf_item ul
 {
     list-style-position: inside;
 }
@@ -179,6 +192,52 @@ div.order_button
 		<div class="cost">  </div>
 	</div>
 */
+#cart_contents
+{
+	display:			block;
+	width:				780px;
+	padding:			10px 10px 10px 10px;
+	background-color:	#ffeeee;
+	font-family:		Raleway;
+	border-collapse:	collapse;
+}
+
+#cart table
+{
+	border:		1px solid #ddd;
+}
+
+#cart td, #cart th
+{
+	border:		1px solid #ddd;
+	padding:	8px;
+}
+
+#cart tr
+{
+	width:	100%;
+}
+
+#cart tr:nth-child(even)
+{
+	background-color:	#f2f2f2;
+	width:			 	100%;
+}
+
+#cart tr:hover
+{
+	background-color:	#ddd;
+}
+
+#cart th
+{
+	padding-top:		12px;
+	padding-bottom:		12px;
+	text-align:			left;
+	background-color:	#AF4C50;
+	color:				white;
+}
+
 div.cart_line
 {
 	display:	block;
