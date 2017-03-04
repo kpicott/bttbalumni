@@ -1,0 +1,257 @@
+/*
+	The golf page shows the information about the golf tournament and offers
+	an in-place shopping cart to purchase items for the tournament.
+
+	The overall layout consists of two upper sections with a nice golf image,
+	a section with information about the tournament, and a simplified cart cum
+	store for ordering. On first opening the page will look like this:
+
+		|<----------------------------- 800px ------------------------------>
+		+-------------------------------------------------------------------+   ^
+		|                                                                   |   |
+		|                                                                   |   |
+		|  Golf Image with title overlaid                                   |  300px
+		|                                                                   |   |
+		|                                                                   |   |
+		+-------------------------------------------------------------------+   v
+		|                                                                   |
+		|                                                                   |  Rest is variable
+		|  Information about the tournament                                 |
+		|                                                                   |
+		|                                                                   |
+		+-------------------------------------------------------------------+
+		|      +------------+  +-----------------+  +----------------+      |
+		|      | Add Golfer |  | Add Dinner-Only |  | Sponsor a Hole |      |
+		|      +------------+  +-----------------+  +----------------+      |
+		+-------------------------------------------------------------------+
+		|  Your shopping cart is empty. Add items with the buttons above.   |
+		+--------------------------------------------------------+----------+
+		| Pay now with Paypal, or mail a cheque with order form  |          |
+		| +-----------------+  +------------------+              |          |
+		| | Pay with Paypal |  | Print Order Form |        Total |   $$$    |
+		| +-----------------+  +------------------+              |          |
+		+--------------------------------------------------------+----------+
+
+	When you click any order button the "empty" message is removed and a new
+	line is added based on what you ordered.
+
+	"Add Golfer"
+		+---------+--------------------+-------------------+-----+
+		|  Name:  |  _________________ |  Golf + Dinner    |  $$ |
+		+---------+--------------------+-------------------+-----+
+	
+	"Add Dinner Only"
+		+---------+--------------------+-------------------+-----+
+		|  Name:  |  _________________ |  Dinner Only      |  $$ |
+		+---------+--------------------+-------------------+-----+
+
+	"Sponsor a Hole"
+		+---------+--------------------+-------------------+-----+
+		|  Name:  |  _________________ |   Number of Holes |     |
+		|  Email: |  _________________ |        ___        |  $$ |
+		+---------+--------------------+-------------------+-----+
+	
+	In addition, the first time you order anything a comment box is added
+	for instructions (max 256 characters due to a limitation of Paypal)
+
+		+--------------------------+-----------------------------+
+		|  Special Instructions:   |                             |
+		|  (e.g. other foursome    |                             |
+		|  members, food allergy)  |                             |
+		+--------------------------+-----------------------------+
+*/
+
+/*======================================================================
+	Ordering buttons that will add a shadow on hover and press down
+	when you click on them.
+		<button class="shadow_button" onclick="pressed_me();">BUTTON TITLE</button>
+*/
+.shadow_button
+{
+    background-color:    #AF4C50;
+    border:              none;
+    color:               white;
+    padding:             10px 15px;
+    text-align:          center;
+    text-decoration:     none;
+    display:             inline-block;
+    font-size:           16px;
+    margin:              4px 2px;
+    cursor:              pointer;
+    transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s; /* Safari */
+}
+
+.shadow_button:hover
+{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.shadow_button:active
+{
+  background-color: #8e3e41;
+  box-shadow:       0 5px #666;
+  transform:        translateY(2px);
+}
+
+/*======================================================================
+	Subsections of the entire cart
+======================================================================*/
+
+/*----------------------------------------
+  Title image at the top
+*/
+div.splash
+{
+	display:	block;
+	width:		800px;
+	height:		300px;
+}
+
+/*----------------------------------------
+  Section containing the instructions below
+*/
+div.instructions
+{
+	display:			block;
+	width:				800px;
+	padding:			10px 30px 10px 30px;
+	background-color:	white;
+}
+div.instructions item
+{
+	display:		inline-block;
+	position:		absolute;
+	left:			0px;
+	width:			300px;
+	font-size:		16px;
+	text-align:		left;
+	font-weight:	bold;
+}
+div.instructions price
+{
+	position:		absolute;
+	left:			310px;
+	width:			100px;
+	text-align:		center;
+}
+div.instructions image
+{
+	position:		absolute;
+	left:			420px;
+	width:			100px;
+	text-align:		center;
+}
+div.instructions button
+{
+	position:		absolute;
+	left:			530px;
+	width:			270px;
+	font-size:		16px;
+	text-align:		center;
+}
+div.instructions ul
+{
+    list-style-position: inside;
+}
+
+/*----------------------------------------
+  Next is the buttons for ordering
+*/
+div.order_buttons
+{
+	display:	block;
+	width:		800px;
+	text-align:	center;
+}
+div.order_button
+{
+	display:	inline-block;
+	float:		left;
+}
+
+/*======================================================================
+  Cart lines all look the same, though content will vary
+  	<div class="cart_line">
+		<div class="name">  </div>
+		<div class="value"> </div>
+		<div class="info">  </div>
+		<div class="cost">  </div>
+	</div>
+*/
+div.cart_line
+{
+	display:	block;
+	border:		1px solid #ddd;
+}
+div.cart_line name
+{
+	font-style:	italic;
+}
+div.cart_line value
+{
+}
+div.cart_line info
+{
+	font-style:	italic;
+}
+div.cart_line cost
+{
+	font-weight:	bold;
+	width:			50px;
+}
+
+/*----------------------------------------
+  Total line is sectioned differently
+  	<div class="cart_total_line">
+		<div class="info"> </div>
+		<div class="cost"> </div>
+	</div>
+*/
+div.cart_total_line
+{
+}
+div.cart_total_line info
+{
+}
+div.cart_total_line cost
+{
+	width:			50px;
+}
+
+/*----------------------------------------
+  Instruction line is sectioned differently
+  	<div class="cart_instruction_line">
+		<div class="info">  </div>
+		<div class="field"> </div>
+	</div>
+*/
+div.cart_instruction_line
+{
+	display:	block;
+}
+div.cart_instruction_line info
+{
+	font-style:	italic;
+	float:		left;
+}
+div.cart_instruction_line field
+{
+	float:	left;
+}
+
+/*======================================================================
+	Generic effects
+======================================================================*/
+
+/*----------------------------------------
+  Outlined, shadowed box to separate sections
+*/
+.box_shadow
+{
+	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	margin-bottom:	10px;
+	border:			1px;
+	border-style:	solid;
+}
+

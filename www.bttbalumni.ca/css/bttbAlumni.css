@@ -5,7 +5,7 @@
     padding-left:   0px;
     padding-bottom: 0px;
     margin:         0px;
-    font:           10.5pt/16pt Tahoma, Arial;
+    font:           10.5pt/16pt Raleway, Tahoma, Arial;
     color:          #111;
 }
 html
@@ -214,7 +214,7 @@ p
 #navigation
 {
     position:  absolute;
-    top:       160px;
+    top:       130px;
     left:      5px;
 	z-index:   1;
 }

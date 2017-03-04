@@ -21,6 +21,11 @@ class bttbPage:
 		"""
 		Javascripts and styles are not evaluated by default so they must be
 		called out for special treatment after import.
+
+        __JAVASCRIPTPATH__/SomeJavascript.js
+        __CSSPATH__/SomeCSS.css
+        JS: Some Javascript code to embed
+        CSS: Some CSS code to embed
 		"""
 		return []
 

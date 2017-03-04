@@ -158,6 +158,7 @@ class bttbNavigation:
         print "<link rel='alternate' type='application/rss+xml' title='BTTB Alumni News' href='http://www.bttbalumni.ca/cgi-bin/bttbRSS.cgi' />"
         print '<title>BTTB Alumni</title>'
         print MapLinks( """
+        <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700" rel="stylesheet">
         <link rel="shortcut icon" href="/Favicon.ico" type="image/x-icon" />
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttb.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbLogin.js'></script>

@@ -107,7 +107,7 @@ openPage = function(url)
                 {
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
-                    var scriptList = response[1].split(' ');
+                    var scriptList = response[1].split('@');
                     if( /MSIE/.test(navigator.userAgent) && !window.opera )
                     {
                         // Try to force IE to not cache this information
@@ -188,7 +188,7 @@ openForm = function(url,parameters,followUp)
                     // followUp page specified.
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
-                    var scriptList = response[1].split(' ');
+                    var scriptList = response[1].split('@');
                     content.innerHTML = response[2];
                     if( title.length > 0 ) document.title = title;
                     if( scriptList.length > 0 ) loadScripts( scriptList );
@@ -237,27 +237,48 @@ loadScripts = function(scripts)
     var head = document.getElementsByTagName("head").item(0);
     for( i=0; i<scripts.length; i++ )
     {
-        var file    = scripts[i];
-        var fileRef = "";
+        var file     = scripts[i];
+        var fileRef  = "";
+        var isScript = false;
 
         // Only load the file if it has not already been loaded.
         if( _loadedScripts.indexOf(file) >= 0 )
             continue;
 
-        if( file.indexOf(".js") != -1 )
+		// Raw script code
+		if( file.indexOf("JS:") != -1 )
+		{
+            fileRef = document.createElement('script')
+			if( _debug ) alert( 'Raw Javascript:\n' + file );
+            fileRef.innerHTML = file.substring( file.indexOf("JS:") + 3 );
+		}
+		// Raw CSS code
+		else if( file.indexOf("CSS:") != -1 )
+		{
+            fileRef = document.createElement('style')
+			if( _debug ) alert( 'Raw CSS:\n' + file );
+            fileRef.innerHTML = file.substring( file.indexOf("CSS:") + 4 );
+		}
+		// Reference to a Javascript file
+        else if( file.indexOf(".js") != -1 )
         {
             // Javascript files have to create a <script> tag
             fileRef = document.createElement('script')
+			if( _debug ) alert( 'Javascript file:\n' + file );
             fileRef.setAttribute("type", "text/javascript");
             fileRef.setAttribute("src", file);
+        	isScript = true;
         }
+		// Reference to a CSS file
         else if( file.indexOf(".css") != -1 )
         {
             // CSS files have to create a <link> tag
             fileRef=document.createElement("link")
+			if( _debug ) alert( 'CSS file:\n' + file );
             fileRef.setAttribute("rel",  "stylesheet");
             fileRef.setAttribute("type", "text/css");
             fileRef.setAttribute("href", file);
+        	isScript = true;
         }
 
         if( fileRef != "" )
@@ -265,7 +286,10 @@ loadScripts = function(scripts)
             head.appendChild(fileRef);
 
             // Remember this script being already added to page
-            _loadedScripts += file + " "
+			if( isScript )
+			{
+				_loadedScripts += file + " "
+			}
         }
     }
 }
