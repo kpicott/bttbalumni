@@ -50,7 +50,7 @@ def date_css():
         css += '.d-%02d { background-position: -50px %dpx;}\n' % (day, offset)
         offset -= 31
     offset = 0
-    for day in range(16,32):
+    for day in range(17,32):
         css += '.d-%02d { background-position: -100px %dpx;}\n' % (day, offset)
         offset -= 31
     offset = -6
@@ -68,11 +68,14 @@ def date_image(date_to_format=None):
     if date_to_format is None:
         date_to_format = datetime.datetime.now()
 
-    return date_to_format.strftime( '''<div class="postdate">
-  <div class="month m-%m">%b</div>
-  <div class="day d-%d">%d</div> 
-  <div class="year y-%Y">%Y</div> 
-</div>''' )
+    return '''<div class="postdate">
+  <div class="month m-%02d">%02d</div>
+  <div class="day d-%02d">%02d</div> 
+  <div class="year y-%d">%d</div> 
+</div>''' % ( date_to_format.month, date_to_format.month
+            , date_to_format.day, date_to_format.day
+            , date_to_format.year, date_to_format.year
+            )
 
 #======================================================================
 #
@@ -85,7 +88,7 @@ if __name__ == '__main__':
     print '</style></head><body>'
     month = 1
     year_index = 0
-    for day in range(1, 31):
+    for day in range(1, 32):
         print '<p>%s</p>\n' % date_image( datetime.datetime(YEARS_SUPPORTED[year_index], month, day) )
 
         # Increment both month and year so that all will be seen
