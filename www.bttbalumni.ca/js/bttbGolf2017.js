@@ -647,7 +647,7 @@ function print_golf_cart()
 	// Congratulate them on their frugality
 	if( discount > 0 )
 	{
-    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " for being an early-bird!</i></p>\n" );
+    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " by being an early-bird!</i></p>\n" );
 	}
 
 	print_wnd.document.write( "<p><i>Golf Details:<ul>\n" );
