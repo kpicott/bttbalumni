@@ -3,11 +3,27 @@
 //		item_name        : Description of item
 //		onN              : Name of option N (name or email)
 //		osN              : Value of option N
+//						   Field containing option = osN_X for item X
 //		tax_rate         : Rate of tax to apply to the item, as a percentage
 //		discount_amount  : Amount of discount - only non-zero items will have this
 //
 var cart_contents = [ ];
 var empty_cart_msg = "Your cart is currently empty - add items for purchase.";
+
+// Special codes used as identifiable onN options
+var golfer_name_code        = "Golfer Name";
+var lunch_name_code         = "Lunch Guest Name";
+var dinner_name_code        = "Dinner Guest Name";
+var hole_sponsor_name_code  = "Sponsor Name";
+var hole_sponsor_email_code = "Sponsor Email";
+
+// Special ids to identify the different types of items. They're used for
+// printing the form so they should be descriptive.
+var golfer_id  = "Golf Tournament Entry";
+var lunch_id   = "Golf Tournament Lunch";
+var dinner_id  = "Golf Tournament Dinner";
+var sponsor_id = "Golf Tournament Hole Sponsorship";
+var instructions_id = "Special Instructions";
 
 //----------------------------------------------------------------------
 //
@@ -31,8 +47,8 @@ function add_golfer()
 	{
 		golfer.discount_amount = 15;
 	}
-	golfer.item_name = "Golf tournament entry";
-	golfer.on0 = "Golfer Name";
+	golfer.item_name = golfer_id;
+	golfer.on0 = golfer_name_code;
 	golfer.os0 = "";
 	golfer.tax_rate = 0;
 
@@ -44,12 +60,29 @@ function add_golfer()
 //
 // Add a new diner to the cart contents
 //
+function add_lunch()
+{
+	var diner = {};
+	diner.amount = 20;
+	diner.item_name = lunch_id;
+	diner.on0 = lunch_name_code;
+	diner.os0 = "";
+	diner.tax_rate = 0;
+
+	cart_contents.push( diner );
+	rebuild_golf_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new diner to the cart contents
+//
 function add_diner()
 {
 	var diner = {};
 	diner.amount = 60;
-	diner.item_name = "Golf tournament dinner";
-	diner.on0 = "Guest Name";
+	diner.item_name = dinner_id;
+	diner.on0 = dinner_name_code;
 	diner.os0 = "";
 	diner.tax_rate = 0;
 
@@ -65,10 +98,10 @@ function sponsor_hole()
 {
 	var sponsor = {};
 	sponsor.amount = 250;
-	sponsor.item_name = "Golf tournament hole sponsorship";
-	sponsor.on0 = "Name";
+	sponsor.item_name = sponsor_id;
+	sponsor.on0 = hole_sponsor_name_code;
 	sponsor.os0 = "";
-	sponsor.on1 = "Email";
+	sponsor.on1 = hole_sponsor_email_code;
 	sponsor.os1 = "";
 	sponsor.tax_rate = 0;
 
@@ -78,10 +111,16 @@ function sponsor_hole()
 
 //----------------------------------------------------------------------
 //
-// Remove an existing item from the cart
+// Remove an existing item from the cart.
+// Does nothing if the item does not exist.
 //
-function remove_item()
+function remove_cart_item(item_idx)
 {
+	if( cart_contents.length > item_idx )
+	{
+		cart_contents.splice( item_idx, 1 );
+		rebuild_golf_cart();
+	}
 }
 
 //----------------------------------------------------------------------
@@ -93,8 +132,41 @@ function remove_item()
 //		- Every hole sponsorship has a name and an email
 //		- Every hole sponsorship has non-zero quantity
 //
-function validate_golf_order()
+function validate_cart_contents()
 {
+	var cart_item;
+    for( var idx=0; idx<cart_contents.length; ++idx )
+    {
+		var cart_info = cart_contents[idx];
+		if( cart_info.hasOwnProperty("on0") )
+		{
+			cart_item = document.getElementById( "os0_" + idx );
+			if( cart_item )
+			{
+				if( cart_item.value.length === 0 )
+				{
+					alert( 'You must fill in all of the "' + cart_info.on0 + '" fields' );
+					return false;
+				}
+				cart_info.os0 = cart_item.value;
+			}
+		}
+		if( cart_info.hasOwnProperty("on1") )
+		{
+			cart_item = document.getElementById( "os1_" + idx );
+			if( cart_item )
+			{
+				if( cart_item.value.length === 0 )
+				{
+					alert( 'You must fill in all of the "' + cart_info.on1 + '" fields' );
+					return false;
+				}
+				cart_info.os1 = cart_item.value;
+			}
+		}
+	}
+
+	return true;
 }
 
 //----------------------------------------------------------------------
@@ -115,20 +187,20 @@ function rebuild_golf_paypal_button()
 
 //----------------------------------------------------------------------
 //
-// Print out the order form in a separate tab
-//
-function print_golf_order_form()
-{
-}
-
-//----------------------------------------------------------------------
-//
 // Using the current cart contents rebuild the HTML element in id
 // "cart_contents" to show the current list of items in the cart.
 //
 function rebuild_golf_cart()
 {
     var cart_element = document.getElementById( "cart_contents" );
+
+	// Get the current instructions, if any, so that they are up to date
+	var instructions = '';
+	var instructions_el = document.getElementById( "instructions" );
+	if( instructions_el )
+	{
+		instructions = instructions_el.value;
+	}
 
     // Empty out any previous cart contents
     while( cart_element.hasChildNodes() )
@@ -161,6 +233,9 @@ function rebuild_golf_cart()
 	title_col = document.createElement( "th" );
 	title_col.innerHTML = "Cost";
 	title_row.appendChild( title_col );
+	title_col = document.createElement( "th" );
+	title_col.innerHTML = "Remove";
+	title_row.appendChild( title_col );
 	cart_table.appendChild( title_row );
 
     // Just the paypal elements for now
@@ -169,6 +244,8 @@ function rebuild_golf_cart()
     {
 		var cart_row = document.createElement( "tr" );
         var cart_info = cart_contents[idx];
+
+		// Paypal stuff
 		//var cart_index = 1;
 		//for( var item_key in cart_info )
 		//{
@@ -192,10 +269,10 @@ function rebuild_golf_cart()
 		cart_row.appendChild( cart_col );
 
 		cart_col = document.createElement( "td" );
-		cart_col.innerHTML = "<input type='text' size='32' maxlength='64' placeholder='" + cart_info.on0 + "'>";
+		cart_col.innerHTML = "<input type='text' size='32' maxlength='64' id='os0_" + idx + "' placeholder='" + cart_info.on0 + "'>";
 		if( cart_info.hasOwnProperty("on1") )
 		{
-			cart_col.innerHTML += "<br><input type='text' size='32' maxlength='64' placeholder='" + cart_info.on1 + "'>";
+			cart_col.innerHTML += "<br><input type='text' size='32' maxlength='64' id='os1_" + idx + "' placeholder='" + cart_info.on1 + "'>";
 		}
 		cart_row.appendChild( cart_col );
 
@@ -204,37 +281,67 @@ function rebuild_golf_cart()
 		cart_row.appendChild( cart_col );
 		total_cost += cart_info.amount;
 
+        var remove_col = document.createElement( "td" );
+        remove_col.innerHTML = "<button onclick='remove_cart_item(\"" + idx + "\");'>X</button>";
+        remove_col.align = "center";
+        cart_row.appendChild( remove_col );
+
 		cart_table.appendChild( cart_row );
     }
 
-	// If the cart has elements then include a total line and payment buttons
-	var total_row = document.createElement( "tr" );
+	// If the cart has elements then include isntructions, a total line, and payment buttons
+	var instructions_row = document.createElement( "tr" );
+	var instructions_col = document.createElement( "td" );
+	instructions_col.innerHTML = instructions_id;
+	instructions_row.appendChild( instructions_col );
+	//
+	instructions_col = document.createElement( "td" );
+	instructions_col.colSpan = 3;
+	instructions_col.innerHTML = "<textarea rows='4' cols='64' maxlength='256' id='instructions' placeholder='Enter instructions here...'>" + instructions;
+	instructions_row.appendChild( instructions_col );
+	//
+	cart_table.appendChild( instructions_row );
 
+	// Totals row
+	var total_row = document.createElement( "tr" );
+	//
 	var total_col = document.createElement( "th" );
 	total_col.innerHTML = "Total";
 	total_row.appendChild( total_col );
-
+	//
 	total_col = document.createElement( "th" );
 	total_col.innerHTML = "";
 	total_row.appendChild( total_col );
-
+	//
 	total_col = document.createElement( "th" );
 	total_col.innerHTML = "$" + total_cost;
 	total_row.appendChild( total_col );
-
+	//
+	total_col = document.createElement( "th" );
+	total_col.innerHTML = "";
+	total_row.appendChild( total_col );
+	//
 	cart_table.appendChild( total_row );
 
+	// Separate the table of items from the payment buttons
 	cart_element.appendChild( cart_table );
 
+	// Payment buttons
 	var button_container = document.createElement( "div" );
-	button_container.class = "golf_button_container";
+	button_container.className = "golf_payment_buttons";
 
 		var form_button = document.createElement( "button" );
-		form_button.class = "shadow_button";
-		form_button.onclick = "print_golf_cart();";
-		form_button.innerHTML = "View Printable Order";
-
+		form_button.className = "shadow_button";
+		form_button.onclick = function() { print_golf_cart(); };
+		form_button.innerHTML = 'Pay Online With Paypal';
 		button_container.appendChild( form_button );
+
+		form_button = document.createElement( "button" );
+		form_button.className = "shadow_button";
+		form_button.onclick = function() { print_golf_cart(); };
+		form_button.innerHTML = "View Printable Order";
+		button_container.appendChild( form_button );
+
 	cart_element.appendChild( button_container );
 }
 
@@ -244,7 +351,20 @@ function rebuild_golf_cart()
 //
 function print_golf_cart()
 {
-    var print_wnd = window.open("about:blank", "oolf_cart");
+	if( ! validate_cart_contents() )
+	{
+		return;
+	}
+
+	// Special instructions are not stored anywhere so get them out first.
+	var instructions = '';
+	var instructions_el = document.getElementById( "instructions" );
+	if( instructions_el )
+	{
+		instructions = instructions_el.value;
+	}
+
+    var print_wnd = window.open("about:blank", "golf_cart");
     print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Golf Shopping Cart</title></head>\n" );
     print_wnd.document.write( "<body><img src='/Images70th/PrintableFormHeader.jpg'/>\n" );
 
@@ -285,7 +405,7 @@ function print_golf_cart()
     print_wnd.document.write( "<tr><td width='100'>Name:</td><td>" + name + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Email:</td><td>" + email + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Phone:</td><td>" + phone + "</td></tr>\n" );
-    print_wnd.document.write( "<tr height='150'><td>Special<br/>Instructions:</td><td>&nbsp;</td></tr>\n" );
+    print_wnd.document.write( "<tr height='150'><td>Special<br/>Instructions:</td><td>" + instructiosn + "</td></tr>\n" );
     print_wnd.document.write( "</table>" );
 
     print_wnd.document.write( "<h2>Your Order</h2>\n" );
@@ -300,11 +420,42 @@ function print_golf_cart()
     {
         print_wnd.document.write( "<p>" + empty_cart_msg + "</p>" );
     }
-//    else
-//    {
-//        for( var idx=0; idx<cart_contents.length; ++idx )
-//        {
-//            var cart_item = cart_contents[idx];
+    else
+    {
+        for( var idx=0; idx<cart_contents.length; ++idx )
+        {
+            var cart_item = cart_contents[idx];
+
+            print_wnd.document.write( "<tr>" );
+            print_wnd.document.write( "<td>" + cart_item[idx_desc] + "</td>" );
+
+			switch( cart_item.item_name )
+			{
+				case golfer_id:
+            		print_wnd.document.write( "<td>Golfer Name</td>" );
+					break;
+				case lunch_id:
+            		print_wnd.document.write( "<td>Lunch Guest Name</td>" );
+					break;
+				case dinner_id:
+            		print_wnd.document.write( "<td>Dinner Guest Name</td>" );
+					break;
+				case sponsor_id:
+            		print_wnd.document.write( "<td>Sponsor Name<br>Sponsor Email</td>" );
+					break;
+			}
+            print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
+            total_cost = total_cost + cost;
+            print_wnd.document.write( "</tr>\n" );
+
+//  	amount           : Dollar amount for the item, not including tax
+//		item_name        : Description of item
+//		onN              : Name of option N (name or email)
+//		osN              : Value of option N
+//						   Field containing option = osN_X for item X
+//		tax_rate         : Rate of tax to apply to the item, as a percentage
+//		discount_amount  : Amount of discount - only non-zero items will have this
+
 //			if( cart_item[idx_id] === "golf" )
 //			{
 //				had_golf = true;
@@ -333,11 +484,14 @@ function print_golf_cart()
 //            print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
 //            total_cost = total_cost + cost;
 //            print_wnd.document.write( "</tr>\n" );
-//        }
-//    }
+        }
+    }
     print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
+    print_wnd.document.write( "<td></td>" );
+    print_wnd.document.write( "<td></td>" );
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
+
     print_wnd.document.write( "</tr>\n" );
     print_wnd.document.write( "</table>\n" );
 //

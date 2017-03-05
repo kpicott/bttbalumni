@@ -128,7 +128,7 @@ if 'SCRIPT_FILENAME' in os.environ:
     (title, scripts, content) = panel.pageContent()
     if not content: content = ErrorMsg('Blank page loaded', params)
     print 'Content-type: text/html\n'
-    print title + '|' + '@'.join([MapLinks(a) for a in scripts]) + '|' + content
+    print title + '|' + '#!#'.join([MapLinks(a) for a in scripts]) + '|' + content
 else:
     unittest.main()
 

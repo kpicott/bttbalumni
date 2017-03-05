@@ -80,9 +80,12 @@ openPage = function(url)
     ||  (p.getHost() == 'band.local')
     ||  (p.getHost() == '') )
     {
+		if( _openingPage ) return;
         _openingPage = true;
         pageUrl = p.assembledURL(false);
         hashUrl = p.assembledURL(true);
+        if( _debug) alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
+
         if( useHistory )
         {
             dhtmlHistory.add(hashUrl[0], pageUrl[1]);
@@ -94,14 +97,7 @@ openPage = function(url)
 			content.removeChild( content.firstChild );
 		}
 
-        if( _debug)
-        {
-            content.innerHTML = "<h2>AJAX</h2>" + pageUrl[0] + '<br>' + hashUrl[0];
-        }
-        else
-        {
-            content.innerHTML = "Loading...";
-        }
+        content.innerHTML = "Loading...";
         new Ajax.Request(pageUrl[1],
         {
             method: 'get',
@@ -113,7 +109,7 @@ openPage = function(url)
                 {
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
-                    var scriptList = response[1].split('@');
+                    var scriptList = response[1].split('#!#');
                     if( /MSIE/.test(navigator.userAgent) && !window.opera )
                     {
                         // Try to force IE to not cache this information
@@ -166,14 +162,9 @@ openForm = function(url,parameters,followUp)
 	}
 
     _openingPage = true;
-    if( _debug)
-    {
-        content.innerHTML = "<h2>AJAX FORM</h2>" + url + '<br>' + parameters;
-    }
-    else
-    {
-        content.innerHTML = "Processing...";
-    }
+    if( _debug) alert( "AJAX openForm:" + url + ' | ' + parameters + ' | ' + followUp );
+    content.innerHTML = "Processing...";
+
     // Force the POST method on forms since the general case will not know
     // how much data is being sent.
     new Ajax.Request(url,
@@ -200,7 +191,7 @@ openForm = function(url,parameters,followUp)
                     // followUp page specified.
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
-                    var scriptList = response[1].split('@');
+                    var scriptList = response[1].split('#!#');
                     content.innerHTML = response[2];
                     if( title.length > 0 ) document.title = title;
                     if( scriptList.length > 0 ) loadScripts( scriptList );
@@ -248,14 +239,6 @@ loadScripts = function(scripts)
 {
     var head = document.getElementsByTagName("head").item(0);
 
-	// Remove the scripts if they'v been loaded already
-	//var scriptEl;
-	//var scriptEls = head.getElementsByClassName( "page_scripts" );
-	//for( scriptEl in scriptEls )
-	//{
-	//	head.removeChild( scriptEl );
-	//}
-
     for( i=0; i<scripts.length; i++ )
     {
         var file     = scripts[i];
@@ -270,7 +253,6 @@ loadScripts = function(scripts)
 		if( file.indexOf("JS:") != -1 )
 		{
             fileRef = document.createElement('script')
-			fileRef.className = "page_scripts";
 			if( _debug ) alert( 'Raw Javascript:\n' + file );
             fileRef.innerHTML = file.substring( file.indexOf("JS:") + 3 );
 		}
@@ -278,7 +260,6 @@ loadScripts = function(scripts)
 		else if( file.indexOf("CSS:") != -1 )
 		{
             fileRef = document.createElement('style')
-			fileRef.className = "page_scripts";
 			if( _debug ) alert( 'Raw CSS:\n' + file );
             fileRef.innerHTML = file.substring( file.indexOf("CSS:") + 4 );
 		}
@@ -287,7 +268,6 @@ loadScripts = function(scripts)
         {
             // Javascript files have to create a <script> tag
             fileRef = document.createElement('script')
-			fileRef.className = "page_scripts";
 			if( _debug ) alert( 'Javascript file:\n' + file );
             fileRef.setAttribute("type", "text/javascript");
             fileRef.setAttribute("src", file);
@@ -298,7 +278,6 @@ loadScripts = function(scripts)
         {
             // CSS files have to create a <link> tag
             fileRef=document.createElement("link")
-			fileRef.className = "page_scripts";
 			if( _debug ) alert( 'CSS file:\n' + file );
             fileRef.setAttribute("rel",  "stylesheet");
             fileRef.setAttribute("type", "text/css");

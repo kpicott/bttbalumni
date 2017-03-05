@@ -163,6 +163,10 @@ div.golf_button_container
 	text-align:		center;
 	vertical-align:	middle;
 }
+div.golf_payment_buttons
+{
+	display:		block;
+}
 div.golf_item ul
 {
     list-style-position: inside;
@@ -234,7 +238,7 @@ div.order_button
 	padding-top:		12px;
 	padding-bottom:		12px;
 	text-align:			left;
-	background-color:	#AF4C50;
+	background-color:	#aeaeae;
 	color:				white;
 }
 
