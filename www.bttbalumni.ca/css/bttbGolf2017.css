@@ -40,22 +40,6 @@
 	When you click any order button the "empty" message is removed and a new
 	line is added based on what you ordered.
 
-	"Add Golfer"
-		+---------+--------------------+-------------------+-----+
-		|  Name:  |  _________________ |  Golf + Dinner    |  $$ |
-		+---------+--------------------+-------------------+-----+
-	
-	"Add Dinner Only"
-		+---------+--------------------+-------------------+-----+
-		|  Name:  |  _________________ |  Dinner Only      |  $$ |
-		+---------+--------------------+-------------------+-----+
-
-	"Sponsor a Hole"
-		+---------+--------------------+-------------------+-----+
-		|  Name:  |  _________________ |   Number of Holes |     |
-		|  Email: |  _________________ |        ___        |  $$ |
-		+---------+--------------------+-------------------+-----+
-	
 	In addition, the first time you order anything a comment box is added
 	for instructions (max 256 characters due to a limitation of Paypal)
 
@@ -316,5 +300,13 @@ div.cart_instruction_line field
 	margin-bottom:	10px;
 	border:			1px;
 	border-style:	solid;
+}
+
+/*----------------------------------------
+  Avoid breaking the line after a form (for Paypal button)
+*/
+.inline_form
+{
+	float:	left;
 }
 

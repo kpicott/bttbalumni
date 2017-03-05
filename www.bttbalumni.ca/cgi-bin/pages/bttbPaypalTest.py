@@ -241,6 +241,36 @@ class bttbPaypalTest(bttbPage):
 
 </form>
 </li>
+
+<li>Test 8: Online generated cart<br>
+<form target="_self" method="post" action="https://www.sandbox.paypal.com/cgi-bin/webscr">
+<input type="hidden" name="cmd" value="_ext-enter">
+<input type="hidden" name="redirect_cmd" value="_cart">
+<input type="hidden" name="business" value="bttb-seller@picott.ca">
+<input name="currency_code" value="CAD" type="hidden">
+<input name="shipping" value="0" type="hidden">
+<input name="cancel_return" value="http://bttbalumni.ca/#golf2017?payment=paypal" type="hidden">
+<input name="cbt" value="Return to the BTTB 70th Anniversary Golf Tournament" type="hidden">
+<input name="return" value="http://bttbalumni.ca/#thanksGolf2017" type="hidden">
+<input name="image_url" value="http://bttbalumni.ca/Images/SiteLogoSmall.png" type="hidden">
+<input name="shopping_url" value="http://bttbalumni.ca/#golf2017?payment=paypal" type="hidden">
+<input name="email" value="bttb@picott.ca" type="hidden">
+<input name="first_name" value="Kevin" type="hidden">
+<input name="last_name" value="Picott" type="hidden">
+<input name="night_phone_a" value="905" type="hidden">
+<input name="night_phone_b" value="338" type="hidden">
+<input name="night_phone_c" value="9578" type="hidden">
+<input name="tax_cart" value="0" type="hidden">
+<input name="amount_1" value="20" type="hidden">
+<input name="item_name_1" value="Golf Tournament Lunch" type="hidden">
+<input name="on0_1" value="Lunch Guest Name" type="hidden">
+<input name="os0_1" value="" type="hidden">
+<input type="hidden" name="upload" value="1">
+<button class="shadow_button" name="submit">Pay Online With Paypal
+</button>
+</form>
+</li>
+
 </ol>
         """)
         return html

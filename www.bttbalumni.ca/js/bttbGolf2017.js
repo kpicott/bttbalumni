@@ -1,3 +1,7 @@
+// Change these values to make Paypal live
+var PAYPAL_EMAIL = "bttb-seller@picott.ca";
+var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+
 // Contents of the current cart, represented as an array of keywords.
 //  	amount           : Dollar amount for the item, not including tax
 //		item_name        : Description of item
@@ -34,6 +38,13 @@ today = new Date();
 cutoff = new Date();
 cutoff.setFullYear(2017, 3, 15);
 var apply_discounts = (cutoff > today);
+
+//----------------------------------------------------------------------
+//
+function add_tax(amount)
+{
+    return Math.round(113.0 * amount) / 100.0;
+}
 
 //----------------------------------------------------------------------
 //
@@ -114,13 +125,29 @@ function sponsor_hole()
 // Remove an existing item from the cart.
 // Does nothing if the item does not exist.
 //
-function remove_cart_item(item_idx)
+function remove_cart_item(item_el)
 {
+	var item_idx = item_el.value;
 	if( cart_contents.length > item_idx )
 	{
 		cart_contents.splice( item_idx, 1 );
 		rebuild_golf_cart();
 	}
+}
+
+//----------------------------------------------------------------------
+//
+// Get any special instructions
+//
+function get_instructions()
+{
+	var instructions = '';
+	var instructions_el = document.getElementById( "instructions" );
+	if( instructions_el )
+	{
+		instructions = instructions_el.value;
+	}
+	return instructions;
 }
 
 //----------------------------------------------------------------------
@@ -135,9 +162,9 @@ function remove_cart_item(item_idx)
 function validate_cart_contents()
 {
 	var cart_item;
-    for( var idx=0; idx<cart_contents.length; ++idx )
+    for( var idx=1; idx<=cart_contents.length; ++idx )
     {
-		var cart_info = cart_contents[idx];
+		var cart_info = cart_contents[idx-1];
 		if( cart_info.hasOwnProperty("on0") )
 		{
 			cart_item = document.getElementById( "os0_" + idx );
@@ -171,18 +198,147 @@ function validate_cart_contents()
 
 //----------------------------------------------------------------------
 //
+// Callback for when a cart item had option details modified.
+// Updates the Paypal button fields so that it's always ready to go.
+//
+function update_cart_option(option_el)
+{
+	var paypal_el = document.getElementById( "paypal_" + option_el.id );
+	if( option_el && paypal_el )
+	{
+		paypal_el.value = option_el.value;
+	}
+}
+
+//----------------------------------------------------------------------
+//
+// Build and return a hidden input document element
+//
+function hidden_input_element(name, value)
+{
+	return hidden_input_element_with_id(name, value, "paypal_" + name);
+}
+
+//----------------------------------------------------------------------
+//
+// Build and return a hidden input document element
+//
+function hidden_input_element_with_id(name, value, id)
+{
+	var input = document.createElement( "input" );
+	input.type = "hidden";
+	input.name = name;
+	input.value = value;
+	input.id = id;
+	return input;
+}
+
+//----------------------------------------------------------------------
+//
 // Build the Paypal order button using the current cart contents,
 // omitting any fields that are not fully filled in.
 //
 function rebuild_golf_paypal_button()
 {
-	// Common cart boilerplate
+	// Look for the div containing the paypal button. If it could
+	// not be found then bail out, there's nowhere to put this.
+	var paypal_button = document.getElementById( "paypal_button" );
+	if( ! paypal_button )
+	{
+		return;
+	}
 
-	// tax_cart = "0"
-	// amount
-	// item_name
-	// on0
-	// os0
+	// Common cart boilerplate
+    var form  = document.createElement( "form" );
+	form.target = "_self";
+	form.className = "inline_form";
+	form.method = "post";
+	form.action = PAYPAL_URL;
+
+	var paypal_info = { "cmd"           : "_ext-enter"
+					  , "redirect_cmd"  : "_cart"
+    				  , "currency_code" : "CAD"
+    				  , "shipping"      : "0"
+    				  , "cancel_return" : "http://bttbalumni.ca/#golf2017?payment=paypal"
+    				  , "cbt"           : "Return to the BTTB 70th Anniversary Golf Tournament"
+    				  , "return"        : "http://bttbalumni.ca/#thanksGolf2017"
+    				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
+    				  , "shopping_url"  : "http://bttbalumni.ca/#golf2017?payment=paypal"
+
+					  , "email"         : member_info.email
+					  , "first_name"    : member_info.first_name
+					  , "last_name"     : member_info.last_name
+					  , "night_phone_a" : member_info.night_phone_a
+					  , "night_phone_b" : member_info.night_phone_b
+					  , "night_phone_c" : member_info.night_phone_c
+
+					  , "tax_cart"      : "0"
+					  , "upload"        : "1"
+					  , "business"      : PAYPAL_EMAIL
+					  };
+
+	// First the boilerplate
+	for( var name in paypal_info )
+	{
+		if( paypal_info.hasOwnProperty(name) )
+		{
+			form.appendChild( hidden_input_element( name, paypal_info[name] ) );
+		}
+	}
+
+    for( var idx=1; idx<=cart_contents.length; ++idx )
+    {
+        var cart_info = cart_contents[idx-1];
+
+		form.appendChild( hidden_input_element( "amount_" + idx, cart_info.amount ) );
+		form.appendChild( hidden_input_element( "item_name_" + idx, cart_info.item_name ) );
+
+		// NOTE: Ignore tax_rate since a cart-wide rate was set
+
+		// Optional discount amount
+		if( cart_info.hasOwnProperty("discount_amount") )
+		{
+			form.appendChild( hidden_input_element( "discount_amount_" + idx, cart_info.discount_amount ) );
+		}
+
+		// Optional option 0
+		if( cart_info.hasOwnProperty("on0") )
+		{
+			form.appendChild( hidden_input_element( "on0_" + idx, cart_info.on0 ) );
+			form.appendChild( hidden_input_element( "os0_" + idx, cart_info.os0 ) );
+		}
+
+		// Optional option 1
+		if( cart_info.hasOwnProperty("on1") )
+		{
+			form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on0 ) );
+			form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os0 ) );
+		}
+	}
+
+	// Instructions cannot be sent as a separate field in Paypal so they
+	// have to be packaged up as a free item.
+	var instructions = get_instructions();
+	var instructions_idx = cart_contents.length + 1;
+
+	form.appendChild( hidden_input_element( "item_name_" + instructions_idx, instructions_id ) );
+	form.appendChild( hidden_input_element( "amount_" + instructions_idx, 0 ) );
+	form.appendChild( hidden_input_element( "on0_" + instructions_idx, "Note" ) );
+	form.appendChild( hidden_input_element_with_id( "os0_" + instructions_idx, instructions, "paypal_instructions" ) );
+
+	// Payment button
+	var form_button = document.createElement( "button" );
+	form_button.className = "shadow_button";
+	form_button.name = "submit";
+	form_button.innerHTML = 'Pay Online With Paypal';
+	form.appendChild( form_button );
+
+	// Replace the contents of the paypal button div with the new button
+    while( paypal_button.hasChildNodes() )
+    {
+        paypal_button.removeChild( paypal_button.firstChild );
+    }
+	paypal_button.appendChild( form );
 }
 
 //----------------------------------------------------------------------
@@ -195,12 +351,7 @@ function rebuild_golf_cart()
     var cart_element = document.getElementById( "cart_contents" );
 
 	// Get the current instructions, if any, so that they are up to date
-	var instructions = '';
-	var instructions_el = document.getElementById( "instructions" );
-	if( instructions_el )
-	{
-		instructions = instructions_el.value;
-	}
+	var instructions = get_instructions();
 
     // Empty out any previous cart contents
     while( cart_element.hasChildNodes() )
@@ -238,51 +389,59 @@ function rebuild_golf_cart()
 	title_row.appendChild( title_col );
 	cart_table.appendChild( title_row );
 
-    // Just the paypal elements for now
+	var update_cart_fn = function() { update_cart_option(this); };
+	var remove_cart_fn = function() { remove_cart_item(this); };
+
+    // Build the individual items
 	var total_cost = 0;
-    for( var idx=0; idx<cart_contents.length; ++idx )
+    for( var idx=1; idx<=cart_contents.length; ++idx )
     {
 		var cart_row = document.createElement( "tr" );
-        var cart_info = cart_contents[idx];
+        var cart_info = cart_contents[idx-1];
 
-		// Paypal stuff
-		//var cart_index = 1;
-		//for( var item_key in cart_info )
-		//{
-		//    if( ! cart_info.hasOwnProperty(item_key) )
-		//	{
-		//		continue;
-		//	}
-		//	var item_data = cart_info[item_key];
-
-		//	var field = document.createElement( "input" );
-		//	field.type = "hidden";
-		//	field.name = item_key + "_" + cart_index;
-		//	field.value = item_data;
-
-			// cart_element.appendChild( field );
-
-		//	cart_index++;
-		//}
 		var cart_col = document.createElement( "td" );
 		cart_col.innerHTML = cart_info.item_name;
 		cart_row.appendChild( cart_col );
 
 		cart_col = document.createElement( "td" );
-		cart_col.innerHTML = "<input type='text' size='32' maxlength='64' id='os0_" + idx + "' placeholder='" + cart_info.on0 + "'>";
-		if( cart_info.hasOwnProperty("on1") )
-		{
-			cart_col.innerHTML += "<br><input type='text' size='32' maxlength='64' id='os1_" + idx + "' placeholder='" + cart_info.on1 + "'>";
-		}
+			var os0_el = document.createElement( "input" );
+			os0_el.type = "text";
+			os0_el.size = 32;
+			os0_el.maxlength = 64;
+			os0_el.id = "os0_" + idx;
+			os0_el.oninput = update_cart_fn;
+			os0_el.placeholder = cart_info.on0;
+			cart_col.appendChild( os0_el );
+
+			if( cart_info.hasOwnProperty("on1") )
+			{
+				var os1_el = document.createElement( "input" );
+				os1_el.type = "text";
+				os1_el.size = 32;
+				os1_el.maxlength = 64;
+				os1_el.id = "os1_" + idx;
+				os1_el.oninput = update_cart_fn;
+				os1_el.placeholder = cart_info.on1;
+				cart_col.appendChild( os1_el );
+			}
 		cart_row.appendChild( cart_col );
 
 		cart_col = document.createElement( "td" );
-		cart_col.innerHTML = "$" + cart_info.amount;
+		var cost = cart_info.amount;
+		if( cart_info.hasOwnProperty("discount_amount") )
+		{
+			cost -= cart_info.discount_amount;
+		}
+		cart_col.innerHTML = "$" + cost;
 		cart_row.appendChild( cart_col );
-		total_cost += cart_info.amount;
+		total_cost += cost;
 
         var remove_col = document.createElement( "td" );
-        remove_col.innerHTML = "<button onclick='remove_cart_item(\"" + idx + "\");'>X</button>";
+			var remove_button = document.createElement( "button" );
+			remove_button.innerHTML = "X";
+			remove_button.value = idx - 1;
+			remove_button.onclick = remove_cart_fn;
+			remove_col.appendChild( remove_button );
         remove_col.align = "center";
         cart_row.appendChild( remove_col );
 
@@ -297,7 +456,15 @@ function rebuild_golf_cart()
 	//
 	instructions_col = document.createElement( "td" );
 	instructions_col.colSpan = 3;
-	instructions_col.innerHTML = "<textarea rows='4' cols='64' maxlength='256' id='instructions' placeholder='Enter instructions here...'>" + instructions;
+		var instructions_text = document.createElement( "textarea" );
+		instructions_text.rows = "4";
+		instructions_text.cols = "64";
+		instructions_text.maxlength = "256";
+		instructions_text.id = "instructions";
+		instructions_text.placeholder = "Enter instructions here (foursome members, food allergies, etc.)";
+		instructions_text.oninput = function() { update_cart_option(this); };
+		instructions_text.innerHTML += instructions;
+		instructions_col.appendChild( instructions_text );
 	instructions_row.appendChild( instructions_col );
 	//
 	cart_table.appendChild( instructions_row );
@@ -330,19 +497,21 @@ function rebuild_golf_cart()
 	var button_container = document.createElement( "div" );
 	button_container.className = "golf_payment_buttons";
 
+		// Put in a placeholder for the Paypal button - populate below
+		var paypal_div = document.createElement( "div" );
+		paypal_div.id = "paypal_button";
+		button_container.appendChild( paypal_div );
+
+		// The cheque method will trigger a page build
 		var form_button = document.createElement( "button" );
 		form_button.className = "shadow_button";
 		form_button.onclick = function() { print_golf_cart(); };
-		form_button.innerHTML = 'Pay Online With Paypal';
-		button_container.appendChild( form_button );
-
-		form_button = document.createElement( "button" );
-		form_button.className = "shadow_button";
-		form_button.onclick = function() { print_golf_cart(); };
-		form_button.innerHTML = "View Printable Order";
+		form_button.innerHTML = "View Printable Order Form";
 		button_container.appendChild( form_button );
 
 	cart_element.appendChild( button_container );
+
+	rebuild_golf_paypal_button();
 }
 
 //----------------------------------------------------------------------
@@ -357,16 +526,16 @@ function print_golf_cart()
 	}
 
 	// Special instructions are not stored anywhere so get them out first.
-	var instructions = '';
-	var instructions_el = document.getElementById( "instructions" );
-	if( instructions_el )
-	{
-		instructions = instructions_el.value;
-	}
+	var instructions = get_instructions();
 
     var print_wnd = window.open("about:blank", "golf_cart");
-    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Golf Shopping Cart</title></head>\n" );
-    print_wnd.document.write( "<body><img src='/Images70th/PrintableFormHeader.jpg'/>\n" );
+    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Golf Shopping Cart</title>\n" );
+    print_wnd.document.write( "<link href='https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700' rel='stylesheet'>" );
+    print_wnd.document.write( "<style>" );
+    print_wnd.document.write( "* { font-family: Raleway; font-size: 12; }" );
+    print_wnd.document.write( "</style>" );
+    print_wnd.document.write( "</head>" );
+    print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeader.jpg'/>\n" );
 
     // Get the values of the hidden fields containing the logged-in member's
     // information. The odd format is to be consistent with the way PayPal
@@ -405,7 +574,7 @@ function print_golf_cart()
     print_wnd.document.write( "<tr><td width='100'>Name:</td><td>" + name + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Email:</td><td>" + email + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Phone:</td><td>" + phone + "</td></tr>\n" );
-    print_wnd.document.write( "<tr height='150'><td>Special<br/>Instructions:</td><td>" + instructiosn + "</td></tr>\n" );
+    print_wnd.document.write( "<tr><td>Special<br/>Instructions:</td><td><p>" + instructions + "</p></td></tr>\n" );
     print_wnd.document.write( "</table>" );
 
     print_wnd.document.write( "<h2>Your Order</h2>\n" );
@@ -413,119 +582,89 @@ function print_golf_cart()
     print_wnd.document.write( "<tr><th>Item</th><th>Information</th><th width='100'>Cost</th></tr>" );
     var total_cost = 0.0;
 	var discount = 0.0;
-	var had_golf = false;
-	var had_golf_dinner = false;
-	var had_golf_hole = false;
+	var sponsored_a_hole = false;
     if( cart_contents.length === 0 )
     {
         print_wnd.document.write( "<p>" + empty_cart_msg + "</p>" );
     }
     else
     {
-        for( var idx=0; idx<cart_contents.length; ++idx )
+        for( var idx=1; idx<=cart_contents.length; ++idx )
         {
-            var cart_item = cart_contents[idx];
+            var cart_item = cart_contents[idx-1];
+
+			// Calculate the cost of this item
+            var cost = cart_item.amount;
+			if( cart_item.hasOwnProperty("discount_amount") )
+			{
+				cost = cost - cart_item.discount_amount;
+				discount = discount + cart_item.discount_amount;
+			}
+			if( cart_item.tax_rate > 0 )
+			{
+				cost = add_tax(cost);
+				discount = discount + add_tax(cart_item.discount_amount) - cart_item.discount_amount;
+			}
 
             print_wnd.document.write( "<tr>" );
-            print_wnd.document.write( "<td>" + cart_item[idx_desc] + "</td>" );
+            print_wnd.document.write( "<td>" + cart_item.item_name + "</td>" );
 
-			switch( cart_item.item_name )
+			// If there are any information fields add them here
+            print_wnd.document.write( "<td>" );
+			if( cart_item.hasOwnProperty("on0") )
 			{
-				case golfer_id:
-            		print_wnd.document.write( "<td>Golfer Name</td>" );
-					break;
-				case lunch_id:
-            		print_wnd.document.write( "<td>Lunch Guest Name</td>" );
-					break;
-				case dinner_id:
-            		print_wnd.document.write( "<td>Dinner Guest Name</td>" );
-					break;
-				case sponsor_id:
-            		print_wnd.document.write( "<td>Sponsor Name<br>Sponsor Email</td>" );
-					break;
+				print_wnd.document.write( cart_item.on0 );
+				print_wnd.document.write( " = " );
+				print_wnd.document.write( cart_item.os0 );
 			}
+			if( cart_item.hasOwnProperty("on1") )
+			{
+				print_wnd.document.write( "<br>" );
+				print_wnd.document.write( cart_item.on1 );
+				print_wnd.document.write( " = " );
+				print_wnd.document.write( cart_item.os1 );
+			}
+            print_wnd.document.write( "</td>" );
+
             print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
             total_cost = total_cost + cost;
             print_wnd.document.write( "</tr>\n" );
 
-//  	amount           : Dollar amount for the item, not including tax
-//		item_name        : Description of item
-//		onN              : Name of option N (name or email)
-//		osN              : Value of option N
-//						   Field containing option = osN_X for item X
-//		tax_rate         : Rate of tax to apply to the item, as a percentage
-//		discount_amount  : Amount of discount - only non-zero items will have this
-
-//			if( cart_item[idx_id] === "golf" )
-//			{
-//				had_golf = true;
-//			}
-//			else if( cart_item[idx_id] === "golfDinner" )
-//			{
-//				had_golf_dinner = true;
-//			}
-//			else if( cart_item[idx_id] === "golfHole" )
-//			{
-//				had_golf_hole = true;
-//			}
-//            var cost = cart_item[idx_cost];
-//			if( apply_discounts )
-//			{
-//				cost = cost - cart_item[idx_disc];
-//				discount = discount + cart_item[idx_disc];
-//			}
-//			if( cart_item[idx_taxed] )
-//			{
-//				cost = add_tax(cost);
-//				discount = discount + add_tax(cart_item[idx_disc]) - cart_item[idx_disc];
-//			}
-//            print_wnd.document.write( "<tr>" );
-//            print_wnd.document.write( "<td>" + cart_item[idx_desc] + "</td>" );
-//            print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
-//            total_cost = total_cost + cost;
-//            print_wnd.document.write( "</tr>\n" );
+			if( cart_item.item_name === golfer_id )
+			{
+				sponsored_a_hole = true;
+			}
         }
     }
     print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
     print_wnd.document.write( "<td></td>" );
-    print_wnd.document.write( "<td></td>" );
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
 
     print_wnd.document.write( "</tr>\n" );
     print_wnd.document.write( "</table>\n" );
-//
-//	// Congratulate them on their frugality
-//	if( discount > 0 )
-//	{
-//    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " for being an early-bird!</i></p>\n" );
-//	}
-//
-//	// Check to see if any further information is required for golf
-//	if( had_golf )
-//	{
-//		print_wnd.document.write( "<table width='90%' cellpadding='5' border='1'>" );
-//		print_wnd.document.write( "<tr><td width='200'>Golf Partner(s), if any?</td><td>&nbsp;</td></tr>\n" );
-//		print_wnd.document.write( "</table>\n" );
-//	}
-//	if( had_golf || had_golf_dinner )
-//	{
-//		print_wnd.document.write( "<p><i>Golf is at Indian Wells Golf Course, 5377 Walker's Line, Burlington</i></p>\n" );
-//		if( had_golf )
-//		{
-//			print_wnd.document.write( "<p><i>BBQ Lunch is at noon, shotgun start is at 1pm</i></p>\n" );
-//		}
-//	}
-//	if( had_golf_dinner )
-//	{
-//		print_wnd.document.write( "<p><i>Dinner guests please arrive before 6:30pm for dinner. (Come earlier to watch the golfers!)</i></p>\n" );
-//	}
-//	if( had_golf_hole )
-//	{
-//		print_wnd.document.write( "<p><i>You will be contacted for further information" );
-//		print_wnd.document.write( " regarding your hole sponsorship. Send email to" );
-//		print_wnd.document.write( " golf@bttbalumni.ca if you are not contacted within a week.</i></p>\n" );
-//	}
+
+	// Congratulate them on their frugality
+	if( discount > 0 )
+	{
+    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " for being an early-bird!</i></p>\n" );
+	}
+
+	print_wnd.document.write( "<p><i>Golf Details:<ul>\n" );
+	print_wnd.document.write( "<li>Indian Wells Golf Course, 5377 Walker's Line, Burlington</li>\n" );
+	print_wnd.document.write( "<li>BBQ Lunch starts at 11:30am</li>\n" );
+	print_wnd.document.write( "<li>Shotgun start is at 1pm</li>\n" );
+	print_wnd.document.write( "<li>Dinner buffet opens at 7:00pm.</li>\n" );
+	print_wnd.document.write( "</ul></p>\n" );
+
+	if( sponsored_a_hole )
+	{
+		print_wnd.document.write( "<p><i>Thank you for sponsoring a hole! You will be contacted for further information" );
+		print_wnd.document.write( " regarding your hole sponsorship. Send email to" );
+		print_wnd.document.write( " golf@bttbalumni.ca if you are not contacted within a week.</i></p>\n" );
+	}
+
+	print_wnd.document.write( "<h2><font color='#af4c50'>Thank you for your order, see you in June!</font></h2>\n" );
 
     print_wnd.document.write( "</body></html>" );
     print_wnd.document.close();
