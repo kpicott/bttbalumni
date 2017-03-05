@@ -311,8 +311,8 @@ function rebuild_golf_paypal_button()
 		// Optional option 1
 		if( cart_info.hasOwnProperty("on1") )
 		{
-			form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on0 ) );
-			form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os0 ) );
+			form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on1 ) );
+			form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os1 ) );
 		}
 	}
 
