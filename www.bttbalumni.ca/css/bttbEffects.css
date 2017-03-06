@@ -1,0 +1,64 @@
+/*
+	Utility file containing special effects on items (shadows, generic transitions, colouring...)
+*/
+
+/*======================================================================
+	Buttons that will add a shadow on hover and press down when you click on them.
+		<button class="shadow_button" onclick="pressed_me();">BUTTON TITLE</button>
+*/
+.shadow_button
+{
+    background-color:    #AF4C50;
+    border:              none;
+    color:               white;
+    padding:             10px 15px;
+    text-align:          center;
+    text-decoration:     none;
+    display:             inline-block;
+    font-size:           16px;
+    margin:              4px 2px;
+    cursor:              pointer;
+    transition-duration: 0.2s;
+    -webkit-transition-duration: 0.2s; /* Safari */
+}
+
+.shadow_button:hover
+{
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.shadow_button:active
+{
+  background-color: #8e3e41;
+  box-shadow:       0 5px #666;
+  transform:        translateY(2px);
+}
+
+/*========================================
+	Nicely shadowed, outlined, box
+*/
+div.box_shadow
+{
+	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	margin-bottom:	10px;
+	border:			1px;
+	border-style:	solid;
+}
+
+/*========================================
+  Avoid breaking the line after a form (for Paypal button)
+*/
+.inline_form
+{
+	float:	left;
+}
+
+
+/* ==================================================================
+   Copyright (C) Kevin Peter Picott. All rights reserved. These coded
+   instructions, statements and computer programs contain unpublished
+   information proprietary to Kevin Picott, which is protected by the
+   Canadian and US federal copyright law and may not be  disclosed to
+   third  parties  or  duplicated or  copied,  in whole  or in  part,
+   without   the  prior  written   consent  of  Kevin  Peter  Picott.
+   ==================================================================*/

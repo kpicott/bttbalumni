@@ -1,0 +1,184 @@
+/*
+	The store contains both the items for sale and the shopping cart, for simplicity.
+
+	The golf tournament has been broken out into its own store since it requires more information
+	from purchasers, and will appeal to a different audience.
+
+	The elements comprising the store look like this:
+
+	#store
+		+---------------------------------------------------+ +---------------------------------+
+		|        #dates                                     | |  #golf                          |
+		+---------------------------------------------------+ +---------------------------------+
+		+---------------------------------------------------------------------------------------+
+		|                                                                                       |
+		|                   #title                                                              |
+		|                                                                                       |
+		+---------------------------------------------------------------------------------------+
+		     #allin           #saturday          #parade           #shirt             #hat    
+			 .item              .item            .item              .item            .item
+		+---------------+ +---------------+ +---------------+ +---------------+ +---------------+
+		|+-------------+| |+-------------+| |+-------------+| |+-------------+| |+-------------+|
+		||    .image   || ||    .image   || ||    .image   || ||    .image   || ||    .image   ||
+		|+-------------+| |+-------------+| |+-------------+| |+-------------+| |+-------------+|
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  |         |  | |  |         |  | |  |         |  | |  |         |  | |  |         |  |
+		|  |  .info  |  | |  |  .info  |  | |  |  .info  |  | |  |  .info  |  | |  |  .info  |  |
+		|  |         |  | |  |         |  | |  |         |  | |  |         |  | |  |         |  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  |  .name  |  | |  |  .name  |  | |  |  .name  |  | |  |  .name  |  | |  |  .name  |  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  | .shirt  |  | |  | .shirt  |  | |  | .shirt  |  | |  | .shirt  |  | |  | .shirt  |  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  |         |  | |  |         |  | |  |         |  | |  |         |  | |  |         |  |
+		|  |  .cost  |  | |  |  .cost  |  | |  |  .cost  |  | |  |  .cost  |  | |  |  .cost  |  |
+		|  |         |  | |  |         |  | |  |         |  | |  |         |  | |  |         |  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		|  |  .add   |  | |  |  .add   |  | |  |  .add   |  | |  |  .add   |  | |  |  .add   |  |
+		|  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  | |  +---------+  |
+		+---------------+ +---------------+ +---------------+ +---------------+ +---------------+
+	#allin .item(800px x 150px)
+		+---------------------------------------------------------------------------------------+
+		| +--------------------+ +--------------------------------+ +-------+  +-------------+  |
+		| | .image             | | .info                          | |.cost  |  | .add        |  |
+		| |                    | |                                | |       |  +-------------+  |
+		| |                    | |                                | |       |  +-------------+  |
+		| |                    | |                                | |       |  | .name       |  |
+		| +--------------------+ +--------------------------------+ +-------+  +-------------+  |
+		|                                                                      +-------------+  |
+		|                                                                      | .shirt_size |  |
+		|                                                                      +-------------+  |
+		+---------------------------------------------------------------------------------------+
+	Repeat for #saturday, #parade, #shirt, #hat
+
+	#cart
+		+-------------------------------------------------------------------+
+		|  Your shopping cart is empty. Add items with the buttons above.   |
+		+--------------------------------------------------------+----------+
+		| Pay now with Paypal, or mail a cheque with order form  |          |
+		| +-----------------+  +------------------+              |          |
+		| | Pay with Paypal |  | Print Order Form |        Total |   $$$    |
+		| +-----------------+  +------------------+              |          |
+		+--------------------------------------------------------+----------+
+*/
+
+#store
+{
+	display:	block;
+	position:	relative;
+	top:		0px;
+	left:		0px;
+	width:		800px;
+	background-color:	red;
+}
+#dates
+{
+	background-color:	green;
+	display:			inline-block;
+	width:				475px;
+	height:				40px;
+}
+#golf
+{
+	background-color:	blue;
+	display:			inline;
+	width:				324px;
+	height:				40px;
+}
+#title
+{
+	background-color:	yellow;
+	display:			inline;
+	width:				800px;
+	height:				80px;
+}
+.item
+{
+	width:				800px;
+	height:				150px;
+	display:			block;
+	background-color:	red;
+}
+#allin
+{
+	background-color:	#777777;
+}
+#saturday
+{
+	background-color:	#999999;
+}
+#parade
+{
+	background-color:	#bbbbbb;
+}
+#shirt
+{
+	background-color:	#dddddd;
+}
+#hat
+{
+	background-color:	#ffffff;
+}
+
+.item .image
+{
+	position:		absolute;
+	top:			0px;
+	left:			0px;
+	width:			125px;
+	background-color:	cyan;
+}
+.item .info
+{
+	position:		absolute;
+	top:			0px;
+	left:			130px;
+	width:			125px;
+	background-color:	magenta;
+}
+.item .cost
+{
+	position:		absolute;
+	top:			0px;
+	left:			260px;
+	background-color:	green;
+}
+.item .buttons
+{
+	position:		absolute;
+	top:			0px;
+	right:			150px;
+	background-color:	#999999;
+}
+.item .name
+{
+	display:			block;
+	background-color:	yellow;
+}
+.item .shirt_size
+{
+	display:			block;
+	background-color:	red;
+}
+.item .add
+{
+	display:			block;
+	background-color:	blue;
+}
+#cart
+{
+	display:	inline;
+	width:		800px;
+	background-color:	green;
+}
+
+/* ==================================================================
+   Copyright (C) Kevin Peter Picott. All rights reserved. These coded
+   instructions, statements and computer programs contain unpublished
+   information proprietary to Kevin Picott, which is protected by the
+   Canadian and US federal copyright law and may not be  disclosed to
+   third  parties  or  duplicated or  copied,  in whole  or in  part,
+   without   the  prior  written   consent  of  Kevin  Peter  Picott.
+   ==================================================================*/
