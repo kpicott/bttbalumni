@@ -24,7 +24,10 @@ class bttbGolf2017(bttbPage):
 
     #----------------------------------------
     def scripts(self):
-        script_list = ['__JAVASCRIPTPATH__/bttbGolf2017.js', '__CSSPATH__/bttbGolf2017.css']
+        script_list = ['__JAVASCRIPTPATH__/bttbGolf2017.js'
+                      , '__CSSPATH__/bttbEffects.css'
+                      , '__CSSPATH__/bttbGolf2017.css'
+                      ]
         script_list.append( 'CSS: %s' % date_css() )
 
         first_name = ''

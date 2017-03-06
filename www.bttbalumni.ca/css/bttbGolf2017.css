@@ -51,39 +51,6 @@
 */
 
 /*======================================================================
-	Ordering buttons that will add a shadow on hover and press down
-	when you click on them.
-		<button class="shadow_button" onclick="pressed_me();">BUTTON TITLE</button>
-*/
-.shadow_button
-{
-    background-color:    #AF4C50;
-    border:              none;
-    color:               white;
-    padding:             10px 15px;
-    text-align:          center;
-    text-decoration:     none;
-    display:             inline-block;
-    font-size:           16px;
-    margin:              4px 2px;
-    cursor:              pointer;
-    transition-duration: 0.2s;
-    -webkit-transition-duration: 0.2s; /* Safari */
-}
-
-.shadow_button:hover
-{
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24),0 17px 50px 0 rgba(0,0,0,0.19);
-}
-
-.shadow_button:active
-{
-  background-color: #8e3e41;
-  box-shadow:       0 5px #666;
-  transform:        translateY(2px);
-}
-
-/*======================================================================
 	Subsections of the entire cart
 ======================================================================*/
 
@@ -192,7 +159,8 @@ div.order_button
 
 #cart table
 {
-	border:		1px solid #ddd;
+	border:	1px solid #ddd;
+	width:	100%;
 }
 
 #cart td, #cart th
@@ -231,18 +199,18 @@ div.cart_line
 	display:	block;
 	border:		1px solid #ddd;
 }
-div.cart_line name
+div.cart_line .name
 {
 	font-style:	italic;
 }
-div.cart_line value
+div.cart_line .value
 {
 }
-div.cart_line info
+div.cart_line .info
 {
 	font-style:	italic;
 }
-div.cart_line cost
+div.cart_line .cost
 {
 	font-weight:	bold;
 	width:			50px;
@@ -258,10 +226,10 @@ div.cart_line cost
 div.cart_total_line
 {
 }
-div.cart_total_line info
+div.cart_total_line .info
 {
 }
-div.cart_total_line cost
+div.cart_total_line .cost
 {
 	width:			50px;
 }
@@ -283,29 +251,6 @@ div.cart_instruction_line info
 	float:		left;
 }
 div.cart_instruction_line field
-{
-	float:	left;
-}
-
-/*======================================================================
-	Generic effects
-======================================================================*/
-
-/*----------------------------------------
-  Outlined, shadowed box to separate sections
-*/
-.box_shadow
-{
-	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	margin-bottom:	10px;
-	border:			1px;
-	border-style:	solid;
-}
-
-/*----------------------------------------
-  Avoid breaking the line after a form (for Paypal button)
-*/
-.inline_form
 {
 	float:	left;
 }
