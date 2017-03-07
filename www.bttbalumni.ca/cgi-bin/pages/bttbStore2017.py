@@ -104,7 +104,7 @@ CART_DATA = {
             ,   'shirt' :    { 'image'        : 'merch_shirt.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Shirt</b><ul>
-                                                   <li>Golf shirt with embroidered reunion patch</li>
+                                                   <li>Stormtech Gold shirt with embroidered reunion patch</li>
                                                    <li>Select from a wide variety of sizes</li>
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
