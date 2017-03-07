@@ -68,7 +68,7 @@ CART_DATA = {
                                                    <li>70<sup>th</sup> Anniversary Reunion Shirt</li>
                                                    <li>70<sup>th</sup> Anniversary Reunion Hat</li>
                                                    <li>Marching spot in the SOMF with the Alumni Band</li>
-                                                   <li>Saturday Night Social (dinner + entertainment)</li>
+                                                   <li>Saturday Night Social (buffet + entertainment)</li>
                                                    <li>$120 Early-Bird until April 15th, $140 after!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceAllIn%s.png' % EARLY
@@ -79,7 +79,7 @@ CART_DATA = {
             ,   'saturday' : { 'image'        : 'merch_saturday.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>Saturday Night Social</b><ul>
-                                                   <li>Dinner</li>
+                                                   <li>Buffet dinner</li>
                                                    <li>Music and Entertainment</li>
                                                    <li>Cash bar</li>
                                                    <li>Guests Welcome</li>
