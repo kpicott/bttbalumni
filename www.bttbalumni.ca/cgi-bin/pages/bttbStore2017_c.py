@@ -22,22 +22,22 @@ if NOW > EARLYBIRD_CUTOFF:
 # List of available shirt options
 #
 NO_SHIRT_SELECTED = "-- Select Shirt Size --"
-SHIRT_OPTIONS = [ [ "",    NO_SHIRT_SELECTED]
-                , [ "WXS", "Women's Extra Small"]
-                , [ "WS",  "Women's Small"]
-                , [ "WM",  "Women's Medium"]
-                , [ "WL",  "Women's Large"]
-                , [ "WXL", "Women's XL"]
-                , [ "W2X", "Women's 2XL"]
-                , [ "MS",  "Men's Small"]
-                , [ "MM",  "Men's Medium"]
-                , [ "ML",  "Men's Large"]
-                , [ "MXL", "Men's XL"]
-                , [ "M2X", "Men's 2XL"]
-                , [ "M3X", "Men's 3XL"]
-                , [ "M4X", "Men's 4XL"]
-                , [ "M5X", "Men's 5XL"]
-                , [ "M6X", "Men's 6XL"]
+SHIRT_OPTIONS = [ NO_SHIRT_SELECTED
+                , "Women's Extra Small"
+                , "Women's Small"
+                , "Women's Medium"
+                , "Women's Large"
+                , "Women's XL"
+                , "Women's 2XL"
+                , "Men's Small"
+                , "Men's Medium"
+                , "Men's Large"
+                , "Men's XL"
+                , "Men's 2XL"
+                , "Men's 3XL"
+                , "Men's 4XL"
+                , "Men's 5XL"
+                , "Men's 6XL"
                 ]
 
 def shirt_options(selector_name):
@@ -46,29 +46,24 @@ def shirt_options(selector_name):
     :return: the HTML that implements the shirt dropdown selection
     '''
     html = '<select class="dropdown" id="%s">' % selector_name
-    html += '<option value="%s" selected="selected">%s</option>' % (NO_SHIRT_SELECTED, NO_SHIRT_SELECTED)
     for shirt_info in SHIRT_OPTIONS:
-        html += '<option value="%s">%s</option>' % ( shirt_info[0], shirt_info[1] )
+        html += '<option value="%s">%s</option>' % ( shirt_info, shirt_info )
     html += '</select>'
     return html
 
 #======================================================================
 def title_html():
     ''':return: HTML implementing the first section with the title information'''
-    return MapLinks( '''
-<div class='splash box_shadow'>
-<img src='/Images70th/golf.jpg' width='800' height='300' usemap='#golfMap'/>
-<map name='golfMap'>
-    <area shape='rect' coords='10,211,229,236' target='IndianWells' alt='Indian Wells' href='http://www.indianwellsgolfclub.ca/'>
-    <area shape='rect' coords='160,266,652,291' alt='Mail us' href='mailto:golf@bttbalumni.ca'>
-</map></div>''')
+    return MapLinks( '''send:(info@bttbalumni.ca,<div class='box_shadow' id='header'></div>)
+              link:(/cgi-bin/nav.cgi#golf2017,<div class='box_shadow' id='golf_link'></div>)
+              <div class='box_shadow' id='title'></div>''' )
 
 #======================================================================
 #
 # Data driving the individual cart items
 #
 CART_DATA = {
-                'allin' :    { 'image'        : '/Images70th/Store/merch_inclusive.png'
+                'allin' :    { 'image'        : 'merch_inclusive.jpg'
                              , 'size'         : '_big'
                              , 'info'         : '''<b>All-Inclusive VIP Ticket</b><ul>
                                                    <li>70<sup>th</sup> Anniversary Reunion Shirt</li>
@@ -77,12 +72,12 @@ CART_DATA = {
                                                    <li>Saturday Night Social (dinner + entertainment)</li>
                                                    <li>Early-Bird pricing until April 15th!</li>
                                                    </ul>'''
-                             , 'cost_image'   : 'PriceAllIn%sA.png' % EARLY
-                             , 'onclick'      : 'add_lunch();'
+                             , 'cost_image'   : 'PriceAllIn%s.png' % EARLY
+                             , 'onclick'      : 'add_all_inclusive();'
                              , 'name'         : 'Name of participant'
                              , 'size_select'  : shirt_options( 'allin_size' )
                              }
-            ,   'saturday' : { 'image'        : '/Images70th/WinACar.png'
+            ,   'saturday' : { 'image'        : 'merch_saturday.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>Saturday Night Social</b><ul>
                                                    <li>Dinner</li>
@@ -91,11 +86,11 @@ CART_DATA = {
                                                    <li>Non-Alumni Welcome</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceSaturday.png'
-                             , 'onclick'      : 'add_golfer();'
+                             , 'onclick'      : 'add_saturday();'
                              , 'name'         : 'Name of participant'
                              , 'size_select'  : ''
                              }
-            ,   'parade' :   { 'image'        : '/Images70th/WinACar.png'
+            ,   'parade' :   { 'image'        : 'merch_parade.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>Sound of Music Parade, Alumni Band</b><ul>
                                                    <li>Includes Hat and Shirt as uniform</li>
@@ -103,11 +98,11 @@ CART_DATA = {
                                                    <li>Parade music from multiple eras</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceParade.png'
-                             , 'onclick'      : 'add_diner();'
+                             , 'onclick'      : 'add_parade();'
                              , 'name'         : 'Name of participant'
                              , 'size_select'  : shirt_options( 'parade_size' )
                              }
-            ,   'shirt' :    { 'image'        : '/Images70th/WinACar.png'
+            ,   'shirt' :    { 'image'        : 'merch_shirt.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Shirt</b><ul>
                                                    <li>High quality golf shirt with special reunion patch</li>
@@ -115,11 +110,11 @@ CART_DATA = {
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceShirt.png'
-                             , 'onclick'      : 'sponsor_hole();'
+                             , 'onclick'      : 'add_shirt();'
                              , 'name'         : None
                              , 'size_select'  : shirt_options( 'shirt_size' )
                              }
-            ,   'hat'   :    { 'image'        : '/Images70th/WinACar.png'
+            ,   'hat'   :    { 'image'        : 'merch_hat.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Hat</b><ul>
                                                    <li>Navy Blue with special reunion logo</li>
@@ -127,7 +122,7 @@ CART_DATA = {
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceHat.png'
-                             , 'onclick'      : 'sponsor_hole();'
+                             , 'onclick'      : 'add_hat();'
                              , 'name'         : None
                              , 'size_select'  : ''
                              }
@@ -141,13 +136,14 @@ def item_html( item_name ):
 
     cart_item = CART_DATA[item_name]
     html = "<div class='item%s box_shadow'>" % cart_item['size']
-    html += "<div class='image'><img src='%s'></div>" % cart_item['image']
+    html += "<div class='image'><img src='/Images70th/Store/%s'></div>" % cart_item['image']
     html += "<div class='info'>%s</div>" % cart_item['info']
     html += "<div class='price'><img src='/Images70th/Store/%s'></div>" % cart_item['cost_image']
     html += "<div class='button_container'><table>"
     html += "<tr><td><button class='shadow_button' onclick='%s'>Add To Cart</button></td></tr>" % cart_item['onclick']
     if cart_item['name'] is not None:
-        html += "<tr><td><input type='text' name='%s_name' placeholder='%s' width='32'></td></tr>" % (item_name, cart_item['name'] )
+        html += "<tr><td><input type='text' id='%s_name'" % item_name
+        html += " name='%s_name' placeholder='%s' width='32'></td></tr>" % (item_name, cart_item['name'] )
     html += "<tr><td>%s</td></tr>" % cart_item['size_select']
     html += "</table></div></div>"
     return html
@@ -215,7 +211,7 @@ class bttbStore2017_c(bttbPage):
 # ==================================================================
 
 import unittest
-class TestGolf2017(unittest.TestCase):
+class TestStore2017(unittest.TestCase):
     '''Unit tests for this module'''
     def testDump(self):
         '''Simple test to dump the page content'''

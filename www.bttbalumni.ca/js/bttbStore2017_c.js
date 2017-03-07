@@ -14,20 +14,24 @@ var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 var cart_contents = [ ];
 var empty_cart_msg = "Your cart is currently empty - add items for purchase.";
 
+var no_shirt_selected = "-- Select Shirt Size --"; // Same as in bttbStore2017_c.py
+
 // Special codes used as identifiable onN options
-var golfer_name_code        = "Golfer Name";
-var lunch_name_code         = "Lunch Guest Name";
-var dinner_name_code        = "Dinner Guest Name";
-var hole_sponsor_name_code  = "Sponsor Name";
-var hole_sponsor_email_code = "Sponsor Email";
+var all_inclusive_name_code = "Name";
+var all_inclusive_size_code = "Shirt Size";
+var saturday_name_code      = "Name";
+var parade_name_code        = "Name";
+var parade_size_code        = "Shirt Size";
+var shirt_size_code         = "Shirt Size";
 
 // Special ids to identify the different types of items. They're used for
 // printing the form so they should be descriptive.
-var golfer_id  = "Golf Tournament Entry";
-var lunch_id   = "Golf Tournament Lunch";
-var dinner_id  = "Golf Tournament Dinner";
-var sponsor_id = "Golf Tournament Hole Sponsorship";
-var instructions_id = "Special Instructions";
+var all_inclusive_id  = "All-Inclusive Pass, Hat, and Shirt";
+var saturday_id       = "Saturday Night Social Ticket";
+var parade_id         = "Parade Spot, Hat, and Shirt";
+var shirt_id          = "70th Anniversary Shirt";
+var hat_id            = "70th Anniversary Hat";
+var instructions_id   = "Special Instructions";
 
 //----------------------------------------------------------------------
 //
@@ -38,8 +42,14 @@ today = new Date();
 cutoff = new Date();
 cutoff.setFullYear(2017, 3, 15);
 var apply_discounts = (cutoff > today);
+if( apply_discounts )
+{
+	all_inclusive_id += " (Early-Bird Rate)";
+}
 
 //----------------------------------------------------------------------
+//
+// Add HST to the given amount
 //
 function add_tax(amount)
 {
@@ -48,76 +58,172 @@ function add_tax(amount)
 
 //----------------------------------------------------------------------
 //
-// Add a new golfer to the cart contents
+// Calculate the tax on a specific item
+// tax_rate is a percentage (e.g. 13 for HST)
 //
-function add_golfer()
+function tax_on_item(amount, tax_rate)
 {
-	var golfer = {};
-	golfer.amount = 200;
+    return Math.round(tax_rate * amount) / 100.0;
+}
+
+//----------------------------------------------------------------------
+//
+// Validate that an item being ordered has had a name specified.
+//
+// name_id : unique ID of the "text" field containing the name.
+// item : name of the item being ordered, in a display-friendly
+// 		  format - it will be used in the alert if the name is missing.
+//
+// Returns null if the name was not present, otherwise returns the name
+//
+function validate_name(name_id, item)
+{
+	var name = document.getElementById( name_id );
+	if( ! name || (name.value.length === 0) )
+	{
+		alert( 'Please enter a name for the "' + item + '"' );
+		return null;
+	}
+	return name.value;
+}
+
+//----------------------------------------------------------------------
+//
+// Validate that an item being ordered has had a shirt size selected.
+//
+// shirt_id : unique ID of the "select" field containing the shirt option.
+// item : name of the item being ordered, in a display-friendly
+//		 format - it will be used in the alert if the size is missing.
+//
+// Returns null if the size was not specified, otherwise returns the size
+//
+function validate_size(shirt_id, item)
+{
+    var shirt_element = document.getElementById( shirt_id );
+	if( ! shirt_element || (shirt_element.value === no_shirt_selected) )
+	{
+		alert( 'Please select a shirt size for the "' + item + '"' );
+		return null;
+	}
+	return shirt_element.value;
+}
+
+
+//----------------------------------------------------------------------
+//
+// Add a new all-inclusive participant to the cart contents
+//
+function add_all_inclusive()
+{
+	var name = validate_name( 'allin_name', 'All-Inclusive Ticket' );
+	var size = validate_size( 'allin_size', 'All-Inclusive Ticket' );
+	if( ! name || ! size )
+	{
+		return;
+	}
+
+	var attendee = {};
+	attendee.amount = 140;
 	if( apply_discounts )
 	{
-		golfer.discount_amount = 15;
+		attendee.discount_amount = 20;
 	}
-	golfer.item_name = golfer_id;
-	golfer.on0 = golfer_name_code;
-	golfer.os0 = "";
-	golfer.tax_rate = 0;
+	attendee.item_name = all_inclusive_id;
+	attendee.on0 = all_inclusive_name_code;
+	attendee.os0 = name;
+	attendee.on1 = all_inclusive_size_code;
+	attendee.os1 = size;
+	attendee.tax_rate = 13;
 
-	cart_contents.push( golfer );
-	rebuild_golf_cart();
+	cart_contents.push( attendee );
+	rebuild_cart();
 }
 
 //----------------------------------------------------------------------
 //
-// Add a new diner to the cart contents
+// Add a new Saturday night social ticket to the cart contents
 //
-function add_lunch()
+function add_saturday()
 {
-	var diner = {};
-	diner.amount = 20;
-	diner.item_name = lunch_id;
-	diner.on0 = lunch_name_code;
-	diner.os0 = "";
-	diner.tax_rate = 0;
+	var name = validate_name( 'saturday_name', 'Saturday Night Social' );
+	if( ! name )
+	{
+		return;
+	}
 
-	cart_contents.push( diner );
-	rebuild_golf_cart();
+	var socializer = {};
+	socializer .amount = 70;
+	socializer .item_name = saturday_id;
+	socializer .on0 = saturday_name_code;
+	socializer .os0 = name;
+	socializer .tax_rate = 13;
+
+	cart_contents.push( socializer );
+	rebuild_cart();
 }
 
 //----------------------------------------------------------------------
 //
-// Add a new diner to the cart contents
+// Add a new parade participant to the cart contents
 //
-function add_diner()
+function add_parade()
 {
-	var diner = {};
-	diner.amount = 60;
-	diner.item_name = dinner_id;
-	diner.on0 = dinner_name_code;
-	diner.os0 = "";
-	diner.tax_rate = 0;
+	var name = validate_name( 'parade_name', 'Parade' );
+	var size = validate_size( 'parade_size', 'Parade' );
+	if( ! name || ! size )
+	{
+		return;
+	}
 
-	cart_contents.push( diner );
-	rebuild_golf_cart();
+	var marcher = {};
+	marcher.amount = 40;
+	marcher.item_name = parade_id;
+	marcher.on0 = parade_name_code;
+	marcher.os0 = name;
+	marcher.on1 = parade_size_code;
+	marcher.os1 = size;
+	marcher.tax_rate = 13;
+
+	cart_contents.push( marcher );
+	rebuild_cart();
 }
 
 //----------------------------------------------------------------------
 //
-// Add a new hole sponsorship to the cart contents
+// Add a new shirt to the cart contents
 //
-function sponsor_hole()
+function add_shirt()
 {
-	var sponsor = {};
-	sponsor.amount = 250;
-	sponsor.item_name = sponsor_id;
-	sponsor.on0 = hole_sponsor_name_code;
-	sponsor.os0 = "";
-	sponsor.on1 = hole_sponsor_email_code;
-	sponsor.os1 = "";
-	sponsor.tax_rate = 0;
+	var size = validate_size( 'shirt_size', '70th Anniversary Golf Shirt' );
+	if( ! size )
+	{
+		return;
+	}
 
-	cart_contents.push( sponsor );
-	rebuild_golf_cart();
+	var shirt = {};
+	shirt.amount = 35;
+	shirt.item_name = shirt_id;
+	shirt.on0 = shirt_size_code;
+	shirt.os0 = size;
+	shirt.tax_rate = 13;
+
+	cart_contents.push( shirt );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new hat to the cart contents
+//
+function add_hat()
+{
+	var hat = {};
+	hat.amount = 15;
+	hat.item_name = hat_id;
+	hat.tax_rate = 13;
+
+	cart_contents.push( hat );
+	rebuild_cart();
 }
 
 //----------------------------------------------------------------------
@@ -131,7 +237,7 @@ function remove_cart_item(item_el)
 	if( cart_contents.length > item_idx )
 	{
 		cart_contents.splice( item_idx, 1 );
-		rebuild_golf_cart();
+		rebuild_cart();
 	}
 }
 
@@ -148,52 +254,6 @@ function get_instructions()
 		instructions = instructions_el.value;
 	}
 	return instructions;
-}
-
-//----------------------------------------------------------------------
-//
-// Look through the fields on the form and ensure they are all consistent.
-// Things to check are:
-//		- Every golfer has a name
-//		- Every diner has a name
-//		- Every hole sponsorship has a name and an email
-//		- Every hole sponsorship has non-zero quantity
-//
-function validate_cart_contents()
-{
-	var cart_item;
-    for( var idx=1; idx<=cart_contents.length; ++idx )
-    {
-		var cart_info = cart_contents[idx-1];
-		if( cart_info.hasOwnProperty("on0") )
-		{
-			cart_item = document.getElementById( "os0_" + idx );
-			if( cart_item )
-			{
-				if( cart_item.value.length === 0 )
-				{
-					alert( 'You must fill in all of the "' + cart_info.on0 + '" fields' );
-					return false;
-				}
-				cart_info.os0 = cart_item.value;
-			}
-		}
-		if( cart_info.hasOwnProperty("on1") )
-		{
-			cart_item = document.getElementById( "os1_" + idx );
-			if( cart_item )
-			{
-				if( cart_item.value.length === 0 )
-				{
-					alert( 'You must fill in all of the "' + cart_info.on1 + '" fields' );
-					return false;
-				}
-				cart_info.os1 = cart_item.value;
-			}
-		}
-	}
-
-	return true;
 }
 
 //----------------------------------------------------------------------
@@ -238,7 +298,7 @@ function hidden_input_element_with_id(name, value, id)
 // Build the Paypal order button using the current cart contents,
 // omitting any fields that are not fully filled in.
 //
-function rebuild_golf_paypal_button()
+function rebuild_paypal_button()
 {
 	// Look for the div containing the paypal button. If it could
 	// not be found then bail out, there's nowhere to put this.
@@ -259,11 +319,11 @@ function rebuild_golf_paypal_button()
 					  , "redirect_cmd"  : "_cart"
     				  , "currency_code" : "CAD"
     				  , "shipping"      : "0"
-    				  , "cancel_return" : "http://bttbalumni.ca/#golf2017?payment=paypal"
-    				  , "cbt"           : "Return to the BTTB 70th Anniversary Golf Tournament"
-    				  , "return"        : "http://bttbalumni.ca/#thanksGolf2017"
+    				  , "cancel_return" : "http://bttbalumni.ca/#store2017_c"
+    				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
+    				  , "return"        : "http://bttbalumni.ca/#thanks2017"
     				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
-    				  , "shopping_url"  : "http://bttbalumni.ca/#golf2017?payment=paypal"
+    				  , "shopping_url"  : "http://bttbalumni.ca/#store2017_c"
 
 					  , "email"         : member_info.email
 					  , "first_name"    : member_info.first_name
@@ -272,7 +332,6 @@ function rebuild_golf_paypal_button()
 					  , "night_phone_b" : member_info.night_phone_b
 					  , "night_phone_c" : member_info.night_phone_c
 
-					  , "tax_cart"      : "0"
 					  , "upload"        : "1"
 					  , "business"      : PAYPAL_EMAIL
 					  };
@@ -292,8 +351,7 @@ function rebuild_golf_paypal_button()
 
 		form.appendChild( hidden_input_element( "amount_" + idx, cart_info.amount ) );
 		form.appendChild( hidden_input_element( "item_name_" + idx, cart_info.item_name ) );
-
-		// NOTE: Ignore tax_rate since a cart-wide rate was set
+		form.appendChild( hidden_input_element( "tax_rate_" + idx, cart_info.tax_rate ) );
 
 		// Optional discount amount
 		if( cart_info.hasOwnProperty("discount_amount") )
@@ -346,7 +404,7 @@ function rebuild_golf_paypal_button()
 // Using the current cart contents rebuild the HTML element in id
 // "cart_contents" to show the current list of items in the cart.
 //
-function rebuild_golf_cart()
+function rebuild_cart()
 {
     var cart_element = document.getElementById( "cart_contents" );
 
@@ -394,6 +452,7 @@ function rebuild_golf_cart()
 
     // Build the individual items
 	var total_cost = 0;
+	var total_tax = 0;
     for( var idx=1; idx<=cart_contents.length; ++idx )
     {
 		var cart_row = document.createElement( "tr" );
@@ -404,25 +463,13 @@ function rebuild_golf_cart()
 		cart_row.appendChild( cart_col );
 
 		cart_col = document.createElement( "td" );
-			var os0_el = document.createElement( "input" );
-			os0_el.type = "text";
-			os0_el.size = 32;
-			os0_el.maxlength = 64;
-			os0_el.id = "os0_" + idx;
-			os0_el.oninput = update_cart_fn;
-			os0_el.placeholder = cart_info.on0;
-			cart_col.appendChild( os0_el );
-
-			if( cart_info.hasOwnProperty("on1") )
+			if( cart_info.hasOwnProperty("on0") )
 			{
-				var os1_el = document.createElement( "input" );
-				os1_el.type = "text";
-				os1_el.size = 32;
-				os1_el.maxlength = 64;
-				os1_el.id = "os1_" + idx;
-				os1_el.oninput = update_cart_fn;
-				os1_el.placeholder = cart_info.on1;
-				cart_col.appendChild( os1_el );
+				cart_col.innerHTML = "<b>" + cart_info.on0 + ": </b><i>" + cart_info.os0 + "</i>";
+				if( cart_info.hasOwnProperty("on1") )
+				{
+					cart_col.innerHTML += "<br><b>" + cart_info.on1 + ": </b><i>" + cart_info.os1 + "</i>";
+				}
 			}
 		cart_row.appendChild( cart_col );
 
@@ -435,6 +482,7 @@ function rebuild_golf_cart()
 		cart_col.innerHTML = "$" + cost;
 		cart_row.appendChild( cart_col );
 		total_cost += cost;
+		total_tax += tax_on_item( cost, cart_info.tax_rate );
 
         var remove_col = document.createElement( "td" );
 			var remove_button = document.createElement( "button" );
@@ -461,8 +509,8 @@ function rebuild_golf_cart()
 		instructions_text.cols = "64";
 		instructions_text.maxlength = "256";
 		instructions_text.id = "instructions";
-		instructions_text.placeholder = "Enter instructions here (foursome members, food allergies, etc.)";
-		instructions_text.oninput = function() { update_cart_option(this); };
+		instructions_text.placeholder = "Enter any messages for us here...";
+		instructions_text.oninput = update_cart_fn;
 		instructions_text.innerHTML += instructions;
 		instructions_col.appendChild( instructions_text );
 	instructions_row.appendChild( instructions_col );
@@ -477,11 +525,12 @@ function rebuild_golf_cart()
 	total_row.appendChild( total_col );
 	//
 	total_col = document.createElement( "th" );
-	total_col.innerHTML = "";
+	total_col.innerHTML = "including HST of $" + total_tax.toFixed(2);
 	total_row.appendChild( total_col );
 	//
+	total_cost += total_tax;
 	total_col = document.createElement( "th" );
-	total_col.innerHTML = "$" + total_cost;
+	total_col.innerHTML = "$" + total_cost.toFixed(2);
 	total_row.appendChild( total_col );
 	//
 	total_col = document.createElement( "th" );
@@ -505,31 +554,26 @@ function rebuild_golf_cart()
 		// The cheque method will trigger a page build
 		var form_button = document.createElement( "button" );
 		form_button.className = "shadow_button";
-		form_button.onclick = function() { print_golf_cart(); };
+		form_button.onclick = function() { print_cart(); };
 		form_button.innerHTML = "View Printable Order Form";
 		button_container.appendChild( form_button );
 
 	cart_element.appendChild( button_container );
 
-	rebuild_golf_paypal_button();
+	rebuild_paypal_button();
 }
 
 //----------------------------------------------------------------------
 //
 // Create a new window with the contents of the cart in a printable format
 //
-function print_golf_cart()
+function print_cart()
 {
-	if( ! validate_cart_contents() )
-	{
-		return;
-	}
-
 	// Special instructions are not stored anywhere so get them out first.
 	var instructions = get_instructions();
 
-    var print_wnd = window.open("about:blank", "golf_cart");
-    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Golf Shopping Cart</title>\n" );
+    var print_wnd = window.open("about:blank", "cart");
+    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Shopping Cart</title>\n" );
     print_wnd.document.write( "<link href='https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700' rel='stylesheet'>" );
     print_wnd.document.write( "<style>" );
     print_wnd.document.write( "* { font-family: Raleway; font-size: 12; }" );
@@ -581,14 +625,15 @@ function print_golf_cart()
     print_wnd.document.write( "<table width='90%' cellpadding='5' border='1'>" );
     print_wnd.document.write( "<tr><th>Item</th><th>Information</th><th width='100'>Cost</th></tr>" );
     var total_cost = 0.0;
+	var total_tax = 0.0;
 	var discount = 0.0;
-	var sponsored_a_hole = false;
     if( cart_contents.length === 0 )
     {
         print_wnd.document.write( "<p>" + empty_cart_msg + "</p>" );
     }
     else
     {
+		var tax = 0.0;
         for( var idx=1; idx<=cart_contents.length; ++idx )
         {
             var cart_item = cart_contents[idx-1];
@@ -602,9 +647,10 @@ function print_golf_cart()
 			}
 			if( cart_item.tax_rate > 0 )
 			{
-				cost = add_tax(cost);
+				total_tax += tax_on_item( cost, cart_item.tax_rate );
 				discount = discount + add_tax(cart_item.discount_amount) - cart_item.discount_amount;
 			}
+            total_cost = total_cost + cost;
 
             print_wnd.document.write( "<tr>" );
             print_wnd.document.write( "<td>" + cart_item.item_name + "</td>" );
@@ -627,18 +673,13 @@ function print_golf_cart()
             print_wnd.document.write( "</td>" );
 
             print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
-            total_cost = total_cost + cost;
             print_wnd.document.write( "</tr>\n" );
-
-			if( cart_item.item_name === golfer_id )
-			{
-				sponsored_a_hole = true;
-			}
         }
     }
     print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
-    print_wnd.document.write( "<td></td>" );
+    print_wnd.document.write( "<td>including HST of $" + total_tax.toFixed(2) + "</td>" );
+	total_cost += total_tax;
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
 
     print_wnd.document.write( "</tr>\n" );
@@ -648,20 +689,6 @@ function print_golf_cart()
 	if( discount > 0 )
 	{
     	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " by being an early-bird!</i></p>\n" );
-	}
-
-	print_wnd.document.write( "<p><i>Golf Details:<ul>\n" );
-	print_wnd.document.write( "<li>Indian Wells Golf Course, 5377 Walker's Line, Burlington</li>\n" );
-	print_wnd.document.write( "<li>BBQ Lunch starts at 11:30am</li>\n" );
-	print_wnd.document.write( "<li>Shotgun start is at 1pm</li>\n" );
-	print_wnd.document.write( "<li>Dinner buffet opens at 7:00pm.</li>\n" );
-	print_wnd.document.write( "</ul></p>\n" );
-
-	if( sponsored_a_hole )
-	{
-		print_wnd.document.write( "<p><i>Thank you for sponsoring a hole! You will be contacted for further information" );
-		print_wnd.document.write( " regarding your hole sponsorship. Send email to" );
-		print_wnd.document.write( " golf@bttbalumni.ca if you are not contacted within a week.</i></p>\n" );
 	}
 
 	print_wnd.document.write( "<h2><font color='#af4c50'>Thank you for your order, see you in June!</font></h2>\n" );

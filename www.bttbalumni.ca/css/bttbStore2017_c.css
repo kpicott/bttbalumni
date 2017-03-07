@@ -1,37 +1,31 @@
 /*
-	The golf page shows the information about the golf tournament and offers
-	an in-place shopping cart to purchase items for the tournament.
+	The store page shows the information about the items for sale at the reunion.
 
-	The overall layout consists of two upper sections with a nice golf image,
-	a section with information about the tournament, and a simplified cart cum
-	store for ordering. On first opening the page will look like this:
+	The overall layout consists of a title section in two parts, a main store
+	section, and a shopping cart. On first opening the page will look like this:
 
 		|<----------------------------- 800px ------------------------------>
-		+-------------------------------------------------------------------+   ^
-		|                                                                   |   |
-		|                                                                   |   |
-		|  Golf Image with title overlaid                                   |  300px
-		|                                                                   |   |
-		|                                                                   |   |
-		+-------------------------------------------------------------------+   v
-		<----------- 300px -------->|10| 100 |10| 100|10|<----- 270 px ----->
-		+-------------------------------------------------------------------+   v
-		|                              +-----+  +----+     +------------+   |
-		| Golf Info                    | CAR |  | $$ |     | Add Golfer |   |
-		|                              +-----+  +----+     +------------+   |
+		+--------------------------------------------+----------------------+
+		| .header                                    |  .golf_link          |
+		+--------------------------------------------+----------------------+
+		| .title                                                            |
+		|                                                                   |
 		+-------------------------------------------------------------------+
-		|                                       +----+  +-----------------+ |
-		| Dinner Info                           | $$ |  | Add Dinner Only | |
-		|                                       +----+  +-----------------+ |
+		.item_big (for the all-in item)
 		+-------------------------------------------------------------------+
-		|                                       +----+  +-----------------+ |
-		| Hole Sponsorship Info                 | $$ |  | Sponsor A Hole  | |
-		|                                       +----+  +-----------------+ |
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
+		+-------------------------------------------------------------------+
+		.item (for all of the other items)
+		+-------------------------------------------------------------------+
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
 		+-------------------------------------------------------------------+
 		+-------------------------------------------------------------------+
 		|  Your shopping cart is empty. Add items with the buttons above.   |
 		+--------------------------------------------------------+----------+
-		| Pay now with Paypal, or mail a cheque with order form  |          |
 		| +-----------------+  +------------------+              |          |
 		| | Pay with Paypal |  | Print Order Form |        Total |   $$$    |
 		| +-----------------+  +------------------+              |          |
@@ -41,12 +35,12 @@
 	line is added based on what you ordered.
 
 	In addition, the first time you order anything a comment box is added
-	for instructions (max 256 characters due to a limitation of Paypal)
+	for instructions (max 200 characters due to a limitation of Paypal)
 
 		+--------------------------+-----------------------------+
+		|                          |                             |
 		|  Special Instructions:   |                             |
-		|  (e.g. other foursome    |                             |
-		|  members, food allergy)  |                             |
+		|                          |                             |
 		+--------------------------+-----------------------------+
 */
 
@@ -55,13 +49,38 @@
 ======================================================================*/
 
 /*----------------------------------------
-  Title image at the top
+  Title images at the top
 */
-div.splash
+#header
 {
-	display:	block;
-	width:		800px;
-	height:		300px;
+	display:		inline-block;
+	width:			490px;
+	height:			40px;
+	background:		url('/Images70th/Store/storeHeaderLeft.jpg') no-repeat top left;
+}
+#header:hover
+{
+	background:		url('/Images70th/Store/storeHeaderLeft_hover.jpg') no-repeat top left;
+}
+#golf_link
+{
+	display:		inline-block;
+	width:			300px;
+	height:			40px;
+	margin-left:	5px;
+	background:		url('/Images70th/Store/storeHeaderRight.jpg') no-repeat top left;
+}
+#golf_link:hover
+{
+	background:		url('/Images70th/Store/storeHeaderRight_hover.jpg') no-repeat top left;
+}
+#title
+{
+	display:		block;
+	width:			800px;
+	height:			80px;
+	margin-top:		-5px;
+	background:		url('/Images70th/Store/storeTitle.jpg') no-repeat top left;
 }
 
 /*----------------------------------------
