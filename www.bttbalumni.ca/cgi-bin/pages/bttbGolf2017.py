@@ -5,7 +5,6 @@ multi-item Paypal cart.
 import datetime
 from bttbPage import bttbPage
 from bttbConfig import *
-from bttbFormatting import date_image, date_css
 __all__ = ['bttbGolf2017']
 
 class bttbGolf2017(bttbPage):
@@ -55,8 +54,6 @@ class bttbGolf2017(bttbPage):
         """
         Return a string with the content for this web page.
         """
-        golf_date = date_image( datetime.datetime(2017,6,16) )
-
         html = MapLinks( """
 <div class='splash box_shadow'>
 <img src='/Images70th/golf.jpg' width='800' height='300' usemap='#golfMap'/>
@@ -64,7 +61,6 @@ class bttbGolf2017(bttbPage):
     <area shape='rect' coords='10,211,229,236' target='IndianWells' alt='Indian Wells' href='http://www.indianwellsgolfclub.ca/'>
     <area shape='rect' coords='160,266,652,291' alt='Mail us' href='mailto:golf@bttbalumni.ca'>
 </map>
-<div class='splash_inset'> %s </div>
 </div>
 
 <div class='golf_item box_shadow'>
@@ -119,7 +115,7 @@ class bttbGolf2017(bttbPage):
 <div id='cart_contents' class='box_shadow'>
 <h2>Your cart is currently empty - add items above.</h2>
 </div>
-""" % (golf_date, self.early) )
+""" % self.early)
         return html
 
 # ==================================================================

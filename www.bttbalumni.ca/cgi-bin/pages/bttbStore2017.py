@@ -37,7 +37,6 @@ SHIRT_OPTIONS = [ NO_SHIRT_SELECTED
                 , "Men's 3XL"
                 , "Men's 4XL"
                 , "Men's 5XL"
-                , "Men's 6XL"
                 ]
 
 def shirt_options(selector_name):
@@ -70,7 +69,7 @@ CART_DATA = {
                                                    <li>70<sup>th</sup> Anniversary Reunion Hat</li>
                                                    <li>Marching spot in the SOMF with the Alumni Band</li>
                                                    <li>Saturday Night Social (dinner + entertainment)</li>
-                                                   <li>Early-Bird pricing until April 15th!</li>
+                                                   <li>$120 Early-Bird until April 15th, $140 after!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceAllIn%s.png' % EARLY
                              , 'onclick'      : 'add_all_inclusive();'
@@ -81,9 +80,9 @@ CART_DATA = {
                              , 'size'         : ''
                              , 'info'         : '''<b>Saturday Night Social</b><ul>
                                                    <li>Dinner</li>
-                                                   <li>Entertainment (low-key)</li>
+                                                   <li>Music and Entertainment</li>
                                                    <li>Cash bar</li>
-                                                   <li>Non-Alumni Welcome</li>
+                                                   <li>Guests Welcome</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceSaturday.png'
                              , 'onclick'      : 'add_saturday();'
@@ -95,7 +94,7 @@ CART_DATA = {
                              , 'info'         : '''<b>Sound of Music Parade, Alumni Band</b><ul>
                                                    <li>Includes Hat and Shirt as uniform</li>
                                                    <li>Over 300 in the band at the 60<sup>th</sup>!</li>
-                                                   <li>Parade music from multiple eras</li>
+                                                   <li>Float seating available if you cannot march</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceParade.png'
                              , 'onclick'      : 'add_parade();'
@@ -105,8 +104,8 @@ CART_DATA = {
             ,   'shirt' :    { 'image'        : 'merch_shirt.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Shirt</b><ul>
-                                                   <li>High quality golf shirt with special reunion patch</li>
-                                                   <li>Wear it as the parade uniform, or just for fun</li>
+                                                   <li>Golf shirt with embroidered reunion patch</li>
+                                                   <li>Select from a wide variety of sizes</li>
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceShirt.png'
@@ -117,8 +116,8 @@ CART_DATA = {
             ,   'hat'   :    { 'image'        : 'merch_hat.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Hat</b><ul>
-                                                   <li>Navy Blue with special reunion logo</li>
-                                                   <li>Part of the alumni band parade uniform</li>
+                                                   <li>Navy Blue with embroidered reunion logo</li>
+                                                   <li>One size fits all</li>
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceHat.png'
