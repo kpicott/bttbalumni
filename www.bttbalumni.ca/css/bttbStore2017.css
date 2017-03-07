@@ -1,98 +1,222 @@
 /*
-	The shopping cart has two different display modes, one for Paypal and one
-	for paying by cheque.
+	The store page shows the information about the items for sale at the reunion.
 
-	Paypal maintains all of the current cart information on its own website so
-	there is no option to edit the cart, only an option to add a new item to
-	the cart. The page splits into two parts. The upper part provides access
-	to the current cart and a simple indicator as to whether any selections
-	have been added to the cart yet:
+	The overall layout consists of a title section in two parts, a main store
+	section, and a shopping cart. On first opening the page will look like this:
 
-	  +-----------------------------------------------+
-	  |  Add Items To Cart using the buttons below    |
-	  |                           +-----------+       |
-	  |  See current cart status: | View Cart |       |
-	  |                           +-----------+       |
-	  +-----------------------------------------------+
-	
-	The section beneath contains a table with all of the available cart
-	items. The table has four columns for each item:
-
-		+--------------+--------------------+----------------+---------------+
-		|  Item Image  |  Item Description  |  Item Options  |  Add To Cart  |
-		+--------------+--------------------+----------------+---------------+
-	
-	Item Description will include the unit price of the item.
-	Item Options contains all available options for the item.
-	Add To Cart is just a button, linking directly to Paypal. It will continue
-	a "return to shopping" link that comes back here.
-
-
-	For those paying by cheque all of the operations will be performed within
-	the page. Instead of a "View Cart" at the top it will contain the current
-	contents of the cart, including item name, options, and price.
-
+		|<----------------------------- 800px ------------------------------>
+		+--------------------------------------------+----------------------+
+		| .header                                    |  .golf_link          |
+		+--------------------------------------------+----------------------+
+		| .title                                                            |
+		|                                                                   |
 		+-------------------------------------------------------------------+
-		|   Cart Contents:                                                  |
-		+----------------------+------------+--------------------+----------+
-		|   Item               |  Options   | Price (with tax)   |  Remove  |
-		+----------------------+------------+--------------------+----------+
-		|                      |            |                    |    []    |
-		+----------------------+------------+--------------------+----------+
-		                             .
-		                             .
-		                             .
-		+----------------------+------------+--------------------+----------+
-		+----------------------+------------+--------------------+----------+
-		|   Total              |XXXXXXXXXXXX|                    |XXXXXXXXXX+
-		+----------------------+------------+--------------------+----------+
+		.item_big (for the all-in item)
+		+-------------------------------------------------------------------+
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
+		+-------------------------------------------------------------------+
+		.item (for all of the other items)
+		+-------------------------------------------------------------------+
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
+		+-------------------------------------------------------------------+
+		+-------------------------------------------------------------------+
+		|  Your shopping cart is empty. Add items with the buttons above.   |
+		+--------------------------------------------------------+----------+
+		| +-----------------+  +------------------+              |          |
+		| | Pay with Paypal |  | Print Order Form |        Total |   $$$    |
+		| +-----------------+  +------------------+              |          |
+		+--------------------------------------------------------+----------+
 
-		Mailing Address:    Blah            +------------------+
-		                    Blah            | Print Order Form |
-		                    Blah            +------------------+
+	When you click any order button the "empty" message is removed and a new
+	line is added based on what you ordered.
 
-	The table of options will look the same as for PayPal.  When you hit the
-	"Add To Cart" button it will add it to the table above.
+	In addition, the first time you order anything a comment box is added
+	for instructions (max 200 characters due to a limitation of Paypal)
 
-	Hitting the "Print Order Form" button will create a new page containing
-	the cart contents, the mailing address, blank fields for the person's
-	name and contact information (pre-populated if they are logged in), and
-	instructions on what to do with the form.
+		+--------------------------+-----------------------------+
+		|                          |                             |
+		|  Special Instructions:   |                             |
+		|                          |                             |
+		+--------------------------+-----------------------------+
 */
 
-/*----------------------------------------------------------------------
-	Simple box around an element
+/*======================================================================
+	Subsections of the entire cart
+======================================================================*/
+
+/*----------------------------------------
+  Title images at the top
 */
-.box
+#header
 {
-	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
-	border-collapse: collapse;
+	display:		inline-block;
+	width:			490px;
+	height:			40px;
+	background:		url('/Images70th/Store/storeHeaderLeft.jpg') no-repeat top left;
+}
+#header:hover
+{
+	background:		url('/Images70th/Store/storeHeaderLeft_hover.jpg') no-repeat top left;
+}
+#golf_link
+{
+	display:		inline-block;
+	width:			300px;
+	height:			40px;
+	margin-left:	5px;
+	background:		url('/Images70th/Store/storeHeaderRight.jpg') no-repeat top left;
+}
+#golf_link:hover
+{
+	background:		url('/Images70th/Store/storeHeaderRight_hover.jpg') no-repeat top left;
+}
+#title
+{
+	display:		block;
+	width:			800px;
+	height:			80px;
+	margin-top:		-5px;
+	background:		url('/Images70th/Store/storeTitle.jpg') no-repeat top left;
 }
 
-/*----------------------------------------------------------------------
-	Table formatting for the current cart contents when paying by cheque.
+/*----------------------------------------
+  Section containing the items up for sale
 */
-#cart
+div.item
 {
-	font-family:     "Trebuchet MS", Arial, Helvetica, sans-serif;
-	border-collapse: collapse;
-	background:	     url('/Images70th/cart.png') left top;
+	display:			block;
+	width:				780px;
+	height:				110px;
+	padding:			10px 10px 10px 10px;
+	background-color:	white;
+}
+div.item_big
+{
+	display:			block;
+	width:				780px;
+	height:				160px;
+	padding:			10px 10px 10px 10px;
+	background-color:	white;
+}
+div.item .image
+{
+	float:			left;
+	width:			100px;
+	height:			100px;
+	text-align:		center;
+}
+div.item_big .image
+{
+	float:			left;
+	width:			150px;
+	height:			150px;
+	text-align:		center;
+}
+div.item .info
+{
+	float:			left;
+	width:			375px;
+	font-size:		16px;
+	text-align:		left;
+	margin-left:	20px;
+}
+div.item_big .info
+{
+	float:			left;
+	width:			325px;
+	font-size:		16px;
+	text-align:		left;
+	margin-left:	20px;
+}
+div.price
+{
+	float:			left;
+	width:			100px;
+	height:			100px;
+	text-align:		center;
+	padding-left:	10px;
+	padding-right:	10px;
+}
+div.button_container
+{
+	float:			left;
+	width:			165px;
+	height:			100px;
+	text-align:		center;
+	vertical-align:	middle;
+}
+div.payment_buttons
+{
+	display:		block;
+}
+div.item ul
+{
+    list-style-position: inside;
+}
+
+/*----------------------------------------
+  Next is the buttons for ordering
+*/
+div.order_buttons
+{
+	display:	block;
+	width:		800px;
+	text-align:	center;
+}
+div.order_button
+{
+	display:	inline-block;
+	float:		left;
+}
+
+/*======================================================================
+  Cart lines all look the same, though content will vary
+  	<div class="cart_line">
+		<div class="name">  </div>
+		<div class="value"> </div>
+		<div class="info">  </div>
+		<div class="cost">  </div>
+	</div>
+*/
+#cart_contents
+{
+	display:			block;
+	width:				780px;
+	padding:			10px 10px 10px 10px;
+	background-color:	#ffeeee;
+	font-family:		Raleway;
+	border-collapse:	collapse;
+}
+
+#cart table
+{
+	border:		1px solid #ddd;
 }
 
 #cart td, #cart th
 {
-	border: 1px solid #ddd;
-	padding: 8px;
+	border:		1px solid #ddd;
+	padding:	8px;
+}
+
+#cart tr
+{
+	width:	100%;
 }
 
 #cart tr:nth-child(even)
 {
-	background-color: #f2f2f2;
+	background-color:	#f2f2f2;
+	width:			 	100%;
 }
 
 #cart tr:hover
 {
-	background-color: #ddd;
+	background-color:	#ddd;
 }
 
 #cart th
@@ -100,311 +224,68 @@
 	padding-top:		12px;
 	padding-bottom:		12px;
 	text-align:			left;
-	background-color:	#AF4C50;
+	background-color:	#aeaeae;
 	color:				white;
 }
 
-/*======================================================================
-	Styles for the fixed layout of the PayPal store.
+div.cart_line
+{
+	display:	block;
+	border:		1px solid #ddd;
+}
+div.cart_line .name
+{
+	font-style:	italic;
+}
+div.cart_line .value
+{
+}
+div.cart_line .info
+{
+	font-style:	italic;
+}
+div.cart_line cost
+{
+	font-weight:	bold;
+	width:			50px;
+}
 
-	The image styles will allow a change in image when you hover over it.
-	The image is set up as double width, where the original and hover images
-	are side-by-side. This allows loading of both images in one shot so that
-	there is no delay on the first hover.
-
-	  Full Image    Default View     Hover View
-	  +---+---+        +---+           +---+
-	  | X | Y |        | X |           | Y |
-	  +---+---+        +---+           +---+
-
-	Each subsection of the image has a coloured background, with a
-	non-coloured gap between items so that the correspondence between image
-	item and "Add To Cart" button is obvious. Items requiring shirt size have
-	it laid out beside that button so that you can set it when ordering, and
-	it's obvious which items require a size.
-
-	Full layout looks like this, with 10px gap between image sections, where
-	SIZE is the shirt size selector, VIEW is the View Cart button, and ADD
-	are add-to-cart buttons:
-
-		<---------- 800 ------------><-- 10px --><---------- 800 ------------>
-
-		+---------------------------+  ^         +---------------------------+
-		|                           |  |         |                           |
-		|          allin            |  | 300px   | View Cart / Cart Contents |
-		|                           |  |         |                           |
-		+---------------------------+  X                      .
-		|       SIZE      ADD       |  | 50px                 .
-		+---------------------------+  v                      .
-		+-------------+-------------+  ^
-		|             |             |  |
-		|   parade    |  saturday   |  | 180px
-		|             |             |  |
-		+-------------+-------------+  X
-		|  SIZE   ADD |    ADD      |  |
-		+-------------+-------------+  v
-		+------+------+-------------+  ^
-		|      |      |             |  |
-		| hat  |shirt |    golf     |  | 180px
-		|      |      |             |  |
-		+------+------+-------------+  v
-		+------+------+-------------+  ^
-		| ADD  | SIZE |    ADD      |  | 80px
-		|      | ADD  |             |  |
-		+-------------+-------------+  v
-		+-------------+-------------+  ^
-		|             |             |  |
-		|  golfHole   | golfDinner  |  | 180px
-		|             |             |  |
-		+-------------+-------------+  X
-		|     ADD     |    ADD      |  | 50px
-		+-------------+-------------+  v
+/*----------------------------------------
+  Total line is sectioned differently
+  	<div class="cart_total_line">
+		<div class="info"> </div>
+		<div class="cost"> </div>
+	</div>
 */
-
-/*========================================
-	Container wrapping around the entire store, to allow relative positioning
-*/
-div.container
+div.cart_total_line
 {
-	position:	absolute;
-	top:		0px;
-	left:		0px;
+}
+div.cart_total_line .info
+{
+}
+div.cart_total_line .cost
+{
+	width:			50px;
 }
 
-/*========================================
-  Container wrapping around the entire store, to allow relative positioning
+/*----------------------------------------
+  Instruction line is sectioned differently
+  	<div class="cart_instruction_line">
+		<div class="info">  </div>
+		<div class="field"> </div>
+	</div>
 */
-div.store_container
+div.cart_instruction_line
 {
-	position:	absolute;
-	top:		0px;
-	left:		0px;
+	display:	block;
 }
-
-/*========================================
-  Positions the cart contents beside the store, when using the internal store
-*/
-div.cart_container
+div.cart_instruction_line .info
 {
-    position:	absolute;
-	top:		0px;
-    left:		810px;
-	width:      800px;
-	display:	inline-block;
+	font-style:	italic;
+	float:		left;
 }
-
-/*========================================
-	Each store item has a nicely shadowed, outlined, box
-*/
-div.box_shadow
+div.cart_instruction_line .field
 {
-	box-shadow:		0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	margin-bottom:	10px;
-	border:			1px;
-	border-style:	solid;
+	float:	left;
 }
-
-/*========================================
-	Large element layout size - all-events
-*/
-div.large_buttons
-{
-	width:				800px;
-	height:				50px;
-	background-color:	#af4c50;
-	position:			absolute;
-	bottom:				-50px;
-}
-div.large_image
-{
-	width:	800px;
-	height:	300px;
-}
-
-/*========================================
-	Medium element layout size - parade, saturday, and golf
-*/
-div.medium_buttons
-{
-	width:				395px;
-	height:				50px;
-	background-color:	#af4c50;
-	position:			absolute;
-	bottom:				-50px;
-}
-div.medium_buttons_2
-{
-	width:				395px;
-	height:				80px;
-	background-color:	#af4c50;
-	position:			absolute;
-	bottom:				-80px;
-}
-div.medium_image
-{
-	width:	395px;
-	height:	180px;
-}
-
-/*========================================
-	Small element layout size - hat and shirt
-*/
-div.small_buttons
-{
-	width:				190px;
-	height:				80px;
-	background-color:	#af4c50;
-	position:			absolute;
-	bottom:				-80px;
-}
-div.small_image
-{
-	width:	190px;
-	height:	180px;
-}
-
-/*========================================
-	Each item is specifically positioned
-*/
-div.allin_item
-{
-	width:		800px;
-	height:		350px;
-	position:	absolute;
-	top:		0px;
-	left:		0px;
-}
-div.parade_item
-{
-	width:		395px;
-	height:		230px;
-	position:	absolute;
-	left:		0px;
-	top:		360px;
-}
-div.saturday_item
-{
-	width:		395px;
-	height:		230px;
-	position:	absolute;
-	left:		405px;
-	top:		360px;
-}
-div.shirt_item
-{
-	width:		190px;
-	height:		260px;
-	position:	absolute;
-	left:		0px;
-	top:		600px;
-}
-div.hat_item
-{
-	width:		190px;
-	height:		260px;
-	position:	absolute;
-	left:		205px;
-	top:		600px;
-}
-div.golf_item
-{
-	width:		395px;
-	height:		260px;
-	position:	absolute;
-	left:		405px;
-	top:		600px;
-}
-div.golfHole_item
-{
-	width:		395px;
-	height:		230px;
-	position:	absolute;
-	left:		0px;
-	top:		870px;
-}
-div.golfDinner_item
-{
-	width:		395px;
-	height:		230px;
-	position:	absolute;
-	left:		405px;
-	top:		870px;
-}
-
-/*========================================
-	Dropdown menu for shirt size is always top-left-ish.
-	Size is browser-dependent so using %+offset might not be consistent.
-*/
-.dropdown
-{
-	border-radius:		5px;
-	padding:			5px;
-	position:			absolute;
-	top:				10px;
-	left:				13px;
-	background-color:	#f2f2f2;
-}
-
-/*========================================
-	Add-to-cart button can be right edge or centered, but always vertically middle
-*/
-.addtocart
-{
-	position:	absolute;
-	top:		50%;
-	margin-top:	-10px;
-	right:		13px;
-}
-.addtocart_center
-{
-	position:		absolute;
-	left:			50%;
-	top:			50%;
-	margin-top:		-10px;
-	margin-left:	-48px;
-}
-.addtocart_center_2
-{
-	position:		absolute;
-	left:			50%;
-	margin-left:	-48px;
-	bottom:			10px;
-}
-
-/*========================================
-	Fix an element to the top left corner of its parent
-*/
-div.fix_top
-{
-	position:	absolute;
-	left:		0px;
-	top:		0px;
-}
-
-/*======================================================================
-ID sections for each of the store items
-*/
-#allin            { background:	url('/Images70th/merch_inclusive.jpg') no-repeat left top; }
-#allin:hover      { background-position: -800px 0px; }
-/*----------------------------------------*/
-#parade           { background:	url('/Images70th/merch_parade.jpg') no-repeat left top; }
-#parade:hover     { background-position: -395px 0px; }
-/*----------------------------------------*/
-#saturday         { background:	url('/Images70th/merch_saturday.jpg') no-repeat left top; }
-#saturday:hover   { background-position: -395px 0px; }
-/*----------------------------------------*/
-#shirt            { background:	url('/Images70th/merch_shirt.jpg') no-repeat left top; }
-#shirt:hover      { background-position: -190px 0px; }
-/*----------------------------------------*/
-#hat              { background:	url('/Images70th/merch_hat.jpg') no-repeat left top; }
-#hat:hover        { background-position: -190px 0px; }
-/*----------------------------------------*/
-#golf             { background:	url('/Images70th/golf.jpg') no-repeat left top; }
-#golf:hover       { background-position: -395px 0px; }
-/*----------------------------------------*/
-#golfHole         { background:	url('/Images70th/golfHole.jpg') no-repeat left top; }
-#golfHole:hover   { background-position: -395px 0px; }
-/*----------------------------------------*/
-#golfDinner       { background:	url('/Images70th/golfDinner.jpg') no-repeat left top; }
-#golfDinner:hover { background-position: -395px 0px; }
 

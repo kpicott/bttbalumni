@@ -1,43 +1,37 @@
-// Contents of the current cart, represented as an array of keywords
-var cart_contents = null;
+// Change these values to make Paypal live
+var PAYPAL_EMAIL = "bttb-seller@picott.ca";
+var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 
-// Options for shirt sizes
-var shirt_sizes = [ [ "WXS", "Women's Extra Small"]
-                  , [ "WS",  "Women's Small"]
-                  , [ "WM",  "Women's Medium"]
-                  , [ "WL",  "Women's Large"]
-                  , [ "WXL", "Women's XL"]
-                  , [ "W2X", "Women's 2XL"]
-                  , [ "MS",  "Men's Small"]
-                  , [ "MM",  "Men's Medium"]
-                  , [ "ML",  "Men's Large"]
-                  , [ "MXL", "Men's XL"]
-                  , [ "M2X", "Men's 2XL"]
-                  , [ "M3X", "Men's 3XL"]
-                  , [ "M4X", "Men's 4XL"]
-                  , [ "M5X", "Men's 5XL"]
-                  , [ "M6X", "Men's 6XL"]
-                  ];
+// Contents of the current cart, represented as an array of keywords.
+//  	amount           : Dollar amount for the item, not including tax
+//		item_name        : Description of item
+//		onN              : Name of option N (name or email)
+//		osN              : Value of option N
+//						   Field containing option = osN_X for item X
+//		tax_rate         : Rate of tax to apply to the item, as a percentage
+//		discount_amount  : Amount of discount - only non-zero items will have this
+//
+var cart_contents = [ ];
+var empty_cart_msg = "Your cart is currently empty - add items for purchase.";
 
-// Possible items for purchase
-// Values are [COST, EARLYBIRD DISCOUNT, IS_TAXED, DESCRIPTION]
-var store_items = { "allin"      : [150, 20,  true, "All Events"]
-                  , "saturday"   : [80,   0,  true, "Saturday Night Social Event"]
-                  , "parade"     : [70,   0,  true, "Saturday Morning Parade"]
-                  , "hat"        : [15,   0,  true, "70th Anniversary Hat"]
-                  , "golf"       : [185, 15, false, "Early-Bird Entrance Into the 70th Anniversary Golf Tournament"]
-                  , "golfHole"   : [250,  0, false, "Hole Sponsorship for the 70th Anniversary Golf Tournament"]
-                  , "golfDinner" : [60,   0, false, "70th Anniversary Golf Tournament, Dinner Only"]
-                  };
+var no_shirt_selected = "-- Select Shirt Size --"; // Same as in bttbStore2017.py
 
-// Append the list of shirt options to the cart options that include them
-for( var shirt_idx=0; shirt_idx<shirt_sizes.length; ++shirt_idx )
-{
-    var shirt_info = shirt_sizes[shirt_idx];
-    store_items[shirt_info[0]] = [30, 0, true, shirt_info[1] + " 70th Anniversary Shirt"];
-    store_items[shirt_info[0]+"_p"] = [0, 0, true, shirt_info[1] + " 70th Anniversary Shirt (for Parade)"];
-    store_items[shirt_info[0]+"_a"] = [0, 0, true, shirt_info[1] + " 70th Anniversary Shirt (for All Events)"];
-}
+// Special codes used as identifiable onN options
+var all_inclusive_name_code = "Name";
+var all_inclusive_size_code = "Shirt Size";
+var saturday_name_code      = "Name";
+var parade_name_code        = "Name";
+var parade_size_code        = "Shirt Size";
+var shirt_size_code         = "Shirt Size";
+
+// Special ids to identify the different types of items. They're used for
+// printing the form so they should be descriptive.
+var all_inclusive_id  = "All-Inclusive Pass, Hat, and Shirt";
+var saturday_id       = "Saturday Night Social Ticket";
+var parade_id         = "Parade Spot, Hat, and Shirt";
+var shirt_id          = "70th Anniversary Shirt";
+var hat_id            = "70th Anniversary Hat";
+var instructions_id   = "Special Instructions";
 
 //----------------------------------------------------------------------
 //
@@ -48,61 +42,361 @@ today = new Date();
 cutoff = new Date();
 cutoff.setFullYear(2017, 3, 15);
 var apply_discounts = (cutoff > today);
-
-//----------------------------------------------------------------------
-//
-// Take a list of item IDs, which are the keywords of the store_items,
-// and return a list of [ [ID, DESCRIPTION, COST, DISCOUNT, TAXABLE] ]
-// elements for all of the IDs in the list. Any IDs not recognized will
-// not be added to the return list
-//
-function convert_ids_to_contents(id_list)
+if( apply_discounts )
 {
-    var contents = [];
-    for( var idx=0; idx<id_list.length; ++idx )
-    {
-        var id = id_list[idx];
-        var store_item = store_items[id] || [0,"Unknown"];
-        contents.push( [id, store_item[3], store_item[0], store_item[1], store_item[2]] );
-    }
-    return contents;
+	all_inclusive_id += " (Early-Bird Rate)";
 }
 
 //----------------------------------------------------------------------
 //
-// Return the current contents of the cart in JSON list of lists:
-//         [ [ID, DESCRIPTION, COST, DISCOUNT, TAXABLE] ]
-//
-function get_cart_contents()
-{
-    // If the cart has nothing in it try to decode the contents from the GET
-    // portion of the URL.
-    if( cart_contents === null )
-    {
-        var contents = decodeURIComponent((new RegExp("[?|&]cart=([^&;]+?)(&|#|;|$)").exec(location.href) || [null, ""])[1].replace(/\+/g, "%20")) || null;
-        if( contents !== null )
-        {
-            cart_contents = contents.split( "," );
-        }
-        else
-        {
-            cart_contents = [];
-        }
-    }
-    return convert_ids_to_contents( cart_contents );
-}
-// Index values into the get_cart_contents values
-var idx_id  = 0;
-var idx_desc = 1;
-var idx_cost = 2;
-var idx_disc = 3;
-var idx_taxed = 4;
-
-//----------------------------------------------------------------------
+// Add HST to the given amount
 //
 function add_tax(amount)
 {
     return Math.round(113.0 * amount) / 100.0;
+}
+
+//----------------------------------------------------------------------
+//
+// Calculate the tax on a specific item
+// tax_rate is a percentage (e.g. 13 for HST)
+//
+function tax_on_item(amount, tax_rate)
+{
+    return Math.round(tax_rate * amount) / 100.0;
+}
+
+//----------------------------------------------------------------------
+//
+// Validate that an item being ordered has had a name specified.
+//
+// name_id : unique ID of the "text" field containing the name.
+// item : name of the item being ordered, in a display-friendly
+// 		  format - it will be used in the alert if the name is missing.
+//
+// Returns null if the name was not present, otherwise returns the name
+//
+function validate_name(name_id, item)
+{
+	var name = document.getElementById( name_id );
+	if( ! name || (name.value.length === 0) )
+	{
+		alert( 'Please enter a name for the "' + item + '"' );
+		return null;
+	}
+	return name.value;
+}
+
+//----------------------------------------------------------------------
+//
+// Validate that an item being ordered has had a shirt size selected.
+//
+// shirt_id : unique ID of the "select" field containing the shirt option.
+// item : name of the item being ordered, in a display-friendly
+//		 format - it will be used in the alert if the size is missing.
+//
+// Returns null if the size was not specified, otherwise returns the size
+//
+function validate_size(shirt_id, item)
+{
+    var shirt_element = document.getElementById( shirt_id );
+	if( ! shirt_element || (shirt_element.value === no_shirt_selected) )
+	{
+		alert( 'Please select a shirt size for the "' + item + '"' );
+		return null;
+	}
+	return shirt_element.value;
+}
+
+
+//----------------------------------------------------------------------
+//
+// Add a new all-inclusive participant to the cart contents
+//
+function add_all_inclusive()
+{
+	var name = validate_name( 'allin_name', 'All-Inclusive Ticket' );
+	var size = validate_size( 'allin_size', 'All-Inclusive Ticket' );
+	if( ! name || ! size )
+	{
+		return;
+	}
+
+	var attendee = {};
+	attendee.amount = 140;
+	if( apply_discounts )
+	{
+		attendee.discount_amount = 20;
+	}
+	attendee.item_name = all_inclusive_id;
+	attendee.on0 = all_inclusive_name_code;
+	attendee.os0 = name;
+	attendee.on1 = all_inclusive_size_code;
+	attendee.os1 = size;
+	attendee.tax_rate = 13;
+
+	cart_contents.push( attendee );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new Saturday night social ticket to the cart contents
+//
+function add_saturday()
+{
+	var name = validate_name( 'saturday_name', 'Saturday Night Social' );
+	if( ! name )
+	{
+		return;
+	}
+
+	var socializer = {};
+	socializer .amount = 70;
+	socializer .item_name = saturday_id;
+	socializer .on0 = saturday_name_code;
+	socializer .os0 = name;
+	socializer .tax_rate = 13;
+
+	cart_contents.push( socializer );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new parade participant to the cart contents
+//
+function add_parade()
+{
+	var name = validate_name( 'parade_name', 'Parade' );
+	var size = validate_size( 'parade_size', 'Parade' );
+	if( ! name || ! size )
+	{
+		return;
+	}
+
+	var marcher = {};
+	marcher.amount = 40;
+	marcher.item_name = parade_id;
+	marcher.on0 = parade_name_code;
+	marcher.os0 = name;
+	marcher.on1 = parade_size_code;
+	marcher.os1 = size;
+	marcher.tax_rate = 13;
+
+	cart_contents.push( marcher );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new shirt to the cart contents
+//
+function add_shirt()
+{
+	var size = validate_size( 'shirt_size', '70th Anniversary Golf Shirt' );
+	if( ! size )
+	{
+		return;
+	}
+
+	var shirt = {};
+	shirt.amount = 35;
+	shirt.item_name = shirt_id;
+	shirt.on0 = shirt_size_code;
+	shirt.os0 = size;
+	shirt.tax_rate = 13;
+
+	cart_contents.push( shirt );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new hat to the cart contents
+//
+function add_hat()
+{
+	var hat = {};
+	hat.amount = 15;
+	hat.item_name = hat_id;
+	hat.tax_rate = 13;
+
+	cart_contents.push( hat );
+	rebuild_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Remove an existing item from the cart.
+// Does nothing if the item does not exist.
+//
+function remove_cart_item(item_el)
+{
+	var item_idx = item_el.value;
+	if( cart_contents.length > item_idx )
+	{
+		cart_contents.splice( item_idx, 1 );
+		rebuild_cart();
+	}
+}
+
+//----------------------------------------------------------------------
+//
+// Get any special instructions
+//
+function get_instructions()
+{
+	var instructions = '';
+	var instructions_el = document.getElementById( "instructions" );
+	if( instructions_el )
+	{
+		instructions = instructions_el.value;
+	}
+	return instructions;
+}
+
+//----------------------------------------------------------------------
+//
+// Callback for when a cart item had option details modified.
+// Updates the Paypal button fields so that it's always ready to go.
+//
+function update_cart_option(option_el)
+{
+	var paypal_el = document.getElementById( "paypal_" + option_el.id );
+	if( option_el && paypal_el )
+	{
+		paypal_el.value = option_el.value;
+	}
+}
+
+//----------------------------------------------------------------------
+//
+// Build and return a hidden input document element
+//
+function hidden_input_element(name, value)
+{
+	return hidden_input_element_with_id(name, value, "paypal_" + name);
+}
+
+//----------------------------------------------------------------------
+//
+// Build and return a hidden input document element
+//
+function hidden_input_element_with_id(name, value, id)
+{
+	var input = document.createElement( "input" );
+	input.type = "hidden";
+	input.name = name;
+	input.value = value;
+	input.id = id;
+	return input;
+}
+
+//----------------------------------------------------------------------
+//
+// Build the Paypal order button using the current cart contents,
+// omitting any fields that are not fully filled in.
+//
+function rebuild_paypal_button()
+{
+	// Look for the div containing the paypal button. If it could
+	// not be found then bail out, there's nowhere to put this.
+	var paypal_button = document.getElementById( "paypal_button" );
+	if( ! paypal_button )
+	{
+		return;
+	}
+
+	// Common cart boilerplate
+    var form  = document.createElement( "form" );
+	form.target = "_self";
+	form.className = "inline_form";
+	form.method = "post";
+	form.action = PAYPAL_URL;
+
+	var paypal_info = { "cmd"           : "_ext-enter"
+					  , "redirect_cmd"  : "_cart"
+    				  , "currency_code" : "CAD"
+    				  , "shipping"      : "0"
+    				  , "cancel_return" : "http://bttbalumni.ca/#store2017"
+    				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
+    				  , "return"        : "http://bttbalumni.ca/#thanks2017"
+    				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
+    				  , "shopping_url"  : "http://bttbalumni.ca/#store2017"
+
+					  , "email"         : member_info.email
+					  , "first_name"    : member_info.first_name
+					  , "last_name"     : member_info.last_name
+					  , "night_phone_a" : member_info.night_phone_a
+					  , "night_phone_b" : member_info.night_phone_b
+					  , "night_phone_c" : member_info.night_phone_c
+
+					  , "upload"        : "1"
+					  , "business"      : PAYPAL_EMAIL
+					  };
+
+	// First the boilerplate
+	for( var name in paypal_info )
+	{
+		if( paypal_info.hasOwnProperty(name) )
+		{
+			form.appendChild( hidden_input_element( name, paypal_info[name] ) );
+		}
+	}
+
+    for( var idx=1; idx<=cart_contents.length; ++idx )
+    {
+        var cart_info = cart_contents[idx-1];
+
+		form.appendChild( hidden_input_element( "amount_" + idx, cart_info.amount ) );
+		form.appendChild( hidden_input_element( "item_name_" + idx, cart_info.item_name ) );
+		form.appendChild( hidden_input_element( "tax_rate_" + idx, cart_info.tax_rate ) );
+
+		// Optional discount amount
+		if( cart_info.hasOwnProperty("discount_amount") )
+		{
+			form.appendChild( hidden_input_element( "discount_amount_" + idx, cart_info.discount_amount ) );
+		}
+
+		// Optional option 0
+		if( cart_info.hasOwnProperty("on0") )
+		{
+			form.appendChild( hidden_input_element( "on0_" + idx, cart_info.on0 ) );
+			form.appendChild( hidden_input_element( "os0_" + idx, cart_info.os0 ) );
+		}
+
+		// Optional option 1
+		if( cart_info.hasOwnProperty("on1") )
+		{
+			form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on1 ) );
+			form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os1 ) );
+		}
+	}
+
+	// Instructions cannot be sent as a separate field in Paypal so they
+	// have to be packaged up as a free item.
+	var instructions = get_instructions();
+	var instructions_idx = cart_contents.length + 1;
+
+	form.appendChild( hidden_input_element( "item_name_" + instructions_idx, instructions_id ) );
+	form.appendChild( hidden_input_element( "amount_" + instructions_idx, 0 ) );
+	form.appendChild( hidden_input_element( "on0_" + instructions_idx, "Note" ) );
+	form.appendChild( hidden_input_element_with_id( "os0_" + instructions_idx, instructions, "paypal_instructions" ) );
+
+	// Payment button
+	var form_button = document.createElement( "button" );
+	form_button.className = "shadow_button";
+	form_button.name = "submit";
+	form_button.innerHTML = 'Pay Online With Paypal';
+	form.appendChild( form_button );
+
+	// Replace the contents of the paypal button div with the new button
+    while( paypal_button.hasChildNodes() )
+    {
+        paypal_button.removeChild( paypal_button.firstChild );
+    }
+	paypal_button.appendChild( form );
 }
 
 //----------------------------------------------------------------------
@@ -112,8 +406,10 @@ function add_tax(amount)
 //
 function rebuild_cart()
 {
-    var cart_info = get_cart_contents();
     var cart_element = document.getElementById( "cart_contents" );
+
+	// Get the current instructions, if any, so that they are up to date
+	var instructions = get_instructions();
 
     // Empty out any previous cart contents
     while( cart_element.hasChildNodes() )
@@ -121,108 +417,150 @@ function rebuild_cart()
         cart_element.removeChild( cart_element.firstChild );
     }
 
-    // Show a special message if the cart is empty
-    if( cart_info.length === 0 )
+	// If the cart is empty just show the empty cart message
+	if( cart_contents.length === 0 )
+	{
+		var msg = document.createElement( "h2" );
+		msg.innerHTML = empty_cart_msg;
+		cart_element.addChild( msg );
+		return;
+	}
+
+    // Build up the cart contents one item at a time
+    var cart_table = document.createElement( "table" );
+    cart_table.width = "100%";
+    cart_table.id = "cart";
+
+	// Add a title row
+	var title_row = document.createElement( "tr" );
+	var title_col = document.createElement( "th" );
+	title_col.innerHTML = "Item";
+	title_row.appendChild( title_col );
+	title_col = document.createElement( "th" );
+	title_col.innerHTML = "Required Information";
+	title_row.appendChild( title_col );
+	title_col = document.createElement( "th" );
+	title_col.innerHTML = "Cost";
+	title_row.appendChild( title_col );
+	title_col = document.createElement( "th" );
+	title_col.innerHTML = "Remove";
+	title_row.appendChild( title_col );
+	cart_table.appendChild( title_row );
+
+	var update_cart_fn = function() { update_cart_option(this); };
+	var remove_cart_fn = function() { remove_cart_item(this); };
+
+    // Build the individual items
+	var total_cost = 0;
+	var total_tax = 0;
+    for( var idx=1; idx<=cart_contents.length; ++idx )
     {
-        var p = document.createElement( "p" );
-        p.className = "box";
-        p.innerHTML = "You have not ordered anything yet. Select an item below to join the fun!";
-        cart_element.appendChild( p );
-    }
-    else
-    {
-        var cart_title = document.createElement( "h2" );
-        cart_title.innerHTML = "Your Cart";
-        cart_element.appendChild( cart_title );
+		var cart_row = document.createElement( "tr" );
+        var cart_info = cart_contents[idx-1];
 
-        // Build up the cart contents one item at a time
-        var cart_table = document.createElement( "table" );
-        cart_table.id = "cart";
+		var cart_col = document.createElement( "td" );
+		cart_col.innerHTML = cart_info.item_name;
+		cart_row.appendChild( cart_col );
 
-		var cart_row;
-		var description_col;
-		var cost_col;
-		var remove_col;
-
-        // Table heading
-        {
-            cart_row = document.createElement( "tr" );
-
-            description_col = document.createElement( "th" );
-            description_col.innerHTML = "Description";
-            cart_row.appendChild( description_col );
-
-            cost_col = document.createElement( "th" );
-            cost_col.innerHTML = "Cost (including HST)";
-            cart_row.appendChild( cost_col );
-
-            remove_col = document.createElement( "th" );
-            remove_col.innerHTML = "Remove From Cart";
-            cart_row.appendChild( remove_col );
-
-            cart_table.appendChild( cart_row );
-        }
-
-        // Table contents, one row per item in the cart
-        var total_cost = 0.0;
-        for( var idx=0; idx<cart_info.length; ++idx )
-        {
-            var cart_item = cart_info[idx];
-
-            cart_row = document.createElement( "tr" );
-
-            description_col = document.createElement( "td" );
-            description_col.innerHTML = cart_item[idx_desc];
-            cart_row.appendChild( description_col );
-
-            cost_col = document.createElement( "td" );
-            var cost = cart_item[idx_cost];
-			if( apply_discounts )
+		cart_col = document.createElement( "td" );
+			if( cart_info.hasOwnProperty("on0") )
 			{
-				cost = cost - cart_item[idx_disc];
+				cart_col.innerHTML = "<b>" + cart_info.on0 + ": </b><i>" + cart_info.os0 + "</i>";
+				if( cart_info.hasOwnProperty("on1") )
+				{
+					cart_col.innerHTML += "<br><b>" + cart_info.on1 + ": </b><i>" + cart_info.os1 + "</i>";
+				}
 			}
-			if( cart_item[idx_taxed] )
-			{
-				cost = add_tax(cost);
-			}
-            cost_col.innerHTML = "$" + cost.toFixed(2);
-            total_cost = total_cost + cost;
-            cart_row.appendChild( cost_col );
+		cart_row.appendChild( cart_col );
 
-            remove_col = document.createElement( "td" );
-            remove_col.innerHTML = "<button onclick='remove_cart_item(\"" + cart_item[idx_id] + "\");'>X</button>";
-            remove_col.align = "center";
-            cart_row.appendChild( remove_col );
+		cart_col = document.createElement( "td" );
+		var cost = cart_info.amount;
+		if( cart_info.hasOwnProperty("discount_amount") )
+		{
+			cost -= cart_info.discount_amount;
+		}
+		cart_col.innerHTML = "$" + cost;
+		cart_row.appendChild( cart_col );
+		total_cost += cost;
+		total_tax += tax_on_item( cost, cart_info.tax_rate );
 
-            cart_table.appendChild( cart_row );
-        }
+        var remove_col = document.createElement( "td" );
+			var remove_button = document.createElement( "button" );
+			remove_button.innerHTML = "X";
+			remove_button.value = idx - 1;
+			remove_button.onclick = remove_cart_fn;
+			remove_col.appendChild( remove_button );
+        remove_col.align = "center";
+        cart_row.appendChild( remove_col );
 
-        // Total line
-        {
-            cart_row = document.createElement( "tr" );
-
-            description_col = document.createElement( "td" );
-            description_col.innerHTML = "Total";
-            cart_row.appendChild( description_col );
-
-            cost_col = document.createElement( "td" );
-            cost_col.innerHTML = "$" + total_cost.toFixed(2);
-            cart_row.appendChild( cost_col );
-
-            remove_col = document.createElement( "th" );
-            remove_col.innerHTML = "";
-            cart_row.appendChild( remove_col );
-
-            cart_table.appendChild( cart_row );
-        }
-
-        cart_element.appendChild( cart_table );
-
-        var print_button = document.createElement( "button" );
-        print_button.innerHTML = "See Printable Form";
-        print_button.onclick = print_cart;
-        cart_element.appendChild( print_button );
+		cart_table.appendChild( cart_row );
     }
+
+	// If the cart has elements then include isntructions, a total line, and payment buttons
+	var instructions_row = document.createElement( "tr" );
+	var instructions_col = document.createElement( "td" );
+	instructions_col.innerHTML = instructions_id;
+	instructions_row.appendChild( instructions_col );
+	//
+	instructions_col = document.createElement( "td" );
+	instructions_col.colSpan = 3;
+		var instructions_text = document.createElement( "textarea" );
+		instructions_text.rows = "4";
+		instructions_text.cols = "64";
+		instructions_text.maxlength = "256";
+		instructions_text.id = "instructions";
+		instructions_text.placeholder = "Enter any messages for us here...";
+		instructions_text.oninput = update_cart_fn;
+		instructions_text.innerHTML += instructions;
+		instructions_col.appendChild( instructions_text );
+	instructions_row.appendChild( instructions_col );
+	//
+	cart_table.appendChild( instructions_row );
+
+	// Totals row
+	var total_row = document.createElement( "tr" );
+	//
+	var total_col = document.createElement( "th" );
+	total_col.innerHTML = "Total";
+	total_row.appendChild( total_col );
+	//
+	total_col = document.createElement( "th" );
+	total_col.innerHTML = "including HST of $" + total_tax.toFixed(2);
+	total_row.appendChild( total_col );
+	//
+	total_cost += total_tax;
+	total_col = document.createElement( "th" );
+	total_col.innerHTML = "$" + total_cost.toFixed(2);
+	total_row.appendChild( total_col );
+	//
+	total_col = document.createElement( "th" );
+	total_col.innerHTML = "";
+	total_row.appendChild( total_col );
+	//
+	cart_table.appendChild( total_row );
+
+	// Separate the table of items from the payment buttons
+	cart_element.appendChild( cart_table );
+
+	// Payment buttons
+	var button_container = document.createElement( "div" );
+	button_container.className = "payment_buttons";
+
+		// Put in a placeholder for the Paypal button - populate below
+		var paypal_div = document.createElement( "div" );
+		paypal_div.id = "paypal_button";
+		button_container.appendChild( paypal_div );
+
+		// The cheque method will trigger a page build
+		var form_button = document.createElement( "button" );
+		form_button.className = "shadow_button";
+		form_button.onclick = function() { print_cart(); };
+		form_button.innerHTML = "View Printable Order Form";
+		button_container.appendChild( form_button );
+
+	cart_element.appendChild( button_container );
+
+	rebuild_paypal_button();
 }
 
 //----------------------------------------------------------------------
@@ -231,15 +569,23 @@ function rebuild_cart()
 //
 function print_cart()
 {
+	// Special instructions are not stored anywhere so get them out first.
+	var instructions = get_instructions();
+
     var print_wnd = window.open("about:blank", "cart");
-    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Shopping Cart</title></head>\n" );
-    print_wnd.document.write( "<body><img src='/Images70th/PrintableFormHeader.jpg'/>\n" );
+    print_wnd.document.write( "<html><head><title>70th Anniversary Reunion Shopping Cart</title>\n" );
+    print_wnd.document.write( "<link href='https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700' rel='stylesheet'>" );
+    print_wnd.document.write( "<style>" );
+    print_wnd.document.write( "* { font-family: Raleway; font-size: 12; }" );
+    print_wnd.document.write( "</style>" );
+    print_wnd.document.write( "</head>" );
+    print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeader.jpg'/>\n" );
 
     // Get the values of the hidden fields containing the logged-in member's
     // information. The odd format is to be consistent with the way PayPal
 	// requires these fields to be named.
-    var first_name = document.getElementById( "first_name" ).value;
-    var last_name = document.getElementById( "last_name" ).value;
+    var first_name = member_info.first_name;
+    var last_name = member_info.last_name;
 	var name = '';
 	if( first_name !== null )
 	{
@@ -249,11 +595,11 @@ function print_cart()
 			name = name + " " + last_name;
 		}
 	}
-    var email = document.getElementById( "email" ).value;
+    var email = member_info.email;
     var phone = '';
-    var area = document.getElementById( "night_phone_a" ).value;
-    var exchange = document.getElementById( "night_phone_b" ).value;
-    var number = document.getElementById( "night_phone_c" ).value;
+    var area = member_info.night_phone_a;
+    var exchange = member_info.night_phone_b;
+    var number = member_info.night_phone_c;
 	if( area !== null )
 	{
 		phone = "(" + area + ") ";
@@ -272,238 +618,83 @@ function print_cart()
     print_wnd.document.write( "<tr><td width='100'>Name:</td><td>" + name + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Email:</td><td>" + email + "</td></tr>\n" );
     print_wnd.document.write( "<tr><td>Phone:</td><td>" + phone + "</td></tr>\n" );
-    print_wnd.document.write( "<tr height='150'><td>Special<br/>Instructions:</td><td>&nbsp;</td></tr>\n" );
+    print_wnd.document.write( "<tr><td>Special<br/>Instructions:</td><td><p>" + instructions + "</p></td></tr>\n" );
     print_wnd.document.write( "</table>" );
 
     print_wnd.document.write( "<h2>Your Order</h2>\n" );
     print_wnd.document.write( "<table width='90%' cellpadding='5' border='1'>" );
-    print_wnd.document.write( "<tr><th>Description</th><th width='100'>Cost</th></tr>" );
+    print_wnd.document.write( "<tr><th>Item</th><th>Information</th><th width='100'>Cost</th></tr>" );
     var total_cost = 0.0;
-    var cart_info = get_cart_contents();
+	var total_tax = 0.0;
 	var discount = 0.0;
-	var had_golf = false;
-	var had_golf_dinner = false;
-	var had_golf_hole = false;
-    if( cart_info.length === 0 )
+    if( cart_contents.length === 0 )
     {
-        print_wnd.document.write( "<p>You have not ordered anything yet. Select an item to join the fun!</p>" );
+        print_wnd.document.write( "<p>" + empty_cart_msg + "</p>" );
     }
     else
     {
-        for( var idx=0; idx<cart_info.length; ++idx )
+		var tax = 0.0;
+        for( var idx=1; idx<=cart_contents.length; ++idx )
         {
-            var cart_item = cart_info[idx];
-			if( cart_item[idx_id] === "golf" )
+            var cart_item = cart_contents[idx-1];
+
+			// Calculate the cost of this item
+            var cost = cart_item.amount;
+			if( cart_item.hasOwnProperty("discount_amount") )
 			{
-				had_golf = true;
+				cost = cost - cart_item.discount_amount;
+				discount = discount + cart_item.discount_amount;
 			}
-			else if( cart_item[idx_id] === "golfDinner" )
+			if( cart_item.tax_rate > 0 )
 			{
-				had_golf_dinner = true;
+				total_tax += tax_on_item( cost, cart_item.tax_rate );
+				discount = discount + add_tax(cart_item.discount_amount) - cart_item.discount_amount;
 			}
-			else if( cart_item[idx_id] === "golfHole" )
-			{
-				had_golf_hole = true;
-			}
-            var cost = cart_item[idx_cost];
-			if( apply_discounts )
-			{
-				cost = cost - cart_item[idx_disc];
-				discount = discount + cart_item[idx_disc];
-			}
-			if( cart_item[idx_taxed] )
-			{
-				cost = add_tax(cost);
-				discount = discount + add_tax(cart_item[idx_disc]) - cart_item[idx_disc];
-			}
-            print_wnd.document.write( "<tr>" );
-            print_wnd.document.write( "<td>" + cart_item[idx_desc] + "</td>" );
-            print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
             total_cost = total_cost + cost;
+
+            print_wnd.document.write( "<tr>" );
+            print_wnd.document.write( "<td>" + cart_item.item_name + "</td>" );
+
+			// If there are any information fields add them here
+            print_wnd.document.write( "<td>" );
+			if( cart_item.hasOwnProperty("on0") )
+			{
+				print_wnd.document.write( cart_item.on0 );
+				print_wnd.document.write( " = " );
+				print_wnd.document.write( cart_item.os0 );
+			}
+			if( cart_item.hasOwnProperty("on1") )
+			{
+				print_wnd.document.write( "<br>" );
+				print_wnd.document.write( cart_item.on1 );
+				print_wnd.document.write( " = " );
+				print_wnd.document.write( cart_item.os1 );
+			}
+            print_wnd.document.write( "</td>" );
+
+            print_wnd.document.write( "<td align='right'>$" + cost.toFixed(2) + "</td>" );
             print_wnd.document.write( "</tr>\n" );
         }
     }
     print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
+    print_wnd.document.write( "<td>including HST of $" + total_tax.toFixed(2) + "</td>" );
+	total_cost += total_tax;
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
+
     print_wnd.document.write( "</tr>\n" );
     print_wnd.document.write( "</table>\n" );
 
 	// Congratulate them on their frugality
 	if( discount > 0 )
 	{
-    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " for being an early-bird!</i></p>\n" );
+    	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " by being an early-bird!</i></p>\n" );
 	}
 
-	// Check to see if any further information is required for golf
-	if( had_golf )
-	{
-		print_wnd.document.write( "<table width='90%' cellpadding='5' border='1'>" );
-		print_wnd.document.write( "<tr><td width='200'>Golf Partner(s), if any?</td><td>&nbsp;</td></tr>\n" );
-		print_wnd.document.write( "</table>\n" );
-	}
-	if( had_golf || had_golf_dinner )
-	{
-		print_wnd.document.write( "<p><i>Golf is at Indian Wells Golf Course, 5377 Walker's Line, Burlington</i></p>\n" );
-		if( had_golf )
-		{
-			print_wnd.document.write( "<p><i>BBQ Lunch is at noon, shotgun start is at 1pm</i></p>\n" );
-		}
-	}
-	if( had_golf_dinner )
-	{
-		print_wnd.document.write( "<p><i>Dinner guests please arrive before 6:30pm for dinner. (Come earlier to watch the golfers!)</i></p>\n" );
-	}
-	if( had_golf_hole )
-	{
-		print_wnd.document.write( "<p><i>You will be contacted for further information" );
-		print_wnd.document.write( " regarding your hole sponsorship. Send email to" );
-		print_wnd.document.write( " golf@bttbalumni.ca if you are not contacted within a week.</i></p>\n" );
-	}
+	print_wnd.document.write( "<h2><font color='#af4c50'>Thank you for your order, see you in June!</font></h2>\n" );
 
     print_wnd.document.write( "</body></html>" );
     print_wnd.document.close();
-}
-
-//----------------------------------------------------------------------
-//
-// Add the item to the cart
-//
-function add_cart_item(cart_item)
-{
-    var shirt_select;
-    var shirt_option = null;
-    var other_item = null;
-    // Validate that shirt size was specified if required
-    if( cart_item === "allin" )
-    {
-        shirt_select = document.getElementById( "allin_shirt" );
-        shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
-        if( shirt_option === "" )
-        {
-            alert( "You must specify a shirt size with the 'All Events' option" );
-            return;
-        }
-        other_item = shirt_option + "_a";
-    }
-    else if( cart_item === "parade" )
-    {
-        shirt_select = document.getElementById( "parade_shirt" );
-        shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
-        if( shirt_option === "" )
-        {
-            alert( "You must specify a shirt size with the 'Parade' option" );
-            return;
-        }
-        other_item = shirt_option + "_p";
-    }
-    else if( cart_item === "shirt" )
-    {
-        shirt_select = document.getElementById( "shirt_shirt" );
-        shirt_option = shirt_select.options[shirt_select.selectedIndex].value;
-        if( shirt_option === "" )
-        {
-            alert( "You must specify a shirt size" );
-            return;
-        }
-        cart_item = shirt_option;
-    }
-    if( cart_contents === null )
-    {
-        cart_contents = [];
-    }
-    cart_contents.push( cart_item );
-    if( other_item !== null )
-    {
-        cart_contents.push( other_item );
-    }
-    rebuild_cart();
-}
-
-//----------------------------------------------------------------------
-//
-// Remove the item from the cart. If the cart item is one of a pair, like
-// a shirt and parade, then remove the matching item as well.
-//
-function remove_cart_item(cart_item)
-{
-    var cart_el;
-    var cart_index;
-    cart_index = cart_contents.indexOf( cart_item );
-    if( cart_index >= 0 )
-    {
-        cart_contents.splice( cart_index, 1 );
-    }
-
-    // If removing the allin event then remove the shirt for it as well
-    //
-    if( cart_item === "allin" )
-    {
-        for( cart_index=0; cart_index<cart_contents.length; ++cart_index )
-        {
-            cart_el = cart_contents[cart_index];
-            if( cart_el.substr(cart_el.length - 2, 2) === "_a" )
-            {
-                cart_contents.splice( cart_index, 1 );
-                break;
-            }
-        }
-    }
-    // If removing the parade event then remove the shirt for it as well
-    //
-    else if( cart_item === "parade" )
-    {
-        for( cart_index=0; cart_index<cart_contents.length; ++cart_index )
-        {
-            cart_el = cart_contents[cart_index];
-            if( cart_el.substr(cart_el.length - 2, 2) === "_p" )
-            {
-                cart_contents.splice( cart_index, 1 );
-                break;
-            }
-        }
-    }
-    // If removing the allin shirt then remove the event as well
-    //
-    else if( cart_item.substr(cart_item.length - 2, 2) === "_a" )
-    {
-        cart_index = cart_contents.indexOf( "allin" );
-        if( cart_index >= 0 )
-        {
-            cart_contents.splice( cart_index, 1 );
-        }
-    }
-    // If removing the parade shirt then remove the event as well
-    //
-    else if( cart_item.substr(cart_item.length - 2, 2) === "_p" )
-    {
-        cart_index = cart_contents.indexOf( "parade" );
-        if( cart_index >= 0 )
-        {
-            cart_contents.splice( cart_index, 1 );
-        }
-    }
-
-    rebuild_cart();
-}
-
-//----------------------------------------------------------------------
-//
-// Validate that an item being ordered has had a shirt size selected.
-// item is the name of the item being ordered, in a display-friendly
-// format - it will be used in the alert if the size is missing.
-// shirt_id is the unique ID of the "select" field containing the shirt option.
-//
-var no_shirt_selected = "-- Select Shirt Size --"; // Same as in bttbStore2017.py
-function validate_shirt_size(item, shirt_id)
-{
-    var shirt_element = document.getElementById( shirt_id );
-	if( shirt_element.value === no_shirt_selected )
-	{
-		alert( 'Please select a shirt size for "' + item + '"' );
-		return false;
-	}
-	return true;
 }
 
 // ==================================================================
