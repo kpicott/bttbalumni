@@ -1,4 +1,6 @@
 // Change these values to make Paypal live
+//var PAYPAL_EMAIL = "bttb@burlington.ca";
+//var PAYPAL_URL   = "https://www.paypal.com/cgi-bin/webscr";
 var PAYPAL_EMAIL = "bttb-seller@picott.ca";
 var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 
@@ -28,7 +30,7 @@ var shirt_size_code         = "Shirt Size";
 // printing the form so they should be descriptive.
 var all_inclusive_id  = "All-Inclusive Pass, Hat, and Shirt";
 var saturday_id       = "Saturday Night Social Ticket";
-var parade_id         = "Parade Spot, Hat, and Shirt";
+var parade_id         = "Parade Spot and Shirt";
 var shirt_id          = "70th Anniversary Shirt";
 var hat_id            = "70th Anniversary Hat";
 var instructions_id   = "Special Instructions";
@@ -123,7 +125,7 @@ function add_all_inclusive()
 	}
 
 	var attendee = {};
-	attendee.amount = 140;
+	attendee.amount = 145;
 	if( apply_discounts )
 	{
 		attendee.discount_amount = 20;
@@ -152,11 +154,11 @@ function add_saturday()
 	}
 
 	var socializer = {};
-	socializer .amount = 70;
-	socializer .item_name = saturday_id;
-	socializer .on0 = saturday_name_code;
-	socializer .os0 = name;
-	socializer .tax_rate = 13;
+	socializer.amount = 95;
+	socializer.item_name = saturday_id;
+	socializer.on0 = saturday_name_code;
+	socializer.os0 = name;
+	socializer.tax_rate = 13;
 
 	cart_contents.push( socializer );
 	rebuild_cart();
@@ -176,7 +178,7 @@ function add_parade()
 	}
 
 	var marcher = {};
-	marcher.amount = 40;
+	marcher.amount = 45;
 	marcher.item_name = parade_id;
 	marcher.on0 = parade_name_code;
 	marcher.os0 = name;

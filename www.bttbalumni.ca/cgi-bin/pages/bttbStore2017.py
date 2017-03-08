@@ -65,11 +65,10 @@ CART_DATA = {
                 'allin' :    { 'image'        : 'merch_inclusive.jpg'
                              , 'size'         : '_big'
                              , 'info'         : '''<b>All-Inclusive VIP Ticket</b><ul>
-                                                   <li>70<sup>th</sup> Anniversary Reunion Shirt</li>
-                                                   <li>70<sup>th</sup> Anniversary Reunion Hat</li>
+                                                   <li>70<sup>th</sup> Anniversary Reunion Shirt and Hat</li>
                                                    <li>Marching spot in the SOMF with the Alumni Band</li>
                                                    <li>Saturday Night Social (buffet + entertainment)</li>
-                                                   <li>$120 Early-Bird until April 15th, $140 after!</li>
+                                                   <li>$125 Early-Bird until April 15th, $145 after!</li>
                                                    </ul>'''
                              , 'cost_image'   : 'PriceAllIn%s.png' % EARLY
                              , 'onclick'      : 'add_all_inclusive();'
@@ -79,12 +78,12 @@ CART_DATA = {
             ,   'saturday' : { 'image'        : 'merch_saturday.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>Saturday Night Social</b><ul>
-                                                   <li>Buffet dinner</li>
+                                                   <li>Buffet dinner, Cash bar</li>
                                                    <li>Music and Entertainment</li>
-                                                   <li>Cash bar</li>
+                                                   <li>We call this the "Band Booster Special"</li>
                                                    <li>Guests Welcome</li>
                                                    </ul>'''
-                             , 'cost_image'   : 'PriceSaturday.png'
+                             , 'cost_image'   : 'PriceSaturday%s.png' % EARLY
                              , 'onclick'      : 'add_saturday();'
                              , 'name'         : 'Name of participant'
                              , 'size_select'  : ''
@@ -92,7 +91,7 @@ CART_DATA = {
             ,   'parade' :   { 'image'        : 'merch_parade.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>Sound of Music Parade, Alumni Band</b><ul>
-                                                   <li>Includes Hat and Shirt as uniform</li>
+                                                   <li>Includes Shirt as uniform</li>
                                                    <li>Over 300 in the band at the 60<sup>th</sup>!</li>
                                                    <li>Float seating available if you cannot march</li>
                                                    </ul>'''
@@ -104,7 +103,7 @@ CART_DATA = {
             ,   'shirt' :    { 'image'        : 'merch_shirt.jpg'
                              , 'size'         : ''
                              , 'info'         : '''<b>70<sup>th</sup> Anniversary Reunion Shirt</b><ul>
-                                                   <li>Stormtech Gold shirt with embroidered reunion patch</li>
+                                                   <li>Stormtech Golf shirt with embroidered reunion patch</li>
                                                    <li>Select from a wide variety of sizes</li>
                                                    <li>Limited edition - you must pre-order!</li>
                                                    </ul>'''
