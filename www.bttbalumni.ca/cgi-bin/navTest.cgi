@@ -39,6 +39,15 @@ class bttbNavigation:
         """
         Display the navigation buttons with Javascript embedded
         """
+        menus = { 'Home'             : { 'link' : '/#home' }
+                , '70th Anniversary' : { 'children' : [
+                                         {
+                                            'Golf'  : { 'link' : '/#golf2017' }
+                                         ,  'Store' : { 'link' : '/#store2017' }
+                                         }
+                                         ]
+                                       }
+                }
         try:
             print "<div id='navigation'>"
             print "<div id='mainMenu'>"
