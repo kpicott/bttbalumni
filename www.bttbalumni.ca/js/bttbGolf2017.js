@@ -259,6 +259,7 @@ function rebuild_golf_paypal_button()
 					  , "redirect_cmd"  : "_cart"
     				  , "currency_code" : "CAD"
     				  , "shipping"      : "0"
+    				  , "custom"        : "70th Anniversary Reunion"
     				  , "cancel_return" : "http://bttbalumni.ca/#golf2017?payment=paypal"
     				  , "cbt"           : "Return to the BTTB 70th Anniversary Golf Tournament"
     				  , "return"        : "http://bttbalumni.ca/#thanksGolf2017"

@@ -319,6 +319,7 @@ function rebuild_paypal_button()
 					  , "redirect_cmd"  : "_cart"
     				  , "currency_code" : "CAD"
     				  , "shipping"      : "0"
+    				  , "custom"        : "70th Anniversary Reunion"
     				  , "cancel_return" : "http://bttbalumni.ca/#store2017"
     				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
     				  , "return"        : "http://bttbalumni.ca/#thanks2017"
