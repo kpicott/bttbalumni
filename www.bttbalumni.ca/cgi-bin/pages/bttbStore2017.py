@@ -83,7 +83,7 @@ CART_DATA = {
                                                    <li>We call this the "Band Booster Special"</li>
                                                    <li>Guests Welcome</li>
                                                    </ul>'''
-                             , 'cost_image'   : 'PriceSaturday%s.png' % EARLY
+                             , 'cost_image'   : 'PriceSaturday.png'
                              , 'onclick'      : 'add_saturday();'
                              , 'name'         : 'Name of participant'
                              , 'size_select'  : ''

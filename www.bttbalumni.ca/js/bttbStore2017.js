@@ -1,8 +1,8 @@
 // Change these values to make Paypal live
-//var PAYPAL_EMAIL = "bttb@burlington.ca";
-//var PAYPAL_URL   = "https://www.paypal.com/cgi-bin/webscr";
-var PAYPAL_EMAIL = "bttb-seller@picott.ca";
-var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+var PAYPAL_EMAIL = "bttb@burlington.ca";
+var PAYPAL_URL   = "https://www.paypal.com/cgi-bin/webscr";
+//var PAYPAL_EMAIL = "bttb-seller@picott.ca";
+//var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 
 // Contents of the current cart, represented as an array of keywords.
 //  	amount           : Dollar amount for the item, not including tax
@@ -321,7 +321,6 @@ function rebuild_paypal_button()
 					  , "redirect_cmd"  : "_cart"
     				  , "currency_code" : "CAD"
     				  , "shipping"      : "0"
-    				  , "custom"        : "70th Anniversary Reunion"
     				  , "cancel_return" : "http://bttbalumni.ca/#store2017"
     				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
     				  , "return"        : "http://bttbalumni.ca/#thanks2017"

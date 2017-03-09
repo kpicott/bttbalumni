@@ -1,4 +1,6 @@
 // Change these values to make Paypal live
+//var PAYPAL_EMAIL = "bttb-seller@picott.ca";
+//var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 var PAYPAL_EMAIL = "bttb@burlington.ca";
 var PAYPAL_URL   = "https://www.paypal.com/cgi-bin/webscr";
 
@@ -260,7 +262,6 @@ function rebuild_golf_paypal_button()
     				  , "currency_code" : "CAD"
     				  , "shipping"      : "0"
     				  , "cancel_return" : "http://bttbalumni.ca/#golf2017"
-    				  , "custom"        : "70th Anniversary Reunion"
     				  , "cbt"           : "Return to the BTTB 70th Anniversary Golf Tournament"
     				  , "return"        : "http://bttbalumni.ca/#thanksGolf2017"
     				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
