@@ -39,6 +39,7 @@ __all__ = [ "HomeHref",
             "PositionList",
             "AsYYYY",
             "CleanupXML",
+            "CommitteAccessRequired",
             "PrintCGIHeader",
             "MailChair",
             "PageLink",
@@ -657,6 +658,19 @@ def LoginRequired(title):
     the 'My Profile' link after you login.
     </div>
     """ % title
+
+#======================================================================
+def CommitteeAccessRequired():
+    """
+    Return a string with the HTML for a warning that the current page with
+    given title requires a committee login to access.
+    """
+    return """
+    <h1>Committee Only Page - %s</h1>
+    <p>
+    Sorry, but this page is only accessible to committee members.
+    </p>
+    """ % self.title()
 
 import smtplib
 
