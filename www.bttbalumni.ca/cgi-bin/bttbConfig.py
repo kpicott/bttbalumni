@@ -6,59 +6,58 @@ import os
 import os.path
 from urlparse import urlparse
 
-_buttonWidth = 109
-_buttonHeight = 31
-_menuButtonWidth = 109
-_menuButtonHeight = 31
-_subMenuButtonWidth = 77
-_subMenuButtonHeight = 18
-_errorsInHtml = True
+MENU_BUTTON_WIDTH = 109
+MENU_BUTTON_HEIGHT = 31
+SUBMENU_BUTTON_WIDTH = 77
+SUBMENU_BUTTON_HEIGHT = 18
+ERRORS_IN_HTML = True
 
-__all__ = [ "HomeHref",
-            "BandImagePath",
-            "PackageImagePath",
-            "SponsorImagePath",
-            "TicketItemPath",
-            "NewsletterPath",
+__all__ = [ "ArchiveFormat",
             "ArticlePath",
-            "JavascriptPath",
-            "CelebrationPath",
-            "CelebrationHref",
-            "CSSPath",
-            "MusicPath",
-            "ImagePath",
-            "PhotoPath",
-            "AudioPath",
-            "DataPath",
-            "DataHref",
-            "BackupHref",
-            "CgiHref",
-            "MapLinks",
-            "Pluralize",
-            "InstrumentList",
-            "PositionList",
             "AsYYYY",
-            "CleanupXML",
-            "CommitteAccessRequired",
-            "PrintCGIHeader",
-            "MailChair",
-            "PageLink",
-            "EmailLink",
-            "DownloadLink",
-            "PhoneFormat",
-            "PhoneParts",
-            "LoginRequired",
-            "EmbedJS",
-            "SortDictByValue",
+            "AudioPath",
             "Backup",
-            "TableList",
-            "DbFormat",
-            "ArchiveFormat",
-            "DearchiveFormat",
+            "BackupHref",
+            "BandImagePath",
+            "CSSPath",
+            "CelebrationHref",
+            "CelebrationPath",
+            "CgiHref",
+            "CleanupXML",
+            "CommitteeAccessRequired",
             "CommitteeMark",
-            "ErrorsInHtml",
+            "DataHref",
+            "DataPath",
+            "DbFormat",
+            "DearchiveFormat",
+            "DownloadLink",
+            "EmailLink",
+            "EmbedJS",
             "Error",
             "ErrorMsg",
+            "ErrorsInHtml",
+            "HomeHref",
+            "ImagePath",
+            "InstrumentList",
+            "JavascriptPath",
+            "LoginRequired",
+            "MailChair",
+            "MapLinks",
+            "MusicPath",
+            "NewsletterPath",
+            "PackageImagePath",
+            "PageLink",
+            "PagePath",
+            "PhoneFormat",
+            "PhoneParts",
+            "PhotoPath",
+            "Pluralize",
+            "PositionList",
+            "PrintCGIHeader",
+            "SortDictByValue",
+            "SponsorImagePath",
+            "TableList",
+            "TicketItemPath",
             "Warning"]
 
 #======================================================================
@@ -78,15 +77,15 @@ def PositionList():
 rootSubst = None
 rootMain = None
 if not 'SERVER_ADDR' in os.environ:
-    cd = os.getcwd()
+    current_directory = os.getcwd()
     if cd.find('/test') >= 0:
         HOMEHREF = '/test'
         CGIHREF = '/cgi-bin/test'
     else:
         HOMEHREF = ''
         CGIHREF = '/cgi-bin'
-    rootSubst = 'www.bttbalumni.ca.*'
-    rootMain = 'www.bttbalumni.ca'
+    rootSubst = 'bttbalumni.ca.*'
+    rootMain = 'bttbalumni.ca'
 elif os.environ['SERVER_ADDR'] == '127.0.0.1':
     if 'SCRIPT_FILENAME' in os.environ:
         if os.environ['SCRIPT_FILENAME'].find( '/test/' ) >= 0:
@@ -102,72 +101,73 @@ else:
     HOMEHREF = ''
     CGIHREF = '/cgi-bin'
 
-re_link = re.compile('link:\((.*?)\)', re.MULTILINE)
-re_download = re.compile('download:\((.*?)\)', re.MULTILINE)
-re_mail = re.compile('send:\((.*?)\)', re.MULTILINE)
-re_menuButton = re.compile('button:\((.*?)\)', re.MULTILINE)
-re_subMenuButton = re.compile('buttonSub:\((.*?)\)', re.MULTILINE)
+RE_LINK = re.compile(r'link:\((.*?)\)', re.MULTILINE)
+RE_DOWNLOAD = re.compile(r'download:\((.*?)\)', re.MULTILINE)
+RE_MAIL = re.compile(r'send:\((.*?)\)', re.MULTILINE)
+RE_MENU_BUTTON = re.compile(r'button:\((.*?)\)', re.MULTILINE)
+RE_SUBMENU_BUTTON = re.compile(r'buttonSub:\((.*?)\)', re.MULTILINE)
 #======================================================================
 def MapLinks(original):
     """
     Take an HTML string with template locations and return a version with them
     all replaced by the real paths, relative to the current configuration
     """
-    resolved = original.replace('__BANDIMAGEPATH__', BandImagePath())    \
-                    .replace('__PACKAGEIMAGEPATH__', PackageImagePath())\
-                    .replace('__SPONSORIMAGEPATH__', SponsorImagePath())\
-                    .replace('__TICKETITEMPATH__', TicketItemPath())    \
-                    .replace('__NEWSLETTERPATH__', NewsletterPath())    \
-                    .replace('__ARTICLEPATH__', ArticlePath())            \
-                    .replace('__BUTTONPATH__', ButtonPath())            \
-                    .replace('__MENUPATH__', MenuPath())                \
-                    .replace('__SUBMENUPATH__', SubMenuPath())            \
-                    .replace('__IMAGEPATH__', ImagePath())                \
-                    .replace('__PHOTOPATH__', PhotoPath())                \
-                    .replace('__AUDIOPATH__', AudioPath())                \
-                    .replace('__HOMEHREF__', HomeHref())                \
-                    .replace('__DATAHREF__', DataHref())                \
-                    .replace('__BACKUPHREF__', BackupHref())            \
-                    .replace('__CSSPATH__', CSSPath())                    \
-                    .replace('__BIOIMAGESPATH__', BioImagesPath())        \
-                    .replace('__INSTRUMENTPATH__', InstrumentPath())    \
-                    .replace('__MUSICPATH__', MusicPath())                \
-                    .replace('__REUNION70THPATH__', Reunion70thPath())    \
-                    .replace('__SHEETMUSICPATH__', SheetMusicPath())    \
-                    .replace('__JAVASCRIPTPATH__', JavascriptPath())    \
-                    .replace('__CELEBRATIONPATH__', CelebrationPath())    \
-                    .replace('__CELEBRATIONHREF__', CelebrationHref())    \
-                    .replace('__CGIHREF__', CgiHref())                    \
-                    .replace('__ROOTPATH__', RootPath())
+    resolved = original.replace('__BANDIMAGEPATH__',    BandImagePath())    \
+                       .replace('__PACKAGEIMAGEPATH__', PackageImagePath()) \
+                       .replace('__SPONSORIMAGEPATH__', SponsorImagePath()) \
+                       .replace('__TICKETITEMPATH__',   TicketItemPath())   \
+                       .replace('__NEWSLETTERPATH__',   NewsletterPath())   \
+                       .replace('__ARTICLEPATH__',      ArticlePath())      \
+                       .replace('__BUTTONPATH__',       ButtonPath())       \
+                       .replace('__MENUPATH__',         MenuPath())         \
+                       .replace('__SUBMENUPATH__',      SubMenuPath())      \
+                       .replace('__IMAGEPATH__',        ImagePath())        \
+                       .replace('__PAGEPATH__',         PagePath())         \
+                       .replace('__PHOTOPATH__',        PhotoPath())        \
+                       .replace('__AUDIOPATH__',        AudioPath())        \
+                       .replace('__HOMEHREF__',         HomeHref())         \
+                       .replace('__DATAHREF__',         DataHref())         \
+                       .replace('__BACKUPHREF__',       BackupHref())       \
+                       .replace('__CSSPATH__',          CSSPath())          \
+                       .replace('__BIOIMAGESPATH__',    BioImagesPath())    \
+                       .replace('__INSTRUMENTPATH__',   InstrumentPath())   \
+                       .replace('__MUSICPATH__',        MusicPath())        \
+                       .replace('__REUNION70THPATH__',  Reunion70thPath())  \
+                       .replace('__SHEETMUSICPATH__',   SheetMusicPath())   \
+                       .replace('__JAVASCRIPTPATH__',   JavascriptPath())   \
+                       .replace('__CELEBRATIONPATH__',  CelebrationPath())  \
+                       .replace('__CELEBRATIONHREF__',  CelebrationHref())  \
+                       .replace('__CGIHREF__', CgiHref())                   \
+                       .replace('__ROOTPATH__', RootPath())
     # ----------------------------------------
-    matches = re_link.findall( resolved )
+    matches = RE_LINK.findall( resolved )
     for link in matches:
         try:
             (url, text) = link.split(',')
         except:
             url = link
             text = url
-        resolved = re_link.sub( PageLink(url, text), resolved, 1 )
+        resolved = RE_LINK.sub( PageLink(url, text), resolved, 1 )
     # ----------------------------------------
-    matches = re_download.findall( resolved )
+    matches = RE_DOWNLOAD.findall( resolved )
     for link in matches:
         try:
             (url, text) = link.split(',')
         except:
             url = link
             text = url
-        resolved = re_download.sub( DownloadLink(url, text), resolved, 1 )
+        resolved = RE_DOWNLOAD.sub( DownloadLink(url, text), resolved, 1 )
     # ----------------------------------------
-    matches = re_mail.findall( resolved )
+    matches = RE_MAIL.findall( resolved )
     for link in matches:
         try:
             (mail, who) = link.split(',')
         except:
             mail = link
             who = mail
-        resolved = re_mail.sub( EmailLink(mail, who), resolved, 1 )
+        resolved = RE_MAIL.sub( EmailLink(mail, who), resolved, 1 )
     # ----------------------------------------
-    matches = re_menuButton.findall( resolved )
+    matches = RE_MENU_BUTTON.findall( resolved )
     for link in matches:
         try:
             (url, name, title) = link.split(',')
@@ -181,14 +181,14 @@ def MapLinks(original):
         name = name.strip().rstrip()
         title = title.strip()
         img = MapLinks("<img src='__MENUPATH__/" + name + "Normal.png'")
-        img += " width='%d'" % _menuButtonWidth
-        img += " height='%d'" % _menuButtonHeight
+        img += " width='%d'" % MENU_BUTTON_WIDTH
+        img += " height='%d'" % MENU_BUTTON_HEIGHT
         img += " border='0'>"
-        buttonInfo = PageLink(url, img, title)
-        buttonInfo += "\n"
-        resolved = re_menuButton.sub( buttonInfo, resolved, 1 )
+        button_info = PageLink(url, img, title)
+        button_info += "\n"
+        resolved = RE_MENU_BUTTON.sub( button_info, resolved, 1 )
     # ----------------------------------------
-    matches = re_subMenuButton.findall( resolved )
+    matches = RE_SUBMENU_BUTTON.findall( resolved )
     for link in matches:
         try:
             (url, name, title) = link.split(',')
@@ -202,18 +202,18 @@ def MapLinks(original):
         name = name.strip().rstrip()
         title = title.strip()
         if url.find('soon') >= 0:
-            buttonInfo = "<li class='subSoon'>\n"
+            button_info = "<li class='subSoon'>\n"
         elif url.find('committee') >= 0:
-            buttonInfo = "<li class='subCommittee'>\n"
+            button_info = "<li class='subCommittee'>\n"
         else:
-            buttonInfo = "<li class='subMenuItem'>\n"
+            button_info = "<li class='subMenuItem'>\n"
         img = MapLinks( "<img src='__SUBMENUPATH__/" + name + "Normal.png'")
-        img += " width='%d'" % _subMenuButtonWidth
-        img += " height='%d'" % _subMenuButtonHeight
+        img += " width='%d'" % SUBMENU_BUTTON_WIDTH
+        img += " height='%d'" % SUBMENU_BUTTON_HEIGHT
         img += " border='0'>"
-        buttonInfo += PageLink(url, img, title)
-        buttonInfo += "</li>\n"
-        resolved = re_subMenuButton.sub( buttonInfo, resolved, 1 )
+        button_info += PageLink(url, img, title)
+        button_info += "</li>\n"
+        resolved = RE_SUBMENU_BUTTON.sub( button_info, resolved, 1 )
     return resolved
 
 #======================================================================
@@ -308,6 +308,11 @@ def ImagePath():
     return HOMEHREF + '/Images'
 
 #======================================================================
+def PagePath():
+    """ Return the path to the raw HTML page directory """
+    return os.path.join( RootPath(), 'pages' )
+
+#======================================================================
 def PhotoPath():
     """ Return the path to the photos directory """
     return HOMEHREF + '/Photos'
@@ -316,11 +321,6 @@ def PhotoPath():
 def AudioPath():
     """ Return the path to the Audio directory """
     return HOMEHREF + '/Audio'
-
-#======================================================================
-def MusicPath():
-    """ Return the path to the music directory """
-    return HOMEHREF + '/Music'
 
 #======================================================================
 def JavascriptPath():
@@ -495,16 +495,16 @@ def PrintCGIHeader():
 
 #======================================================================
 def ErrorsInHtml(newFlag):
-    global _errorsInHtml
-    _errorsInHtml = newFlag
+    global ERRORS_IN_HTML
+    ERRORS_IN_HTML = newFlag
 
 #======================================================================
 def ErrorMsg(msg,info):
     """
     Return an error in HTML format
     """
-    if _errorsInHtml:
-        return "<br><font size='+3' color='red'>ERROR:</font> %s %s <br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the %s .</p></body>" % (msg, info, EmailLink("bttb\@picott.ca", "webmaster") )
+    if ERRORS_IN_HTML:
+        return "<br><font size='+3' color='red'>ERROR:</font> %s %s <br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the %s .</p></body>" % (msg, info, EmailLink("web@bttbalumni.ca", "webmaster") )
     return "*** ERROR: %s\n           %s " % (msg, info)
 
 #======================================================================
@@ -520,8 +520,8 @@ def Warning(msg,info):
     """
     Print out a warning in HTML format and return
     """
-    if _errorsInHtml:
-        return "<br><font size='+3' color='red'>WARN:</font>%s %s<br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the .</p>" % (msg, info, EmailLink("bttb\@picott.ca", "webmaster") )
+    if ERRORS_IN_HTML:
+        return r"<br><font size='+3' color='red'>WARN:</font>%s %s<br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the %s.</p>" % (msg, info, EmailLink("web@bttbalumni.ca", "webmaster") )
     return "*** WARNING: %s\n             %s " % (msg, info)
 
 from binascii import hexlify
@@ -660,7 +660,7 @@ def LoginRequired(title):
     """ % title
 
 #======================================================================
-def CommitteeAccessRequired():
+def CommitteeAccessRequired(title):
     """
     Return a string with the HTML for a warning that the current page with
     given title requires a committee login to access.
@@ -670,7 +670,7 @@ def CommitteeAccessRequired():
     <p>
     Sorry, but this page is only accessible to committee members.
     </p>
-    """ % self.title()
+    """ % title
 
 import smtplib
 
@@ -684,7 +684,7 @@ def MailChair(subject='', text=''):
     mailContent = "From: web@bttbalumni.ca\r\nTo: info@bttbalumni.ca\r\nSubject: %s\r\n\r\n%s" % (subject.replace('&nbsp;', ' '), text.replace('&nbsp;', ' '))
     try:
         if os.environ['REMOTE_ADDR'] != '127.0.0.1':
-            mailServer = smtplib.SMTP('www.bttbalumni.ca')
+            mailServer = smtplib.SMTP('bttbalumni.ca')
             mailServer.sendmail('web@bttbalumni.ca', 'info@bttbalumni.ca', mailContent)
             mailServer.quit()
         else:
@@ -699,11 +699,11 @@ import unittest
 class testConfig(unittest.TestCase):
     def testError(self):
         error = ErrorMsg('hello', 'world')
-        self.assertEqual( error, "<br><font size='+3' color='red'>ERROR:</font> hello world <br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the %s .</p></body>" % EmailLink("bttb\@picott.ca", "webmaster") )
+        self.assertEqual( error, r"<br><font size='+3' color='red'>ERROR:</font> hello world <br> <p>Reload this page in a few seconds to try again.</p> <p>If problem persists contact the %s .</p></body>" % EmailLink("web@bttbalumni.ca", "webmaster") )
 
     def testEmail(self):
-        mailto = EmailLink('bttb@picott.ca')
-        self.assertEqual( mailto, "<a class=\'email\' href=\"javascript:makeEmail(\'__NOSPAM__bttb\',\'__NOSPAM__picott.ca\')\" title=\"send email\">&#98;&#116;&#116;&#98;&#64;&#112;&#105;&#99;&#111;&#116;&#116;&#46;&#99;&#97;</a>" )
+        mailto = EmailLink('web@bttbalumni.ca')
+        self.assertEqual( mailto, "<a class='email' href=\"javascript:makeEmail('__NOSPAM__web','__NOSPAM__bttbalumni.ca')\" title=\"send email\">&#98;&#116;&#116;&#98;&#64;&#112;&#105;&#99;&#111;&#116;&#116;&#46;&#99;&#97;</a>" )
 
     def testPhone(self):
         self.assertEqual( PhoneFormat('1234567890'), '(123) 456-7890' )
@@ -731,9 +731,9 @@ class testConfig(unittest.TestCase):
         self.assertEqual( PhoneParts('---4---5---6---7---8---9-0--'), ['905','456', '7890'] )
 
     def testLinks(self):
-        mail1 = EmailLink('bttb@picott.ca', 'bttb@picott.ca')
-        mail2 = EmailLink('bttb@picott.ca', 'me')
-        mail3 = EmailLink('bttb@picott.ca', 'let me know')
+        mail1 = EmailLink('web@bttbalumni.ca', 'web@bttbalumni.ca')
+        mail2 = EmailLink('web@bttbalumni.ca', 'me')
+        mail3 = EmailLink('web@bttbalumni.ca', 'let me know')
         url1 = PageLink('http://url1', 'http://url1')
         url2 = PageLink('http://url1', 'who')
         url3 = PageLink('#thanks', 'thanks')
@@ -743,13 +743,13 @@ class testConfig(unittest.TestCase):
 ,            'abc 123 link:(http://url1,who) def 234 ': 'abc 123 ' + url2 + ' def 234 '
 ,            'abc 123 link:(#thanks,thanks) def 234 ': 'abc 123 ' + url3 + ' def 234 '
 ,            'link:(http://url1,who) link:(#thanks,thanks)': url2 + ' ' + url3
-,            'abc 123 send:(bttb@picott.ca) def 234 ': 'abc 123 ' + mail1 + ' def 234 '
-,            'abc 123 send:(bttb@picott.ca,me) def 234 ': 'abc 123 ' + mail2 + ' def 234 '
-,            'abc 123 send:(bttb@picott.ca,let me know) def 234 ': 'abc 123 ' + mail3 + ' def 234 '
+,            'abc 123 send:(web@bttbalumni.ca) def 234 ': 'abc 123 ' + mail1 + ' def 234 '
+,            'abc 123 send:(web@bttbalumni.ca,me) def 234 ': 'abc 123 ' + mail2 + ' def 234 '
+,            'abc 123 send:(web@bttbalumni.ca,let me know) def 234 ': 'abc 123 ' + mail3 + ' def 234 '
             }
         for map in mapping:
             self.assertEqual( mapping[map], MapLinks(map) )
-    
+
 if __name__ == '__main__':
     unittest.main()
 
