@@ -76,7 +76,8 @@ function clustrMapError()
 var _openingPage = false;
 function openPage(url)
 {
-    if( dismissAll ) dismissAll();
+	var dismissAll = dismissAll || {};
+    if( isFunction(dismissAll) ) dismissAll();
 
     var p = new BTTBUrl.BTTBURLParser(url);
     if( BTTBUserId >= 0 )
@@ -132,14 +133,21 @@ function openPage(url)
                     {
                         content.innerHTML = response[2];
                     }
-                    if( title.length > 0 ) document.title = title;
-                    if( scriptList.length > 0 ) loadScripts( scriptList );
+                    if( title.length > 0 )
+					{
+						document.title = title;
+					}
+                    if( scriptList.length > 0 )
+					{
+						loadScripts( scriptList );
+					}
                     if( useHistory )
                     {
                         document.location.hash = hashUrl[0];
                     }
                     _openingPage = false;
-    				if( initializePanel ) initializePanel();
+					var initializePanel = initializePanel || {};
+    				if( isFunction(initializePanel) ) initializePanel();
                 }
                 else
                 {
@@ -206,10 +214,17 @@ function openForm(url,parameters,followUp)
                     var title = response[0];
                     var scriptList = response[1].split('#!#');
                     content.innerHTML = response[2];
-                    if( title.length > 0 ) document.title = title;
-                    if( scriptList.length > 0 ) loadScripts( scriptList );
+                    if( title.length > 0 )
+					{
+						document.title = title;
+					}
+                    if( scriptList.length > 0 )
+					{
+						loadScripts( scriptList );
+					}
                     document.location.hash = hashUrl[0];
-    				if( initializePanel ) initializePanel();
+					var initializePanel = initializePanel || {};
+    				if( isFunction(initializePanel) ) initializePanel();
                 }
             }
             else
@@ -345,7 +360,8 @@ function historyChange(newLocation, historyData)
 // the onload event handler that starts the fading.
 function initialize()
 {
-    if( createMenu ) createMenu();
+	var createMenu = createMenu || {};
+    if( isFunction(createMenu) ) createMenu();
     //setInterval('swapFade()',wait);
 
     //----------------------------------------------------------------------

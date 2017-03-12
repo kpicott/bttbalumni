@@ -160,6 +160,7 @@ class bttbNavigation:
         print MapLinks( """
         <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700" rel="stylesheet">
         <link rel="shortcut icon" href="/Favicon.ico" type="image/x-icon" />
+        <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbMenu.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttb.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbLogin.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbUrlParser.js'></script>
@@ -167,7 +168,6 @@ class bttbNavigation:
         <script type='text/javascript' src='__JAVASCRIPTPATH__/images.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/dhtmlHistory.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/scriptaculous.js'></script>
-        <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbMenu.js'></script>
         """ )
         print MapLinks( """
             <STYLE type='text/css' media='all'>

@@ -78,7 +78,7 @@ rootSubst = None
 rootMain = None
 if not 'SERVER_ADDR' in os.environ:
     current_directory = os.getcwd()
-    if cd.find('/test') >= 0:
+    if current_directory.find('/test') >= 0:
         HOMEHREF = '/test'
         CGIHREF = '/cgi-bin/test'
     else:

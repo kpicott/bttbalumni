@@ -8,7 +8,7 @@
 */
 .shadow_button
 {
-    background-color:    #AF4C50;
+    background-color:    #af4c50;
     border:              none;
     color:               white;
     padding:             10px 15px;
@@ -78,6 +78,91 @@ div.box_shadow
 	float:	left;
 }
 
+/*========================================
+  Tooltips underneath an item
+
+  	<div class="tooltip">Text that the user sees
+		<span class="tooltiptext">Tooltip that pops up</span>
+	</div>
+*/
+.tooltip
+{
+    position:		relative;
+    display:		inline-block;
+    border-bottom:	1px dotted black;
+}
+
+.tooltip .tooltiptext
+{
+    visibility:			hidden;
+    width:				120px;
+    background-color:   #af4c50;
+    color:				#fff;
+    text-align:			center;
+    border-radius:		6px;
+    padding:			5px 0;
+    position:			absolute;
+    z-index:			1;
+    top:				150%;
+    left:				50%;
+    margin-left:		-60px;
+}
+
+.tooltip .tooltiptext::after
+{
+    content:		"";
+    position:		absolute;
+    bottom:			100%;
+    left:			50%;
+    margin-left:	-5px;
+    border-width:	5px;
+    border-style:	solid;
+    border-color:	transparent transparent #af4c50 transparent;
+}
+
+.tooltip:hover .tooltiptext
+{
+    visibility: visible;
+}
+
+/*======================================================================
+   Coming-soon feature, to replace text with "coming soon" on hover
+
+   <a href="#" class="coming-soon">TEXT</a>
+*/
+.coming-soon
+{
+	cursor:		default;
+	opacity:	0.6;
+}
+
+.coming-soon span
+{
+	pointer-events:	none;
+}
+
+.coming-soon:before
+{
+    content:	'Coming Soon! ';
+	display:	none;
+}
+
+.coming-soon:hover > span
+{
+    display:		none;
+	pointer-events:	none;
+}
+
+.coming-soon:active > span
+{
+    display:		none;
+}
+
+.coming-soon:hover:before
+{
+    display:			inline-block;
+	background-color:	#eeee22;
+}
 
 /* ==================================================================
    Copyright (C) Kevin Peter Picott. All rights reserved. These coded

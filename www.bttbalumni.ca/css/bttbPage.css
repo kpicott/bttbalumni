@@ -1,0 +1,131 @@
+*
+{
+    font:		10.5pt/16pt Raleway, Tahoma, Arial;
+    color:		#111;
+	box-sizing:	border-box;
+}
+body
+{
+    background:  url('/Images/background.jpg') no-repeat top left;
+}
+
+/*======================================================================
+
+	Lay out the elements of the page relative to the top-level div "page".
+	general layout is:
+
+
+    .page
+	+-------------------------------------------------------------------+
+    | .site-top                                                         |
+	| +---------------------------------------------------------------+ |
+    | |  .header-container                                            | |
+	| |  +----------------------------------------------------------+ | |
+    | |  | .header                                                  | | |
+	| |  | +------------------------------------------------------+ | | |
+    | |  | | .header-title                           .header-menu | | | |
+    | |  | | +------------+         +---------------------------+ | | | |
+    | |  | | |LOGO TITLE  |         |                   #contact| | | | |
+    | |  | | |            |         |                   #welcome| | | | |
+    | |  | | |            |         |                     #login| | | | |
+    | |  | | +------------+         +---------------------------+ | | | |
+	| |  | +------------------------------------------------------+ | | |
+	| |  +----------------------------------------------------------+ | |
+    | |  .nav-container                                               | |
+	| |  +----------------------------------------------------------+ | |
+    | |  | see bttbNav.css for details                              | | |
+	| |  +----------------------------------------------------------+ | |
+	| +---------------------------------------------------------------+ |
+    | #content                                                          |
+    | +------------------------------------------------------------+    |
+    | |                                                            |    |
+    | |                                                            |    |
+    | |                                                            |    |
+    | +------------------------------------------------------------+    |
+	+-------------------------------------------------------------------+
+
+  The "content" area is scrollable, the others are static.
+*/
+.page
+{
+	width:		100%;
+}
+
+.title
+{
+	vertical-align:	middle;
+	font-size:		36px;
+	font-weight:	bold;
+	color:			#AF4C50;
+}
+
+.site-top
+{
+	display:	block;
+	top:		0px;
+	left:		0px;
+	width:		100%;
+}
+
+.header-container
+{
+	padding-bottom:	5px;
+	width:			100%;
+	margin:			0px auto;
+	max-width:		1024px;
+}
+
+.header
+{
+	width:			100%;
+}
+
+.header-title
+{
+	float:			left;
+	margin-right:	10px;
+	margin-left:	10px;
+	vertical-align:	middle;
+}
+
+.header-menu
+{
+	float:			right;
+	margin-right:	10px;
+	margin-left:	10px;
+	vertical-align:	middle;
+	text-transform:	uppercase;
+	font-size:		11px;
+	font-family:	FontAwesome;
+}
+
+.contact
+{
+	display:	block;
+}
+
+#welcome
+{
+	display:	block;
+}
+
+#login
+{
+	display:	block;
+}
+
+#content
+{
+	margin:		0px auto;
+	max-width:	1024px;
+	display:	block;
+}
+
+/* ==================================================================
+   Copyright (C) Kevin Peter Picott. All rights reserved. These coded
+   instructions, statements and computer programs contain unpublished
+   information proprietary to Kevin Picott, which is protected by the
+   Canadian and US federal copyright law and may not be  disclosed to
+   third  parties  or  duplicated or  copied,  in whole  or in  part,
+   without   the  prior  written   consent  of  Kevin  Peter  Picott.
+   ==================================================================*/

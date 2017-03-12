@@ -12,7 +12,7 @@ var subMenusUp = new Array();
 //
 // Verify the user information and confirm their status
 //
-doLogin = function(name,isCommittee,id)
+function doLogin(name,isCommittee,id)
 {
 	$('login').innerHTML = "<label>Welcome " + unescape(name) + "</label><br/><div class='menuLink'><a href=\"javascript:openPage('/#register')\">Edit Profile</a></a><br/>";
 	if( isCommittee )
@@ -33,7 +33,7 @@ doLogin = function(name,isCommittee,id)
 //
 // Forget the login status and restore the login prompt
 //
-doLogout = function(wasBadLogin)
+function doLogout(wasBadLogin)
 {
 	$('login').innerHTML = 
 		"<form name='loginForm' id='loginForm' action='javascript:checkLogin()'>" + 
@@ -64,7 +64,7 @@ doLogout = function(wasBadLogin)
 // Check to see if user has a valid login. Populate the login area according
 // to the result.
 //
-checkLogin = function()
+function checkLogin()
 {
 	var postBodyString = Form.serialize( 'loginForm' );
 	new Ajax.Request('/cgi-bin/login.cgi',
@@ -99,7 +99,7 @@ checkLogin = function()
 // little bit and the submenu gets a window in which to cancel its own
 // dismissal.
 //
-dismiss = function()
+function dismiss()
 {
 	while( subMenu = subMenusUp.pop() )
 	{
@@ -114,7 +114,7 @@ dismiss = function()
 //
 // Cleanup after clicking, dismissing all submenus.
 //
-dismissAll = function()
+function dismissAll()
 {
 	for (var i=0; i<menuids.length; i++)
 	{
@@ -134,7 +134,7 @@ dismissAll = function()
 //
 // Create the menu, popping up and dismissing the submenus as needed
 //
-createMenu = function()
+function createMenu()
 {
 	for (var i=0; i<menuids.length; i++)
 	{

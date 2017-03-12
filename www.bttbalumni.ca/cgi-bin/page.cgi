@@ -31,6 +31,7 @@ class bttbContentPanel(object):
     def __init__(self, init_params):
         self.params = init_params
         self.requestor_id = UNKNOWN_ID
+        self.requestor = None
         try:
             self.page = init_params['page'][0]    # Page to be displayed
             del self.params['page']
@@ -64,27 +65,27 @@ class bttbContentPanel(object):
             self.page = class_object ()
             self.page.setParams( init_params )
             alumni = bttbAlumni()
-            requestor = alumni.getMemberFromId( self.user )
+            self.requestor = alumni.getMemberFromId( self.user )
             cookie = Cookie.SimpleCookie()
-            if not requestor and cookie.has_key('User'):
-                requestor = alumni.getMemberFromId( int(cookie['User']) )
-            if requestor:
+            if not self.requestor and cookie.has_key('User'):
+                self.requestor = alumni.getMemberFromId( int(cookie['User']) )
+            if self.requestor:
                 try:
                     cookie.load(os.environ['HTTP_COOKIE'])
                     if cookie.has_key('WWhenH'):
                         try:
                             last_visit = datetime.fromtimestamp( int(cookie['WWhenH'].value)/1000 )
-                            requestor.setLastVisit( last_visit )
+                            self.requestor.setLastVisit( last_visit )
                         except Exception:
                             # Invalid visit timing resets it
-                            requestor.setLastVisit( datetime.now() )
-                    self.requestor_id = requestor.id
+                            self.requestor.setLastVisit( datetime.now() )
+                    self.requestor_id = self.requestor.id
                 except Exception:
                     # If no cookies available guess at the last visit as a
                     # week ago.
-                    requestor.setLastVisit( datetime.now() - timedelta(7) )
-                    self.request_id = requestor.id
-            self.page.setRequestor( requestor )
+                    self.requestor.setLastVisit( datetime.now() - timedelta(7) )
+                    self.request_id = self.requestor.id
+            self.page.setRequestor( self.requestor )
             self.log_history( '', module_name )
         except Exception, ex:
             # Backup solution is to go to the error page
@@ -115,10 +116,14 @@ class bttbContentPanel(object):
         in the entire website.
         Returns a type (title, scriptArray, content)
         '''
+        if self.requestor is not None and self.requestor.onCommittee:
+            committee_css = 'CSS: .committee-only { display: inherit; }'
+        else:
+            committee_css = 'CSS: .committee-only { display: none; }'
         if isinstance(self.page, bttbPage):
-            return (self.page.title(), self.page.scripts(), self.page.content())
+            return (self.page.title(), self.page.scripts().append( committee_css ), self.page.content())
         elif isinstance(self.page, str):
-            return ('BTTB Alumni', [], MapLinks(self.page))
+            return ('BTTB Alumni', [committee_css], MapLinks(self.page))
         return ('BTTB Alumni : Error loading page', [], MapLinks('''
             <h1>Error loading page %s</h1>
             <p>Try going back and reloading the page. Contact
