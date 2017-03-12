@@ -34,6 +34,31 @@
   transform:        translateY(2px);
 }
 
+/*======================================================================
+	Image buttons that will grey out when you hover over them and then
+	blur when you click on them
+		<a class="grey_blur" href="#"><img src="/Images/image.jpg"></a>
+*/
+a:link.grey_blur
+{
+    border:             		 none;
+    display:            		 inline-block;
+    transition-duration:		 0.1s;
+    -webkit-transition-duration: 0.1s; /* Safari */
+}
+
+a:hover.grey_blur
+{
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter:			grayscale(100%);
+}
+
+a:active.grey_blur
+{
+    -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+    filter:			blur(5px);
+}
+
 /*========================================
 	Nicely shadowed, outlined, box
 */

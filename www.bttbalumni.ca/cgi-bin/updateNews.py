@@ -539,6 +539,40 @@ class bttbUpdateNews:
 		news.sort( lambda x,y: cmp(y[0], x[0]) )
 		self.insertNews( news )
 
+	def update20170311(self):
+		#
+		# News array format:
+		#    DatePosted,Title,Text,Type (0=current, 1=obsolete, 2=broken)
+		news = [
+			(datetime(2017,3,11), 'Buy Your Tickets Now!', MapLinks( """
+			<p>
+            Registration for the 70th Anniversary weekend and Golf Tournament is now open.
+            link:(http://bttbalumni.ca/#store2017, Buy tickets here <img class="link" src="/Images70th/Store/storeLink.png">)
+            </p>
+            <p>
+            We are offering a variety of options including a full weekend package, tickets for just the parade
+            or the Saturday night party, as well as hats and shirts. Early bird pricing is only in effect until
+            <b>April 15<sup>th</sup></b>, so sign-up soon to save yourself a few bucks.
+            </p>
+            <p>
+            We've made a few changes to the pricing, so be sure to check out the site for more information.
+            Speaking of cheques, you can either pay directly online through our secure store, or print off a
+            form and mail it to us with payment attached.
+            </p>
+            <p>
+            For those looking to take part in the Golf Tournament on Friday, June 16<sup>th</sup> you can sign
+            up at link:(http://bttbalumni.ca/#golf2017,<img class="link" src="/Images70th/Store/golfLink.png">).
+            Spots are limited so register early for a chance to spend a day on the links.
+            </p>
+            <p>
+            Let's pack the streets, Central Arena and the golf course this June to make the 70<sup>th</sup>
+            Anniversary party one to remember!
+			</p>
+			"""), 0)
+			]
+		news.sort( lambda x,y: cmp(y[0], x[0]) )
+		self.insertNews( news )
+
 	def insertNews(self, news):
 		#===================================================================
 		for when, title, article, status in news:
