@@ -173,6 +173,7 @@ class bttbNavigation:
             <STYLE type='text/css' media='all'>
                 @import url( '__CSSPATH__/bttbMenu.css' );
                 @import url( '__CSSPATH__/bttbAlumni.css' );
+                @import url( '__CSSPATH__/bttbEffects.css' );
             </STYLE>
             """ )
         print '</head>'

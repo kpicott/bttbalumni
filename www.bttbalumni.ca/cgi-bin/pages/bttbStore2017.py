@@ -169,7 +169,6 @@ class bttbStore2017(bttbPage):
     def scripts(self):
         ''':return: The list of scripts to load in this page'''
         script_list = ['__JAVASCRIPTPATH__/bttbStore2017.js'
-                      , '__CSSPATH__/bttbEffects.css'
                       , '__CSSPATH__/bttbStore2017.css'
                       ]
 
