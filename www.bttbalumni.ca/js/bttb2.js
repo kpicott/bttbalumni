@@ -96,46 +96,25 @@ function openPage(url)
         _openingPage = true;
         var pageUrl = p.assembledURL(false);
         var hashUrl = p.assembledURL(true);
-        if( _debug) alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
+        alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
 
         if( useHistory )
         {
             dhtmlHistory.add(hashUrl[0], pageUrl[1]);
         }
-		var content = document.getElementById( 'content' );
-		// Empty out any previous content
-		while( content.hasChildNodes() )
-		{
-			content.removeChild( content.firstChild );
-		}
 
-        content.innerHTML = "Loading...";
-        new Ajax.Request(pageUrl[1],
-        {
-            method: 'get',
-            onComplete: function (req)
-            {
-                if( req.status === undefined
-                ||  req.status === 0
-                ||  (req.status >= 200 && req.status < 300) )
-                {
-                    var response = req.responseText.split('|', 3);
+        $("#content").html( "Loading..." );
+
+		$.ajax( {url    : pageUrl[1],
+				 success: function(result) {
+                    var response = result.split('|', 3);
                     var title = response[0];
                     var scriptList = response[1].split('#!#');
-                    if( /MSIE/.test(navigator.userAgent) && !window.opera )
-                    {
-                        // Try to force IE to not cache this information
-                        content.innerHTML = "<META HTTP-EQUIV='Pragma' CONTENT='no-cache'>";
-                        content.innerHTML += "<META HTTP-EQUIV='Expires' CONTENT='-1'>";
-                        content.innerHTML += response[2];
-                    }
-                    else
-                    {
-                        content.innerHTML = response[2];
-                    }
+                    var html = response[2];
+
                     if( title.length > 0 )
 					{
-						document.title = title;
+						$("title").html( title );
 					}
                     if( scriptList.length > 0 )
 					{
@@ -145,19 +124,20 @@ function openPage(url)
                     {
                         document.location.hash = hashUrl[0];
                     }
+					$("#content").html( html );
+
                     _openingPage = false;
+
 					var initializePanel = initializePanel || {};
     				if( isFunction(initializePanel) ) initializePanel();
-                }
-                else
-                {
-                    content.innerHTML = '<div class="outlinedTitle">Page Load Error</div>' + req.responseText;
-                    content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
+				    },
+				 error  : function(result) {
+                    $("#content").html( '<div class="outlinedTitle">Page Load Error</div>'
+									  + result
+                    				  + '<p>Please try again. If problem persists please notify the webmaster</p>' );
                     _openingPage = false;
-                }
-            }
-          });
-        onSizeChange();
+					}
+				 } );
     }
     else
     {
@@ -173,18 +153,12 @@ function openPage(url)
 //
 function openForm(url,parameters,followUp)
 {
-	var content = document.getElementById( 'content' );
-	// Empty out any previous content
-	while( content.hasChildNodes() )
-	{
-		content.removeChild( content.firstChild );
-	}
     var p = new BTTBUrl.BTTBURLParser(url);
     var hashUrl = p.assembledURL(true);
 
     _openingPage = true;
     if( _debug) alert( "AJAX openForm:" + url + ' | ' + parameters + ' | ' + followUp );
-    content.innerHTML = "Processing...";
+    $("#content").html( "Processing..." );
 
     // Force the POST method on forms since the general case will not know
     // how much data is being sent.
@@ -201,7 +175,7 @@ function openForm(url,parameters,followUp)
                 _openingPage = false;
                 if( followUp )
                 {
-                    content.innerHTML = 'Form accepted. Forwarding to ' + followUp;
+                    $("#content").html( 'Form accepted. Forwarding to ' + followUp );
                     if( _debug ) alert( 'Following up to ' + followUp + '\nResults : ' + req.responseText );
                     openPage( followUp );
                 }
@@ -213,31 +187,33 @@ function openForm(url,parameters,followUp)
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
                     var scriptList = response[1].split('#!#');
-                    content.innerHTML = response[2];
+                    $("#content").html( response[2] );
                     if( title.length > 0 )
 					{
-						document.title = title;
+						$("title").html( title );
 					}
                     if( scriptList.length > 0 )
 					{
 						loadScripts( scriptList );
 					}
                     document.location.hash = hashUrl[0];
+
 					var initializePanel = initializePanel || {};
     				if( isFunction(initializePanel) ) initializePanel();
                 }
             }
             else
             {
-                content.innerHTML = '<div class="outlinedTitle">Forms Processing Error</div>' + req.responseText;
-                content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
+                $("#content").html( '<div class="outlinedTitle">Forms Processing Error</div>'
+								  + req.responseText
+                				  + '<p>Please try again. If problem persists please notify the webmaster</p>' );
                 _openingPage = false;
                 if( _debug ) alert( 'Check errors please' );
             }
         },
         onFailure: function (req)
         {
-            content.innerHTML = 'ERROR: ' + req.responseText;
+            $("#content").html( 'ERROR: ' + req.responseText );
             _openingPage = false;
             if( _debug ) alert( 'Check errors please' );
         }

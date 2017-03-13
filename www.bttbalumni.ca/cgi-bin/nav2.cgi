@@ -91,8 +91,8 @@ class bttbNavigation:
         </div>
         <div class="header-menu">
           <div class="contact"><a href="/#contact"><i class="fa fa-envelope-o">&nbsp;</i>Contact Us</a></div>
-          <div id="welcome">Welcome</div>
           <div id="login"><i class="fa fa-key">&nbsp;</i>Login</div>
+          <div id="welcome"><i class="fa fa-user">&nbsp;</i>Register</div>
         </div>
       </div>
     </div>
@@ -168,6 +168,7 @@ class bttbNavigation:
         <script type='text/javascript' src='__JAVASCRIPTPATH__/images.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/dhtmlHistory.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/scriptaculous.js'></script>
+        <script type='text/javascript' src='__JAVASCRIPTPATH__/jquery-3.1.1.min.js'></script>
         """ )
         print MapLinks( """
             <STYLE type='text/css' media='all'>
