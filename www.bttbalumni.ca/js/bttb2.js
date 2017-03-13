@@ -96,7 +96,7 @@ function openPage(url)
         _openingPage = true;
         var pageUrl = p.assembledURL(false);
         var hashUrl = p.assembledURL(true);
-        alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
+        if( _debug ) alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
 
         if( useHistory )
         {
