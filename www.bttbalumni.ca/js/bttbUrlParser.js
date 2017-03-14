@@ -24,25 +24,31 @@ if( typeof BTTBUrl == 'undefined' )
 // @classDescription	Creates an BTTBURLParser instance
 // @return {Object}	return an BTTBURLParser object
 // {String} url	The url to parse
+// {String} cgi	The CGI script that loads the page
 // Throws an exception if the specified url is invalid
 //
-BTTBUrl.BTTBURLParser = function(url)
+BTTBUrl.BTTBURLParser = function(url, cgi)
 {
 	this._urlFields = {'Port' : 4, 'Protocol' : 2, 'Host' : 3, 'Pathname' : 5, 'URL' : 0, 'QueryString' : 6, 'Page' : 7, 'User' : 8, 'PageQuery' : 9};
 	this._urlExp = /^((\w+):\/\/)?([^\/\?:#]+)?:?(\d+)?(\/*?[^\?#]+)?\??([^#]+)?#?([^\?:]*):?(\d*)?\??([^#]+)?/;
 	this._pageExp = /page=(\w+)(&?user=(\d+))?&?(.*)?/;
 	this._pageFields = {'PageQuery' : 4, 'Page' : 1, 'User' : 3};
 	this._values = {};
+	this._pageCGI = cgi;
+	alert( "Opening parser using " + cgi );
 	for( var f in this._urlFields )
 	{
-		this['get' + f] = this._makeGetter(f);
-		this['set' + f] = this._makeSetter(f);
+		if( this._urlFields.hasOwnProperty(f) )
+		{
+			this['get' + f] = this._makeGetter(f);
+			this['set' + f] = this._makeSetter(f);
+		}
 	}
 	if (typeof url != 'undefined')
 	{
 		this._parse(url);
 	}
-}
+};
  
 //----------------------------------------------------------------------
 //
@@ -51,7 +57,7 @@ BTTBUrl.BTTBURLParser = function(url)
 BTTBUrl.BTTBURLParser.prototype.setURL = function(url)
 {
 	this._parse(url);
-}
+};
 
 //----------------------------------------------------------------------
 //
@@ -59,9 +65,12 @@ BTTBUrl.BTTBURLParser.prototype._initValues = function()
 {
 	for(var f in this._urlFields)
 	{
-		this._values[f] = '';
+		if( this._urlFields.hasOwnProperty(f) )
+		{
+			this._values[f] = '';
+		}
 	}
-}
+};
 
 //----------------------------------------------------------------------
 //
@@ -75,60 +84,60 @@ BTTBUrl.BTTBURLParser.prototype._parse = function(url)
 	}
 	for( var f in this._urlFields )
 	{
-		if( typeof r[this._urlFields[f]] != 'undefined' )
+		if( this._urlFields.hasOwnProperty(f) )
 		{
-			this._values[f] = r[this._urlFields[f]];
+			if( typeof r[this._urlFields[f]] != 'undefined' )
+			{
+				this._values[f] = r[this._urlFields[f]];
+			}
 		}
 	}
 	// Check for the alternate form and convert into page form if found
 	// Technically this makes the getXXX() fields not match the URL but
 	// that is the point.
-	if( (typeof r[this._urlFields['Pathname']] != 'undefined')
-	&&  (r[this._urlFields['Pathname']].search('page.cgi') > 0) )
+	if( (typeof r[this._urlFields.Pathname] != 'undefined')
+	&&  (r[this._urlFields.Pathname].search(this._pageCGI) > 0) )
 	{
-		if( typeof r[this._urlFields['QueryString']] != 'undefined' )
+		if( typeof r[this._urlFields.QueryString] != 'undefined' )
 		{
-			var p = this._pageExp.exec(r[this._urlFields['QueryString']]);
+			var p = this._pageExp.exec(r[this._urlFields.QueryString]);
 			if( p )
 			{
-				this._values['Pathname'] = '/cgi-bin/page.cgi';
-				this._values['QueryString'] = '';
+				this._values.Pathname = '/cgi-bin/' + this._pageCGI;
+				this._values.QueryString = '';
 				for( var pf in this._pageFields )
 				{
-					this._values[pf] = '';
-					if( typeof p[this._pageFields[pf]] != 'undefined' )
+					if( this._pageFields.hasOwnProperty(pf) )
 					{
-						this._values[pf] = p[this._pageFields[pf]];
+						this._values[pf] = '';
+						if( typeof p[this._pageFields[pf]] != 'undefined' )
+						{
+							this._values[pf] = p[this._pageFields[pf]];
+						}
 					}
 				}
 			}
 		}
 		else
 		{
-			this._values['Page'] = 'home';
+			this._values.Page = 'home';
 		}
 	}
-}
+};
 
 //----------------------------------------------------------------------
 //
 BTTBUrl.BTTBURLParser.prototype._makeGetter = function(field)
 {
-	return function()
-	{
-		return this._values[field];
-	}
-}
+	return function() { return this._values[field]; };
+};
 
 //----------------------------------------------------------------------
 //
 BTTBUrl.BTTBURLParser.prototype._makeSetter = function(field)
 {
-	return function(newValue)
-	{
-		this._values[field] = newValue;
-	}
-}
+	return function(newValue) { this._values[field] = newValue; };
+};
 
 //----------------------------------------------------------------------
 //
@@ -137,7 +146,9 @@ BTTBUrl.BTTBURLParser.prototype.assembledURL = function(asHash)
 	var shortName = '';
 	var url = this.getProtocol();
 	if( url.length > 0 )
-		url = url + '://'
+	{
+		url = url + '://';
+	}
 	if( this.getHost().length > 0 )
 	{
 		url = url + this.getHost();
@@ -165,7 +176,7 @@ BTTBUrl.BTTBURLParser.prototype.assembledURL = function(asHash)
 	}
 	else
 	{
-		shortName = '/cgi-bin/page.cgi?page=';
+		shortName = '/cgi-bin/' + this._pageCGI + '?page=';
 		if( this.getPage().length > 0 )
 		{
 			shortName = shortName + this.getPage();
@@ -183,12 +194,16 @@ BTTBUrl.BTTBURLParser.prototype.assembledURL = function(asHash)
 	}
 	url = url + shortName;
 	return [shortName, url];
-}
+};
 
 //----------------------------------------------------------------------
 //
 BTTBUrl.BTTBURLParser.prototype.debug = function()
 {
+	// Object construction doesn't like in-place string building
+	var pageUrl1 = 'http://www.bttbalumni.ca:8080/cgi-bin/' + this._pageCGI + '?page=frag&b=5';
+	var pageUrl2 = 'http://www.bttbalumni.ca:8080/cgi-bin/' + this._pageCGI + '?page=frag&user=123&b=5';
+
 	var testURLs = {
 		'http://www.bttbalumni.ca':1,
 		'http://www.bttbalumni.ca/':1,
@@ -199,45 +214,51 @@ BTTBUrl.BTTBURLParser.prototype.debug = function()
 		'http://www.bttbalumni.ca:8080/cgi-bin/nav.cgi':1,
 		'http://www.bttbalumni.ca:8080/cgi-bin/nav.cgi?a=4#frag?b=5':1,
 		'http://www.bttbalumni.ca:8080/cgi-bin/nav.cgi?a=4#frag:123?b=5':1,
-		'http://www.bttbalumni.ca:8080/cgi-bin/page.cgi?page=frag&b=5':1,
-		'http://www.bttbalumni.ca:8080/cgi-bin/page.cgi?page=frag&user=123&b=5':1,
+		pageUrl1:1,
+		pageUrl2:1,
 		'/#frag':1,
 		'/#frag:123?b=5':1,
 		'#frag:123?b=5':1
 	};
 	testURLs[this.getURL()] = 1;
 	var u1 = new BTTBUrl.BTTBURLParser( 'http://www.bttbalumni.ca' );
-	document.write( '<table border="1"><tr bgcolor="#ddddff">' );
-	document.write( '<th>URL</th>\n' );
-	document.write( '<th>PORT</th>\n' );
-	document.write( '<th>PROTOCOL</th>\n' );
-	document.write( '<th>HOST</th>\n' );
-	document.write( '<th>PATHNAME</th>\n' );
-	document.write( '<th>QUERY STRING</th>\n' );
-	document.write( '<th>PAGE</th>\n' );
-	document.write( '<th>USER</th>\n' );
-	document.write( '<th>PAGE QUERY</th>\n' );
-	document.write( '<th>ASSEMBLED HASH</th>\n' );
-	document.write( '<th>ASSEMBLED URL</th>\n' );
-	document.write( '</tr>\n' );
+	var table = $('<table></table>' ).attr( "border", "1" );
+	var tr = $('<tr></tr>').attr( "bgcolor", "#ddddff" );
+	$( '<th></th>\n' ).html( 'URL' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'PORT' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'PROTOCOL' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'HOST' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'PATHNAME' ).appendTo( tr );
+	$( '<th>STRING</th>\n' ).html( 'QUERY STRING' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'PAGE' ).appendTo( tr );
+	$( '<th></th>\n' ).html( 'USER' ).appendTo( tr );
+	$( '<th>QUERY</th>\n' ).html( 'PAGE QUERY' ).appendTo( tr );
+	$( '<th>HASH</th>\n' ).html( 'ASSEMBLED HASH' ).appendTo( tr );
+	$( '<th>URL</th>\n' ).html( 'ASSEMBLED URL' ).appendTo( tr );
+	table.append( tr );
+
 	for( var url in testURLs )
 	{
-		u1.setURL(url);
-		document.write( '<tr><th>' + u1.getURL() + '</th>' );
-		document.write( '<td>' + u1.getPort() + '</td>\n' );
-		document.write( '<td>' + u1.getProtocol() + '</td>\n' );
-		document.write( '<td>' + u1.getHost() + '</td>\n' );
-		document.write( '<td>' + u1.getPathname() + '</td>\n' );
-		document.write( '<td>' + u1.getQueryString() + '</td>\n' );
-		document.write( '<td>' + u1.getPage() + '</td>\n' );
-		document.write( '<td>' + u1.getUser() + '</td>\n' );
-		document.write( '<td>' + u1.getPageQuery() + '</td>\n' );
-		document.write( '<td>' + u1.assembledURL(true)[0] + '</td>\n' );
-		document.write( '<td>' + u1.assembledURL(false)[0] + '</td>\n' );
-		document.write( '</tr>\n' );
+		if( testURLs.hasOwnProperty(url) )
+		{
+			tr = $('<tr></tr>');
+			u1.setURL(url);
+			$( '<th></th>' ).html( u1.getURL() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getPort() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getProtocol() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getHost() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getPathname() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getQueryString() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getPage() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getUser() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.getPageQuery() ).appendTo( tr );
+			$( '<td></td>' ).html( u1.assembledURL(true)[0] ).appendTo( tr );
+			$( '<td></td>' ).html( u1.assembledURL(false)[0] ).appendTo( tr );
+			table.append( tr );
+		}
 	}
-	document.write( '</table\n' );
-}
+	$("body").append( table );
+};
 
 //----------------------------------------------------------------------
 //
@@ -261,7 +282,7 @@ BTTBUrl.BTTBURLParser.prototype._testEqual = function(host, page, query, user)
 		unequal = unequal + "<br>BTTBURLParser::testEqual(user - " + this.url + ") -> " + this.getUser() + " != " + user;
 	}
 	return unequal;
-}
+};
 
 //----------------------------------------------------------------------
 //
@@ -297,10 +318,10 @@ BTTBUrl.BTTBURLParser.prototype.test = function()
 	u1.setURL( 'http://www.bttbalumni.ca:8080/cgi-bin/nav.cgi?a=4#frag:123?b=5' );
 	errors = errors + u1._testEqual( bttbHost, 'frag', 'b=5', '123' );
 
-	u1.setURL( 'http://www.bttbalumni.ca:8080/cgi-bin/page.cgi?page=frag&b=5' );
+	u1.setURL( 'http://www.bttbalumni.ca:8080/cgi-bin/' + this._pageCGI + '?page=frag&b=5' );
 	errors = errors + u1._testEqual( bttbHost, 'frag', 'b=5', '' );
 
-	u1.setURL( 'http://www.bttbalumni.ca:8080/cgi-bin/page.cgi?page=frag&user=123&b=5' );
+	u1.setURL( 'http://www.bttbalumni.ca:8080/cgi-bin/' + this._pageCGI + '?page=frag&user=123&b=5' );
 	errors = errors + u1._testEqual( bttbHost, 'frag', 'b=5', '123' );
 
 	u1.setURL( '#frag:123?b=5' );
@@ -308,10 +329,10 @@ BTTBUrl.BTTBURLParser.prototype.test = function()
 
 	if( errors.length > 0 )
 	{
-		document.write( '<h1>BTTB URL Parser Errors</h1>' );
-		document.write( errors );
+		$( '<h1></h1>' ).html( 'BTTB URL Parser Errors' ).appendTo( 'body' );
+		$( '<div></div>' ).html( errors ).appendTo( 'body' );
 	}
-}
+};
 
 // ==================================================================
 // Copyright (C) Kevin Peter Picott. All rights reserved. These coded

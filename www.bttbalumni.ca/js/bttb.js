@@ -78,7 +78,7 @@ function openPage(url)
 {
     if( dismissAll ) dismissAll();
 
-    var p = new BTTBUrl.BTTBURLParser(url);
+    var p = new BTTBUrl.BTTBURLParser(url, 'page.cgi');
     if( BTTBUserId >= 0 )
     {
         p.setUser( BTTBUserId );
@@ -171,7 +171,7 @@ function openForm(url,parameters,followUp)
 	{
 		content.removeChild( content.firstChild );
 	}
-    var p = new BTTBUrl.BTTBURLParser(url);
+    var p = new BTTBUrl.BTTBURLParser(url, 'page.cgi');
     var hashUrl = p.assembledURL(true);
 
     _openingPage = true;

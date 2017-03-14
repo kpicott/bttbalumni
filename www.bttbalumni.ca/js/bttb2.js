@@ -73,17 +73,19 @@ function clustrMapError()
 //
 // For opening up new pages in the content area
 //
+var _loadedScripts = [];
 var _openingPage = false;
 function openPage(url)
 {
-	var dismissAll = dismissAll || {};
-    if( isFunction(dismissAll) ) dismissAll();
+	if( _debug ) alert( "Opening page : " + url + ", opening = " + _openingPage );
 
-    var p = new BTTBUrl.BTTBURLParser(url);
+    var p = new BTTBUrl.BTTBURLParser(url, 'page2.cgi');
+	if( _debug ) alert( "Page Info : " + p );
     if( BTTBUserId >= 0 )
     {
         p.setUser( BTTBUserId );
     }
+
     //
     // Links within this site go through AJAX, others work as usual
     //
@@ -153,7 +155,7 @@ function openPage(url)
 //
 function openForm(url,parameters,followUp)
 {
-    var p = new BTTBUrl.BTTBURLParser(url);
+    var p = new BTTBUrl.BTTBURLParser(url, 'page2.cgi');
     var hashUrl = p.assembledURL(true);
 
     _openingPage = true;
@@ -237,66 +239,51 @@ function submitForm(form,url,followUp)
 // doing an AJAX load does not seem to execute them when they are embedded
 // within a loaded file.
 //
-var _loadedScripts = '';
 function loadScripts(scripts)
 {
-    var head = document.getElementsByTagName("head").item(0);
-
     for( var i=0; i<scripts.length; i++ )
     {
-        var file     = scripts[i];
-        var fileRef  = "";
-        var isScript = false;
+        var content = scripts[i];
 
-        // Only load the file if it has not already been loaded.
-        if( _loadedScripts.indexOf(file) >= 0 )
+        // Only load the script if it has not already been loaded.
+        if( $.inArray(content, _loadedScripts) >= 0 )
+		{
             continue;
+		}
+		_loadedScripts.push( content );
 
 		// Raw script code
-		if( file.indexOf("JS:") != -1 )
+		if( content.indexOf("JS:") != -1 )
 		{
-            fileRef = document.createElement('script');
-			if( _debug ) alert( 'Raw Javascript:\n' + file );
-            fileRef.innerHTML = file.substring( file.indexOf("JS:") + 3 );
+			if( _debug ) alert( 'Raw Javascript:\n' + content );
+            $('<script></script>').html( content.substring( content.indexOf("JS:") + 3 ) )
+				.appendTo( "head" );
 		}
 		// Raw CSS code
-		else if( file.indexOf("CSS:") != -1 )
+		else if( content.indexOf("CSS:") != -1 )
 		{
-            fileRef = document.createElement('style');
-			if( _debug ) alert( 'Raw CSS:\n' + file );
-            fileRef.innerHTML = file.substring( file.indexOf("CSS:") + 4 );
+			if( _debug ) alert( 'Raw CSS:\n' + content );
+            $('<style></style>').html( content.substring( content.indexOf("CSS:") + 4 ) )
+				.appendTo( "head" );
 		}
 		// Reference to a Javascript file
-        else if( file.indexOf(".js") != -1 )
+        else if( content.indexOf(".js") != -1 )
         {
             // Javascript files have to create a <script> tag
-            fileRef = document.createElement('script');
-			if( _debug ) alert( 'Javascript file:\n' + file );
-            fileRef.setAttribute("type", "text/javascript");
-            fileRef.setAttribute("src", file);
-        	isScript = true;
+			if( _debug ) alert( 'Javascript file:\n' + content );
+            $('<script></script>').attr("type", "text/javascript")
+					   .attr("src", content)
+					   .appendTo( "head" );
         }
 		// Reference to a CSS file
-        else if( file.indexOf(".css") != -1 )
+        else if( content.indexOf(".css") != -1 )
         {
             // CSS files have to create a <link> tag
-            fileRef=document.createElement("link");
-			if( _debug ) alert( 'CSS file:\n' + file );
-            fileRef.setAttribute("rel",  "stylesheet");
-            fileRef.setAttribute("type", "text/css");
-            fileRef.setAttribute("href", file);
-        	isScript = true;
-        }
-
-        if( fileRef !== "" )
-        {
-            head.appendChild(fileRef);
-
-            // Remember this script being already added to page
-			if( isScript )
-			{
-				_loadedScripts += file + " ";
-			}
+			if( _debug ) alert( 'CSS file:\n' + content );
+            $("<link></link>").attr("rel",  "stylesheet")
+					 .attr("type", "text/css")
+            		 .attr("href", content)
+					 .appendTo( "head" );
         }
     }
 }
@@ -338,7 +325,6 @@ function initialize()
 {
 	var createMenu = createMenu || {};
     if( isFunction(createMenu) ) createMenu();
-    //setInterval('swapFade()',wait);
 
     //----------------------------------------------------------------------
     if( useHistory )
@@ -348,13 +334,13 @@ function initialize()
         {
             if( document.location.hash )
             {
-                if( _debug ) alert('INITIAL history' + document.location );
+                if( _debug ) alert('INITIAL history : ' + document.location );
                 openPage(document.location.hash + document.location.search);
             }
             else
             {
                 if( _debug ) alert('INITIAL DEFAULT history');
-                openPage("/cgi-bin/page.cgi?page=home");
+                openPage("/cgi-bin/page2.cgi?page=home");
             }
         }
  
@@ -366,35 +352,13 @@ function initialize()
     {
         if( document.location.hash )
         {
-            if( _debug ) alert('INITIAL no history' + document.location.search);
+            if( _debug ) alert('INITIAL no history : ' + document.location.search);
             openPage(document.location.hash + document.location.search);
         }
         else
         {
             if( _debug ) alert('INITIAL DEFAULT no history');
-            openPage("/cgi-bin/page.cgi?page=home");
-        }
-    }
-
-    //----------------------------------------------------------------------
-    // The main menu has a highlight along the edge. Randomly use one of 3
-    // smooth transitions to make this highlight appear.
-    //
-	var mainMenuHighlight = document.getElementById( 'mainMenuHighlight' );
-    if( mainMenuHighlight )
-    {
-        var rnd = Math.random() * 4;
-        if( rnd < 2 )
-        {
-            Effect.Appear( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
-        }
-        else if( rnd < 3 )
-        {
-            Effect.BlindDown( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
-        }
-        else
-        {
-            Effect.SlideDown( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
+            openPage("/cgi-bin/page2.cgi?page=home");
         }
     }
 }
