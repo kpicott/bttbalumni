@@ -20,8 +20,6 @@ class bttbHome2(bttbPage):
 
     def title(self): return 'BTTB Alumni'
 
-    def scripts(self):    return ['__JAVASCRIPTPATH__/browserWarning.js']
-
     def getOldNewsList(self, before):
         (interest,description) = self.alumni.processQuery("""
         SELECT appeared,title,description FROM news
@@ -139,6 +137,8 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         </NOSCRIPT>
         """ )
         remaining = datetime(2017,6,14) - datetime.now()
+        html += EmbeddedJS('browserWarning.js')
+
         html += '<div class="countdown">%d days left to the 70<sup>th</sup> Anniversary Celebration!!!</div>' % remaining.days
 
         news = self.getNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )

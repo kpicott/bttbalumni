@@ -171,6 +171,7 @@ class bttbNavigation:
         <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700" rel="stylesheet">
         <link rel="shortcut icon" href="/Favicon.ico" type="image/x-icon" />
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttb2.js'></script>
+        <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbLogin.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/bttbUrlParser.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/prototype.js'></script>
         <script type='text/javascript' src='__JAVASCRIPTPATH__/images.js'></script>

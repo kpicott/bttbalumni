@@ -96,6 +96,7 @@ function openPage(url)
     {
 		if( _openingPage ) return;
         _openingPage = true;
+
         var pageUrl = p.assembledURL(false);
         var hashUrl = p.assembledURL(true);
         if( _debug ) alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
@@ -106,40 +107,7 @@ function openPage(url)
         }
 
         $("#content").html( "Loading..." );
-
-		$.ajax( {url    : pageUrl[1],
-				 success: function(result) {
-                    var response = result.split('|', 3);
-                    var title = response[0];
-                    var scriptList = response[1].split('#!#');
-                    var html = response[2];
-
-                    if( title.length > 0 )
-					{
-						$("title").html( title );
-					}
-                    if( scriptList.length > 0 )
-					{
-						loadScripts( scriptList );
-					}
-                    if( useHistory )
-                    {
-                        document.location.hash = hashUrl[0];
-                    }
-					$("#content").html( html );
-
-                    _openingPage = false;
-
-					var initializePanel = initializePanel || {};
-    				if( isFunction(initializePanel) ) initializePanel();
-				    },
-				 error  : function(result) {
-                    $("#content").html( '<div class="outlinedTitle">Page Load Error</div>'
-									  + result
-                    				  + '<p>Please try again. If problem persists please notify the webmaster</p>' );
-                    _openingPage = false;
-					}
-				 } );
+		$("#content").load( pageUrl[1] );
     }
     else
     {

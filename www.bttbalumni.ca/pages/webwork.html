@@ -1,19 +1,71 @@
-<html>
-<head>
-<title>Test Web</title>
+<title>BTTB Alumni Website Development Plan</title>
+<script>
+$('document').ready( function() { $('title').html( 'Test Web' ); } );
+</script>
 <style type='text/css'>
 .done
 {
 	text-decoration:		line-through;
 }
-ul
+ol
 {
 	list-style-position:	inside;
 }
-ul > li
+ol > li
 {
     margin-left: 10px;
 }
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a, .dropbtn {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+	position:	relative;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+</style>
 </style>
 </head>
 <body>
@@ -55,49 +107,75 @@ to the webmaster</a>.
 		<td>
 		The navigation is dated and should be updated to have a sleeker,
 		easier-to-use, and easier-to-update look. Rough outline of menus will
-		be:<ul>
-		<li>Home</li>
-		<li>70th Reunion<ul>
-			<li>Buy Tickets</li>
-			<li>Buy Golf Tickets</li>
-			<li>Parade</li>
-			<li>Concert</li>
-			<li>Calendar</li>
-			<li>News</li>
-			</ul></li>
-		<li>Alumni<ul>
-			<li>My Profile</li>
-			<li>All Profiles</li>
-			<li>Newsletters</li>
-			<li>Privacy</li>
-			<li>Contact Us</li>
-			</ul></li>
-		<li>Memories<ul>
-			<li>Memories</li>
-			<li>Drum Majors</li>
-			<li>Wallace B. Wallace</li>
-			<li>Head Chaperones</li>
-			<li>Band Executive</li>
-			<li>Booster Executive</li>
-			<li>Memorials</li>
-			</ul></li>
-		<li>Links<ul>
-			<li>BTTB</li>
-			<li>Band Boosters</li>
-			<li>Doug Wright</li>
-			<li>Band Photo Albums</li>
-			<li>The Band on YouTube</li>
-			</ul></li>
-		<li>Committee (only enabled if logged in as a committee member)<ul>
-			<li>Approvals</li>
-			<li>News Items</li>
-			<li>70th Reunion Data</li>
-			<li>General Queries</li>
-			<li>Website Plan</li>
-			</ul></li>
-		</ul>
+		be:<br>
+		<div class='menu'>
+			<ul>
+			  <li><a href="#">Home</a></li>
+			  <li class="dropdown">
+				<a href="javascript:void(0)" class="dropbtn">70th Reunion</a>
+				<div class="dropdown-content">
+				  <a href="#">Buy Tickets</a>
+				  <a href="#">Buy Golf Tickets</a>
+				  <a href="#">Parade</a>
+				  <a href="#">Concert</a>
+				  <a href="#">Calendar</a>
+				  <a href="#">News</a>
+				</div>
+			  </li>
+			  <li class="dropdown">
+				<a href="javascript:void(0)" class="dropbtn">Account</a>
+				<div class="dropdown-content">
+				  <a href="#">My Profile</a>
+				  <a href="#">All Profiles</a>
+				  <a href="#">Newsletters</a>
+				  <a href="#">Privacy</a>
+				  <a href="#">Contact Us</a>
+				</div>
+			  </li>
+			  <li class="dropdown">
+				<a href="javascript:void(0)" class="dropbtn">Memories</a>
+				<div class="dropdown-content">
+				  <a href="#">Alumni Memories</a>
+				  <a href="#">Drum Majors</a>
+				  <a href="#">Wallace B. Wallace</a>
+				  <a href="#">Head Chaperones</a>
+				  <a href="#">Band Executive</a>
+				  <a href="#">Booster Executive</a>
+				  <a href="#">Memorials</a>
+				</div>
+			  </li>
+			  <li class="dropdown">
+				<a href="javascript:void(0)" class="dropbtn">Links</a>
+				<div class="dropdown-content">
+				  <a href="#">BTTB</a>
+				  <a href="#">Band Boosters</a>
+				  <a href="#">Doug Wright</a>
+				  <a href="#">Band Photo Albums</a>
+				  <a href="#">The Band on YouTube</a>
+				</div>
+			  </li>
+			  <li class="dropdown">
+				<a href="javascript:void(0)" title="Only enabled if logged in as a committee member" class="dropbtn">Committee</a>
+				<div class="dropdown-content">
+				  <a href="#">Approvals</a>
+				  <a href="#">News Items</a>
+				  <a href="#">70th Reunion Data</a>
+				  <a href="#">General Queries</a>
+				  <a href="#">Website Plan</a>
+				</div>
+			  </li>
+			</ul>
+		</div>
 		</td>
 		<td>Nothing</td>
+	</tr>
+	<tr>
+		<td>Social Media Buttons</td>
+		<td>
+		Links at the top going to our Facebook group, Twitter handle,
+		Email contact, etc.
+		</td>
+		<td>Do we have a twitter account?</td>
 	</tr>
 	<tr>
 		<td>Reunion Calendar</td>
@@ -182,11 +260,11 @@ to the webmaster</a>.
 		Currently a lot of the website updates have to be done
 		programmatically, meaning only a few people are capable of it. Provide
 		web-facing access to the useful functions, such as:
-		<ul>
-		<li>Notification when approvals are pending</li>
-		<li>Adding news items</li>
-		<li>Adding/modifying event countdowns that show up on the main page</li>
-		</ul>
+		<ol>
+			<li>Notification when approvals are pending</li>
+			<li>Adding news items</li>
+			<li>Adding/modifying event countdowns that show up on the main page</li>
+		</ol>
 		</td>
 		<td>List of any information people need, or want to be able to update.</td>
 	</tr>

@@ -3,6 +3,7 @@
 Page loader file - handles data in the content frame
 '''
 
+import re
 import os
 import Cookie
 from bttbDB import bttbDB
@@ -15,6 +16,9 @@ from datetime import datetime,timedelta
 # Token used by error logging when requestor is not known
 UNKNOWN_ID = 9999999
 
+# Recognize a title line in a hardcoded HTML file
+RE_HTML_TITLE = re.compile( r'<title>(.*)</title>', re.IGNORECASE )
+
 __all__ = [ 'bttbContentPanel' ]
 
 class bttbContentPanel(object):
@@ -26,6 +30,9 @@ class bttbContentPanel(object):
     parameters being passed in (otherwise error page is shown):
         'page' is always present and valid in init_params
         'user' is valid if present in init_params, None otherwise
+
+    The 'content' and 'title' members are used to identify the raw HTML
+    content and the new page title respectively.
     '''
     #----------------------------------------------------------------------
     def __init__(self, init_params):
@@ -35,15 +42,20 @@ class bttbContentPanel(object):
         self.requestor_id = UNKNOWN_ID
         self.requestor = None
 
-        # List of CSS: and JS: scripts needed for finishing the page load
-        self.scripts = []
+        # Content of the page to load
+        self.content = ''
+
+        # Default title of the page - bttbPage classes will override the
+        # title() method to give a new title. Hardcoded pages can use
+        # <title</title> on a single line to have it extracted.
+        self.title = 'BTTB Alumni'
 
         # URL to the page
         try:
-            self.page = init_params['page'][0]    # Page to be displayed
+            page = init_params['page'][0]    # Page to be displayed
             del self.params['page']
         except Exception:
-            self.page = 'home'
+            page = 'home'
 
         # ID of the user requesting the page
         try:
@@ -53,37 +65,47 @@ class bttbContentPanel(object):
             self.user = None
 
         self.find_requestor( self.user )
-        self.define_scripts()
 
         try:
             # First check to see if the page exists as hardcoded HTML
-            self.page_name = os.path.join( PagePath(), self.page + '.html' )
-            if os.path.isfile( self.page_name ):
+            page_name = os.path.join( PagePath(), page + '.html' )
+            if os.path.isfile( page_name ):
                 try:
-                    page_fd = open( self.page_name, 'r' )
-                    self.page = page_fd.read()
+                    page_fd = open( page_name, 'r' )
+                    self.content = page_fd.read()
                     page_fd.close()
-                    self.log_history( '', self.page_name )
+                    title_match = RE_HTML_TITLE.search( self.content )
+                    if title_match:
+                        self.content = RE_HTML_TITLE.sub( '', self.content )
+                        self.title = title_match.group(1)
+                    self.log_history( '', page_name )
                     return
                 except IOError:
                     pass
 
             # Convert the page name into a page object, derived from bttbPage
-            if len(self.page) > 1:
-                self.page = 'bttb' + self.page[0].upper() + self.page[1:]
-            module_name = 'pages.' + self.page
-            module = __import__ (module_name, globals(), locals(), [self.page])
-            class_object = getattr(module, self.page)
-            self.page = class_object ()
-            self.page.setParams( init_params )
-
-            self.page.setRequestor( self.requestor )
+            if len(page) > 1:
+                page = 'bttb' + page[0].upper() + page[1:]
+            module_name = 'pages.' + page
+            module = __import__ (module_name, globals(), locals(), [page])
+            class_object = getattr(module, page)
+            page = class_object ()
+            page.setParams( init_params )
+            page.setRequestor( self.requestor )
+            self.content = page.content()
+            self.title = page.title()
 
             self.log_history( '', module_name )
         except Exception, ex:
             # Backup solution is to go to the error page
             from pages.bttbError import bttbError
-            self.page = bttbError( ex, self.page )
+            page = bttbError( ex, page )
+            self.title = 'BTTB Alumni : Error'
+            self.content = '''<h1>Error loading page %s</h1>
+            <p>Try going back and reloading the page. Contact
+            send:(web@bttbalumni.ca,the webmaster) if the problem persists.</p>
+            <p><font color='white'>%s</font></p>
+            ''' % (page, str(ex))
             self.log_history( 'error:', module_name )
 
     #----------------------------------------------------------------------
@@ -140,13 +162,10 @@ class bttbContentPanel(object):
         already logged in or not.
         '''
         if self.requestor is None:
-            self.scripts.append( '''JS: $(document).ready(function() {
-                $("#login").html( '<i class="fa fa-key"></i><a href="#" onclick="javascript:doLogin();">Login</a>' );
-            });''')
+            op = 'Login'
         else:
-            self.scripts.append( '''JS: $(document).ready(function() {
-                $("#login").html( '<i class="fa fa-key"></i><a href="#" onclick="javascript:doLogout();">Logout</a>' );
-            });''')
+            op = 'Logout'
+        return '\t$("#login").html( \'<i class="fa fa-key"></i><a href="#" onclick=javascript:do%s();">%s</a>\' );\n' % (op, op)
 
     #----------------------------------------------------------------------
     def set_register_or_welcome(self):
@@ -154,27 +173,31 @@ class bttbContentPanel(object):
         Define the content of the welcome area, based on whether someone is
         already logged in or not.
         '''
+        welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>'
         if self.requestor is None:
-            self.scripts.append( '''JS: $(document).ready(function() {
-                $("#welcome").html( '<i class="fa fa-user"></i><a href="/#register">Register Now</a>' );
-            });''' )
+            welcome += '<a href="/#register">Register Now</a>'
         else:
-            self.scripts.append( '''JS: $(document).ready(function() {
-                $("#welcome").html( '<i class="fa fa-user"></i>Welcome %s' );
-            });''' % self.requestor.fullName() )
+            welcome += 'Welcome %s' % self.requestor.fullName()
+        welcome += '\');\n'
+        return welcome
 
     #----------------------------------------------------------------------
-    def define_scripts(self):
+    def add_preamble(self):
         '''
         Look at the current configuration and set any scripts or styles needed
         for the page.
         '''
-        self.set_register_or_welcome()
-        self.set_login_or_logout()
+        self.content += '<script>$(document).ready(function() {\n'
+        self.content += self.set_register_or_welcome()
+        self.content += self.set_login_or_logout()
+        self.content += '$("title").html( \'%s\' );\n' % self.title
+        self.content += '});</script>\n'
+
         if self.requestor is not None and self.requestor.onCommittee:
-            self.scripts.append( 'CSS: .committee-only { display: inherit; }' )
+            committee_display = 'inherit'
         else:
-            self.scripts.append( 'CSS: .committee-only { display: none; }' )
+            committee_display = 'none'
+        self.content += '<style> .committee-only { display: %s; }</style>\n' % committee_display
 
     #----------------------------------------------------------------------
     def page_content(self):
@@ -182,18 +205,9 @@ class bttbContentPanel(object):
         Display the desired page in the content frame. This is the
         only part that varies from page to page. Everything else is the same
         in the entire website.
-        Returns a type (title, scriptArray, content)
         '''
-        if isinstance(self.page, bttbPage):
-            return (self.page.title(), self.page.scripts() + self.scripts, self.page.content())
-        elif isinstance(self.page, str):
-            return ('BTTB Alumni', self.scripts, MapLinks(self.page))
-        return ('BTTB Alumni : Error loading page', [], MapLinks('''
-            <h1>Error loading page %s</h1>
-            <p>Try going back and reloading the page. Contact
-            send:(web@bttbalumni.ca,the webmaster) if the problem
-            persists.</p>
-            ''') % (self.page) )
+        self.add_preamble()
+        return self.content
 
 # ==================================================================
 
@@ -207,8 +221,8 @@ class TestPage(unittest.TestCase):
 
     def test_basics(self):
         '''Test basic loading of a page and error content'''
-        (_, _, nav_content) = self.nav.page_content()
-        (_, _, bad_nav_content) = self.bad_nav.page_content()
+        nav_content = self.nav.page_content()
+        bad_nav_content = self.bad_nav.page_content()
         self.assert_( nav_content.find('home') )
         self.assert_( bad_nav_content.find('Error loading page') )
 
@@ -219,11 +233,11 @@ if 'SCRIPT_FILENAME' in os.environ:
     import cgi
     PARAMS = cgi.parse()
     PANEL = bttbContentPanel( PARAMS )
-    (TITLE, SCRIPTS, CONTENT) = PANEL.page_content()
+    CONTENT = PANEL.page_content()
     if not CONTENT:
         CONTENT = ErrorMsg('Blank page loaded', PARAMS)
     print 'Content-type: text/html\n'
-    print TITLE + '|' + '#!#'.join([MapLinks(a) for a in SCRIPTS]) + '|' + CONTENT
+    print MapLinks(CONTENT)
 else:
     unittest.main()
 

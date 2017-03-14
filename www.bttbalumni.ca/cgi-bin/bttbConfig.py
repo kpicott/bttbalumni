@@ -32,7 +32,8 @@ __all__ = [ "ArchiveFormat",
             "DearchiveFormat",
             "DownloadLink",
             "EmailLink",
-            "EmbedJS",
+            "EmbeddedJS",
+            "EmbeddedCSS",
             "Error",
             "ErrorMsg",
             "ErrorsInHtml",
@@ -627,16 +628,42 @@ def SortDictByValue(dict):
     return [ backitems[i][1] for i in range(0,len(backitems))]
 
 #======================================================================
-def EmbedJS(script):
+def EmbeddedCSS(style):
+    """
+    Print out HTML which will embed the given style in the middle of a file.
+    Mainly used to cut down on duplication of the style tags.
+
+    If this is called with a file then make a suitable import declaration
+    and make the filename relative to the root CSS directory.
+    """
+    html = '<style type="text/css" media="all">'
+    if style[-4:] == '.css':
+        html += '@import url( "%s" );' % os.path.join( CSSPath(), style )
+    else:
+        html += '>\n<!--'
+        html += MapLinks( style )
+        html += '//-->'
+    html += '</style>'
+    return html
+
+#======================================================================
+def EmbeddedJS(script):
     """
     Print out HTML which will embed the given script in the middle of a file.
     Mainly used to cut down on duplication of the script tags.
+
+    If this is called with a file then make a suitable import declaration
+    and make the filename relative to the root JS directory.
     """
-    print '<script language="Javascript">'
-    print '<!--'
-    print MapLinks( script )
-    print '//-->'
-    print '</script>'
+    html = '<script type="text/javascript"'
+    if script[-3:] == '.js':
+        html += ' src="%s">' % os.path.join( JavascriptPath(), script )
+    else:
+        html += '>\n<!--'
+        html += MapLinks( script )
+        html += '//-->'
+    html += '</script>'
+    return html
 
 #======================================================================
 def LoginRequired(title):
