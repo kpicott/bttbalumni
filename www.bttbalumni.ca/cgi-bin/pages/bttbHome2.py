@@ -6,7 +6,7 @@ import os
 from bttbAlumni import bttbAlumni
 from bttbMember import *
 from bttbPage import bttbPage
-from bttbConfig import *
+from bttbConfig import MapLinks, RootPath, EmbeddedJS, EmbeddedCSS
 from datetime import datetime,timedelta
 __all__ = ['bttbHome2']
 
@@ -18,8 +18,10 @@ class bttbHome2(bttbPage):
         except Exception, e:
             Error( 'Could not find parade information', e )
 
+    #----------------------------------------------------------------------
     def title(self): return 'BTTB Alumni'
 
+    #----------------------------------------------------------------------
     def getOldNewsList(self, before):
         (interest,description) = self.alumni.processQuery("""
         SELECT appeared,title,description FROM news
@@ -28,6 +30,7 @@ class bttbHome2(bttbPage):
         """ % before)
         return interest
 
+    #----------------------------------------------------------------------
     def getNewsList(self, asOf):
         (interest,description) = self.alumni.processQuery("""
         SELECT appeared,title,description FROM news
@@ -36,6 +39,7 @@ class bttbHome2(bttbPage):
         """ % asOf)
         return interest
 
+    #----------------------------------------------------------------------
     def getOldNewsCount(self, asOf):
         (interest,description) = self.alumni.processQuery("""
         SELECT COUNT(*) FROM news
@@ -43,12 +47,14 @@ class bttbHome2(bttbPage):
         """ % asOf)
         return interest[0][0]
 
+    #----------------------------------------------------------------------
     def getFriendCount(self):
         (friends,description) = self.alumni.processQuery("""
         SELECT COUNT(*) from alumni where isFriend = 1
         """)
         return friends[0]
 
+    #----------------------------------------------------------------------
     def getWallaceCount(self):
         (wallace,description) = self.alumni.processQuery("""
         SELECT COUNT(*)
@@ -56,6 +62,7 @@ class bttbHome2(bttbPage):
         """)
         return wallace[0]
 
+    #----------------------------------------------------------------------
     def getMemoryCount(self):
         (memory,description) = self.alumni.processQuery("""
         SELECT COUNT(*)
@@ -63,6 +70,7 @@ class bttbHome2(bttbPage):
         """)
         return memory[0]
 
+    #----------------------------------------------------------------------
     def contact_content(self):
         """
         Get the HTML that will populate the contact form.
@@ -118,6 +126,58 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 </p>
 </form>""")
 
+    #----------------------------------------------------------------------
+    def css(self):
+        '''
+        Define the styles used in this page
+        countdown-container, a simple reddish bar, extended both ways
+        countdown, limited in size to keep content tamed
+        '''
+        return '''
+.countdown-container
+{
+    overflow:	hidden;
+	width:		100%;
+    box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+'''
+
+    #----------------------------------------------------------------------
+    def add_countdowns(self, countdowns):
+        '''Define the Javscript used in this page'''
+        # The countdowns want to extend the entire page width, but this page
+        # is limited to the 'content' div, which is fixed width. Solve that
+        # by adding the countdown container to the 'header' div.
+        if len(countdowns) == 0:
+            return
+        js = "$(document).ready(function() {\n"
+        for (days, title) in countdowns:
+            js += '''var container = $('<div></div>').attr('class','countdown-container');
+                     var ribbon = $('<div></div>').attr('class','ribbon one');
+                     var inner = $('<div></div>').attr('class','bk l');
+                         $('<div></div>').attr('class','arrow top').appendTo( inner );
+                         $('<div></div>').attr('class','arrow bottom').appendTo( inner );
+                     inner.appendTo( ribbon );
+                     $('<div></div>')
+                        .attr('class','skew l')
+                        .appendTo( ribbon );
+                     $('<div></div>')
+                        .attr('class','banner')
+                        .append( $('<div></div>').html( '%s days left to %s' ) )
+                        .appendTo( ribbon );
+                     $('<div></div>')
+                        .attr('class','skew r')
+                        .appendTo( ribbon );
+                     inner = $('<div></div>').attr('class','bk r');
+                         $('<div></div>').attr('class','arrow top').appendTo( inner );
+                         $('<div></div>').attr('class','arrow bottom').appendTo( inner );
+                     inner.appendTo( ribbon );
+                     ribbon.appendTo( container );
+                     container.appendTo( '#header' );''' % (days, title)
+        js += "});\n"
+        return EmbeddedJS( js )
+
+    #----------------------------------------------------------------------
     def content(self):
         """
         Return a string with the content for this web page.
@@ -136,10 +196,22 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         browser in order to enjoy the full experience.</font></b></p>
         </NOSCRIPT>
         """ )
-        remaining = datetime(2017,6,14) - datetime.now()
         html += EmbeddedJS('browserWarning.js')
+        html += EmbeddedCSS( self.css() )
 
-        html += '<div class="countdown">%d days left to the 70<sup>th</sup> Anniversary Celebration!!!</div>' % remaining.days
+        # Add in the active countdowns
+        try:
+            countdown_fd = open(os.path.join(RootPath(),'countdowns.txt'))
+            countdowns = []
+            for line in countdown_fd:
+                (date, event_title) = line.rstrip().split( ',' )
+                (yyyy, mm, dd) = date.split( '-' )
+                remaining = datetime(int(yyyy),int(mm),int(dd)) - datetime.now()
+                countdowns.append( [remaining.days, event_title] )
+            countdown_fd.close()
+            html += self.add_countdowns( countdowns )
+        except Exception:
+            pass
 
         news = self.getNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
         oldNews = []

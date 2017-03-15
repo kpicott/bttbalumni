@@ -89,7 +89,7 @@ class bttbNavigation:
         try:
             print """
 <div class="site-top">
-  <div class="header">
+  <div class="header" id="header">
     <div class="header-container">
       <div class="header">
         <div class="header-title">

@@ -640,9 +640,7 @@ def EmbeddedCSS(style):
     if style[-4:] == '.css':
         html += '@import url( "%s" );' % os.path.join( CSSPath(), style )
     else:
-        html += '>\n<!--'
         html += MapLinks( style )
-        html += '//-->'
     html += '</style>'
     return html
 
@@ -659,9 +657,8 @@ def EmbeddedJS(script):
     if script[-3:] == '.js':
         html += ' src="%s">' % os.path.join( JavascriptPath(), script )
     else:
-        html += '>\n<!--'
+        html += '>'
         html += MapLinks( script )
-        html += '//-->'
     html += '</script>'
     return html
 
