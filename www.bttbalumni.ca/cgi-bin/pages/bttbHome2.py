@@ -127,22 +127,6 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 </form>""")
 
     #----------------------------------------------------------------------
-    def css(self):
-        '''
-        Define the styles used in this page
-        countdown-container, a simple reddish bar, extended both ways
-        countdown, limited in size to keep content tamed
-        '''
-        return '''
-.countdown-container
-{
-    overflow:	hidden;
-	width:		100%;
-    box-shadow: 0px 8px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-'''
-
-    #----------------------------------------------------------------------
     def add_countdowns(self, countdowns):
         '''Define the Javscript used in this page'''
         # The countdowns want to extend the entire page width, but this page
@@ -152,23 +136,23 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
             return
         js = "$(document).ready(function() {\n"
         for (days, title) in countdowns:
-            js += '''var container = $('<div></div>').attr('class','countdown-container');
-                     var ribbon = $('<div></div>').attr('class','ribbon one');
-                     var inner = $('<div></div>').attr('class','bk l');
+            js += '''var container = $('<div></div>').attr('class','ribbon-container');
+                     var ribbon = $('<div></div>').attr('class','ribbon one shadow');
+                     var inner = $('<div></div>').attr('class','bk l shadow');
                          $('<div></div>').attr('class','arrow top').appendTo( inner );
                          $('<div></div>').attr('class','arrow bottom').appendTo( inner );
                      inner.appendTo( ribbon );
                      $('<div></div>')
-                        .attr('class','skew l')
+                        .attr('class','skew l shadow')
                         .appendTo( ribbon );
                      $('<div></div>')
-                        .attr('class','banner')
+                        .attr('class','banner shadow')
                         .append( $('<div></div>').html( '%s days left to %s' ) )
                         .appendTo( ribbon );
                      $('<div></div>')
-                        .attr('class','skew r')
+                        .attr('class','skew r shadow')
                         .appendTo( ribbon );
-                     inner = $('<div></div>').attr('class','bk r');
+                     inner = $('<div></div>').attr('class','bk r shadow');
                          $('<div></div>').attr('class','arrow top').appendTo( inner );
                          $('<div></div>').attr('class','arrow bottom').appendTo( inner );
                      inner.appendTo( ribbon );
@@ -196,8 +180,8 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         browser in order to enjoy the full experience.</font></b></p>
         </NOSCRIPT>
         """ )
-        html += EmbeddedJS('browserWarning.js')
-        html += EmbeddedCSS( self.css() )
+        html += EmbeddedJS(  'browserWarning.js' )
+        html += EmbeddedCSS( 'bttbHome.css' )
 
         # Add in the active countdowns
         try:
