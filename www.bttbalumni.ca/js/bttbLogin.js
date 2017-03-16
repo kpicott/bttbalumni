@@ -91,7 +91,9 @@ function _getCookie (name)
 }
 
 //----------------------------------------------------------------------
+//
 // Set the internal cookie value.
+//
 function _setCookie (name, value)
 {
 	var argv = _setCookie.arguments;
@@ -112,6 +114,27 @@ function _deleteCookie (name)
 	exp.setTime (exp.getTime() - 1);
 	var cval = _getCookie (name);
 	document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString();
+}
+
+//----------------------------------------------------------------------
+//
+// Log out the current user and reload the current page
+//
+function doLogout()
+{
+	var newUrl;
+	// Use the internal history if it's avalable, else the window location
+	if( typeof dhtmlHistory != "undefined" )
+	{
+		newUrl = dhtmlHistory.getCurrentLocation();
+	}
+	else
+	{
+		newUrl = window.location.href;
+	}
+	BTTBUserId = -1;
+	newUrl = newUrl.replace( /:[0-9]*/, "" );
+	openPage( '/#' + newUrl );
 }
 
 // ==================================================================

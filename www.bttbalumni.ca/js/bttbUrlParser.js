@@ -35,7 +35,6 @@ BTTBUrl.BTTBURLParser = function(url, cgi)
 	this._pageFields = {'PageQuery' : 4, 'Page' : 1, 'User' : 3};
 	this._values = {};
 	this._pageCGI = cgi;
-	alert( "Opening parser using " + cgi );
 	for( var f in this._urlFields )
 	{
 		if( this._urlFields.hasOwnProperty(f) )
