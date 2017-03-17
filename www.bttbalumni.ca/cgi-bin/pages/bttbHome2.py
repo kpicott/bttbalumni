@@ -137,7 +137,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         js = "$(document).ready(function() {\n"
         for (days, title) in countdowns:
             js += '''var container = $('<div></div>').attr('class','ribbon-container');
-                     var ribbon = $('<div></div>').attr('class','ribbon one shadow');
+                     var ribbon = $('<div></div>').attr('class','ribbon one');
                      var inner = $('<div></div>').attr('class','bk l shadow');
                          $('<div></div>').attr('class','arrow top').appendTo( inner );
                          $('<div></div>').attr('class','arrow bottom').appendTo( inner );
