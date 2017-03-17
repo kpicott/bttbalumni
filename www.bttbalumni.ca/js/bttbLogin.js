@@ -11,8 +11,8 @@ CurrentUser = function()
 	return [_getCookie('User'),
 			_getCookie('OnCommittee'),
 			_getCookie('FirstName'),
-			_getCookie('FullName')]
-}
+			_getCookie('FullName')];
+};
 LastVisitTime = function()
 {
 	var rightNow = new Date();
@@ -20,16 +20,16 @@ LastVisitTime = function()
 	WWHTime = _getCookie('WWhenH');
 	WWHTime = WWHTime * 1;
 	var lastHereFormatting = new Date(WWHTime);
-	var intLastVisit = (lastHereFormatting.getYear() * 10000)+(lastHereFormatting.getMonth() * 100) + lastHereFormatting.getDate()
+	var intLastVisit = (lastHereFormatting.getYear() * 10000)+(lastHereFormatting.getMonth() * 100) + lastHereFormatting.getDate();
 	var lastHereInDateFormat = "" + lastHereFormatting;
-	var dayOfWeek = lastHereInDateFormat.substring(0,3)
-	var dateMonth = lastHereInDateFormat.substring(4,11)
-	var timeOfDay = lastHereInDateFormat.substring(11,16)
-	var year = lastHereInDateFormat.substring(23,25)
-	var WWHText = dayOfWeek + ", " + dateMonth + " at " + timeOfDay
-	_setCookie ("WWhenH", rightNow.getTime(), exp)
-	return WWHText
-}
+	var dayOfWeek = lastHereInDateFormat.substring(0,3);
+	var dateMonth = lastHereInDateFormat.substring(4,11);
+	var timeOfDay = lastHereInDateFormat.substring(11,16);
+	var year = lastHereInDateFormat.substring(23,25);
+	var WWHText = dayOfWeek + ", " + dateMonth + " at " + timeOfDay;
+	_setCookie ("WWhenH", rightNow.getTime(), exp);
+	return WWHText;
+};
 AddNewUser = function(user, onCommittee, firstName, fullName)
 { 
 	_setCookie ('User', user, exp);
@@ -38,11 +38,11 @@ AddNewUser = function(user, onCommittee, firstName, fullName)
 	_setCookie ('FullName', fullName, exp);
 	_setCookie ('WWHCount', 0, exp);
 	_setCookie ('WWhenH', 0, exp);
-}
+};
 RegisterUserVisit = function()
 { 
-	var WWHCount = _getCookie('WWHCount')
-	if (WWHCount == null)
+	var WWHCount = _getCookie('WWHCount');
+	if (WWHCount === null)
 	{
 		WWHCount = 1;
 	}
@@ -52,8 +52,8 @@ RegisterUserVisit = function()
 	}
 	_setCookie ('WWHCount', WWHCount, exp);
 	var rightNow = new Date();
-	_setCookie ("WWhenH", rightNow.getTime(), exp)
-}
+	_setCookie ("WWhenH", rightNow.getTime(), exp);
+};
 
 //######################################################################
 
@@ -85,7 +85,7 @@ function _getCookie (name)
 		if (document.cookie.substring(i, j) == arg)
 			return _getCookieVal (j);
 		i = document.cookie.indexOf(" ", i) + 1;
-		if (i == 0) break;
+		if (i === 0) break;
 	}
 	return null;
 }
@@ -103,10 +103,10 @@ function _setCookie (name, value)
 	var domain = (argc > 4) ? argv[4] : null;
 	var secure = (argc > 5) ? argv[5] : false;
 	document.cookie = name + "=" + escape (value) +
-	((expires == null) ? "" : ("; expires=" + expires.toGMTString())) +
-	((path == null) ? "" : ("; path=" + path)) +
-	((domain == null) ? "" : ("; domain=" + domain)) +
-	((secure == true) ? "; secure" : "");
+	((expires === null) ? "" : ("; expires=" + expires.toGMTString())) +
+	((path === null) ? "" : ("; path=" + path)) +
+	((domain === null) ? "" : ("; domain=" + domain)) +
+	((secure === true) ? "; secure" : "");
 }
 function _deleteCookie (name)
 {
@@ -122,19 +122,11 @@ function _deleteCookie (name)
 //
 function do_logout()
 {
-	var newUrl;
-	// Use the internal history if it's avalable, else the window location
-	if( typeof dhtmlHistory != "undefined" )
-	{
-		newUrl = dhtmlHistory.getCurrentLocation();
-	}
-	else
-	{
-		newUrl = window.location.href;
-	}
 	BTTBUserId = -1;
-	newUrl = newUrl.replace( /:[0-9]*/, "" );
-	openPage( '/#' + newUrl );
+    var newUrl = document.location.href.replace( /:[0-9]+/, "" );
+	document.location.href = newUrl;
+	document.location.reload();
+	return 1;
 }
 
 //----------------------------------------------------------------------
@@ -149,11 +141,12 @@ function do_login()
 	// When the user clicks anywhere outside of the modal, close it
 	window.onclick = function(event)
 	{
-		if( $( event.target ) != modal )
+		if( event.target === modal[0] )
 		{
 			modal.hide();
 		}
-	}
+	};
+	return 1;
 }
 
 //----------------------------------------------------------------------
@@ -162,8 +155,42 @@ function do_login()
 //
 function close_login()
 {
+	$('#login-error').hide();
 	$('#login-dialog').hide();
 	window.onclick = null;
+}
+
+//----------------------------------------------------------------------
+//
+// Check to see if user has a valid login. Reload the current page with
+// the user ID if so, toggle the error message on if not.
+//
+function check_login()
+{
+	var form = $('#login-form');
+	form.submit( function(event) {
+		action = form.attr('action');
+		$.post(action, form.serialize(), function(result) {
+					var response = result.split('|');
+					if( response.length == 4 )
+					{
+						var id = response[0];
+						var onCommittee = parseInt(response[1]);
+						var firstName = response[2];
+						var fullName = response[3];
+						AddNewUser( id, onCommittee, firstName, fullName );
+						// Reload the page so that all of the elements reflect the new user
+						close_login();
+            			document.location.href = document.location.hash + ':' + id + document.location.search;
+						document.location.reload();
+					}
+					else
+					{
+						$('#login-error').show();
+					}
+			});
+		event.preventDefault();
+	});
 }
 
 // ==================================================================

@@ -165,7 +165,7 @@ class bttbContentPanel(object):
             op = 'login'
         else:
             op = 'logout'
-        return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<a href="javascript:void(0)" onclick="javascript:do_%s();">%s</a>\' );\n' % (op, op)
+        return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<button onclick="javascript:do_%s();">%s</button>\' );\n' % (op, op)
 
     #----------------------------------------------------------------------
     def set_register_or_welcome(self):
@@ -175,7 +175,7 @@ class bttbContentPanel(object):
         '''
         welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>&nbsp;'
         if self.requestor is None:
-            welcome += '<a href="javascript:openPage(\\\'/#register\\\')">Register Now</a>'
+            welcome += '<button onclick="javascript:openPage(\'/#register\')">Register Now</button>'
         else:
             welcome += 'Welcome %s' % self.requestor.fullName()
         welcome += '\');\n'

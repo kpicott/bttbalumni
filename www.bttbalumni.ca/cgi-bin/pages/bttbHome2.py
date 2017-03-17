@@ -178,6 +178,9 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         <font color='red'>Warning: This site relies heavily on JavaScript,
         which you currently have disabled. Please enable it or use another
         browser in order to enjoy the full experience.</font></b></p>
+        <p>
+        link:(/pages/javascript.html,To learn how to enable Javascript click here.)
+        </p>
         </NOSCRIPT>
         """ )
         html += EmbeddedJS(  'browserWarning.js' )
