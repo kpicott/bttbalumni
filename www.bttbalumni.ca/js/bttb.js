@@ -345,6 +345,7 @@ function historyChange(newLocation, historyData)
 // the onload event handler that starts the fading.
 function initialize()
 {
+    if( _debug) alert( "Initialize..." );
     if( createMenu ) createMenu();
     //setInterval('swapFade()',wait);
 

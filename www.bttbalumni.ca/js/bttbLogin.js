@@ -120,7 +120,7 @@ function _deleteCookie (name)
 //
 // Log out the current user and reload the current page
 //
-function doLogout()
+function do_logout()
 {
 	var newUrl;
 	// Use the internal history if it's avalable, else the window location
@@ -135,6 +135,35 @@ function doLogout()
 	BTTBUserId = -1;
 	newUrl = newUrl.replace( /:[0-9]*/, "" );
 	openPage( '/#' + newUrl );
+}
+
+//----------------------------------------------------------------------
+//
+// Open the login modal dialog
+//
+function do_login()
+{
+	var modal = $('#login-dialog');
+	modal.show();
+
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event)
+	{
+		if( $( event.target ) != modal )
+		{
+			modal.hide();
+		}
+	}
+}
+
+//----------------------------------------------------------------------
+//
+// Close the login modal dialog
+//
+function close_login()
+{
+	$('#login-dialog').hide();
+	window.onclick = null;
 }
 
 // ==================================================================

@@ -108,6 +108,7 @@ function openPage(url)
 
         $("#content").html( "Loading..." );
 		$("#content").load( pageUrl[1] );
+        onSizeChange();
     }
     else
     {

@@ -138,6 +138,35 @@ class bttbNavigation:
             Error( 'Showing navigation', e )
 
     #----------------------------------------------------------------------
+    def show_login_dialog(self):
+        """
+        Display the modal login dialog at a fixed point on the page
+        """
+        print """
+<div id="login-dialog" style="display:none;" class="modal shadow">
+  <form name="loginForm" class="modal-content animate" action="javascript:checkLogin()">
+    <div class="imgcontainer">
+      <span onclick="javascript:close_login()" class="close" title="Close Modal">&times;</span>
+      <img src="/Images/img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
+    <div class="login-container">
+      <label><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" name="uname" required>
+      <label><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="psw" required>
+      <button class="loginbtn" type="submit">Login</button>
+    </div>
+    <div class="login-container">
+      <button type="button" onclick="javascript:close_login()" class="cancelbtn">Cancel</button>
+      <span title='Default user name is FIRST LAST, no password' class="psw">
+      <div style="display:none;" id='#login-error'>Your user ID or password was not recognized</div>
+      <a href='mailto:bttb@picott.ca?subject=Forgot My Login&body=I forgot my login information, please reset my password and mail back my id.'href="">Forgot Login?</a></span>
+    </div>
+  </form>
+</div>
+"""
+
+    #----------------------------------------------------------------------
     def show_content(self):
         """
         Display the desired page in the content frame. This is the
@@ -210,7 +239,10 @@ class bttbNavigation:
         Master function to display the entire web page
         """
         self.show_head()
-        print '<body onload="initialize()">'
+        print '<body onresize="onSizeChange()" onload="initialize()">'
+
+        # Fixed position dialog
+        self.show_login_dialog()
 
         print '<div class="page">'
 

@@ -5,8 +5,10 @@
     padding-left:   0px;
     padding-bottom: 0px;
     margin:         0px;
-    font:           10.5pt/16pt Raleway, Tahoma, Arial;
     color:          #111;
+    font-size:		10.5pt;
+    line-height:	16pt;
+    font-family:	Raleway, Tahoma, Arial;
 }
 html
 {

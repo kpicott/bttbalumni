@@ -162,10 +162,10 @@ class bttbContentPanel(object):
         already logged in or not.
         '''
         if self.requestor is None:
-            op = 'Login'
+            op = 'login'
         else:
-            op = 'Logout'
-        return '\t$("#login").html( \'<i class="fa fa-key"></i><a href="#" onclick=javascript:do%s();">%s</a>\' );\n' % (op, op)
+            op = 'logout'
+        return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<a href="javascript:void(0)" onclick="javascript:do_%s();">%s</a>\' );\n' % (op, op)
 
     #----------------------------------------------------------------------
     def set_register_or_welcome(self):
@@ -173,9 +173,9 @@ class bttbContentPanel(object):
         Define the content of the welcome area, based on whether someone is
         already logged in or not.
         '''
-        welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>'
+        welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>&nbsp;'
         if self.requestor is None:
-            welcome += '<a href="/#register">Register Now</a>'
+            welcome += '<a href="javascript:openPage(\\\'/#register\\\')">Register Now</a>'
         else:
             welcome += 'Welcome %s' % self.requestor.fullName()
         welcome += '\');\n'

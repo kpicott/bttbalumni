@@ -147,7 +147,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
                         .appendTo( ribbon );
                      $('<div></div>')
                         .attr('class','banner shadow')
-                        .append( $('<div></div>').html( '%s days left to %s' ) )
+                        .append( $('<div></div>').html( '%s days to go : %s' ) )
                         .appendTo( ribbon );
                      $('<div></div>')
                         .attr('class','skew r shadow')
