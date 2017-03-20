@@ -1,0 +1,71 @@
+.done
+{
+	text-decoration:		line-through;
+}
+ol
+{
+	list-style-position:	inside;
+}
+ol > li
+{
+    margin-left: 10px;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+}
+
+li a, .dropbtn {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover, .dropdown:hover .dropbtn {
+    background-color: red;
+}
+
+li.dropdown {
+    display: inline-block;
+}
+
+.dropdown-content {
+	position:	relative;
+    display: none;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* ==================================================================
+   Copyright (C) Kevin Peter Picott. All rights reserved. These coded
+   instructions, statements and computer programs contain unpublished
+   information proprietary to Kevin Picott, which is protected by the
+   Canadian and US federal copyright law and may not be  disclosed to
+   third  parties  or  duplicated or  copied,  in whole  or in  part,
+   without   the  prior  written   consent  of  Kevin  Peter  Picott.
+   ==================================================================*/

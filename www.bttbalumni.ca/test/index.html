@@ -1,0 +1,124 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<head>
+<title>BTTB Alumni</title>
+<link rel="shortcut icon" href="/Favicon.ico" type="image/x-icon" />
+
+<!-- --------------------------------------------------------------------- -->
+<!-- Javascript imports                                                    -->
+<!-- --------------------------------------------------------------------- -->
+<script type='text/javascript' src='/js/bttb2.js'></script>
+<script type='text/javascript' src='/js/bttbNav.js'></script>
+<script type='text/javascript' src='/js/bttbLogin.js'></script>
+<script type='text/javascript' src='/js/bttbUrlParser.js'></script>
+<script type='text/javascript' src='/js/jquery-3.1.1.min.js'></script>
+
+<!-- --------------------------------------------------------------------- -->
+<!-- Stylesheet imports                                                    -->
+<!-- --------------------------------------------------------------------- -->
+<link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700" rel="stylesheet" />
+<STYLE type='text/css' media='all'>
+@import url( '/css/bttbNav.css' );
+@import url( '/css/bttbPage.css' );
+@import url( '/css/bttbEffects.css' );
+@import url( '/css/font-awesome.min.css' );
+</STYLE>
+
+</head>
+<!-- --------------------------------------------------------------------- -->
+<!-- Javascript support                                                    -->
+<!-- --------------------------------------------------------------------- -->
+<script language='JavaScript'>
+/*----------------------------------------------------------------------
+	Callback when page is loaded.
+
+	Builds the non-hardcoded content.
+*/
+function page_loaded()
+{
+	build_navigation();
+	load_content(location.hash, location.search);
+}
+</script>
+
+<body onhashchange="hash_changed()" onload="page_loaded()" onresize="onSizeChange()">
+
+<!-- --------------------------------------------------------------------- -->
+<!-- Warning for anyone without Javascript enabled                         -->
+<!-- --------------------------------------------------------------------- -->
+<NOSCRIPT>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><b><font color='red'>Warning: This site relies heavily on JavaScript,
+which you currently have disabled. Please enable it or use another
+browser in order to enjoy the full experience.</font></b></p>
+<p><a href='/pages/javascript.html'>See this page</a> for information on how
+to turn it back on.</p>
+</NOSCRIPT>
+
+<!-- --------------------------------------------------------------------- -->
+<!--  Login dialog                                                         -->
+<!--  -------------------------------------------------------------------- -->
+<div id="login-dialog" style="display:none;" class="modal shadow">
+  <form id="login-form" name="login-form" class="modal-content animate" action="/cgi-bin/login.cgi" onclick="javascript:check_login()">
+    <div class="imgcontainer">
+      <span onclick="javascript:close_login()" class="close" title="Close Modal">&times;</span>
+      <img src="/Images/img_avatar2.png" alt="Avatar" class="avatar">
+    </div>
+    <div class="login-container">
+      <label><b>Username</b></label>
+      <input type="text" placeholder="Enter Username" id="user" name="user" required>
+      <label><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+      <button class="loginbtn" type="submit">Login</button>
+    </div>
+    <div class="login-container">
+      <button type="button" onclick="javascript:close_login()" class="cancelbtn">Cancel</button>
+      <span title='Default user name is FIRST LAST, no password' class="psw">
+      <div style="display:none;" id='login-error'>Login not recognized</div>
+      <a href='mailto:bttb@picott.ca?subject=Forgot My Login&body=I forgot my login information, please reset my password and mail back my id.'href="">Forgot Login?</a></span>
+    </div>
+  </form>
+</div>
+
+<!-- --------------------------------------------------------------------- -->
+<!--  Wrap the entire thing in one big div                                 -->
+<!-- --------------------------------------------------------------------- -->
+<div class="page">
+
+<!-- --------------------------------------------------------------------- -->
+<!-- The menus list has two types of entry:                                -->
+<!--    [link, text] for main level links                                  -->
+<!--    [text, [children]] for dropdowns, [children] = [[link,text],...]   -->
+<!--                                                                       -->
+<!-- Prepend a "?" to the link for a disabled coming soon style            -->
+<!-- --------------------------------------------------------------------- -->
+<div class="site-top">
+  <div class="header" id="header">
+    <div class="header-container">
+      <div class="header">
+        <div class="header-title">
+          <a href="#home"><img align="middle" src="/Images/SiteLogoSmall.png"></a>
+  	      <div class="title tooltip">BTTB Alumni
+		    <span class="tooltiptext">Reconnect with old friends and help keep the history of the Burlington Teen Tour Band alive</span>
+          </div>
+        </div>
+        <div class="header-menu">
+          <div class="contact"><a href="/#contact"><i class="fa fa-envelope-o">&nbsp;</i>Contact Us</a></div>
+          <div id="login"><i class="fa fa-key">&nbsp;</i>Login</div>
+          <div id="welcome"><i class="fa fa-user">&nbsp;</i>Register</div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-container">
+      <div class="nav">"""
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --------------------------------------------------------------------- -->
+<!-- Content pane - the part that changes on each page                     -->
+<!-- --------------------------------------------------------------------- -->
+<div id="content"></div>
+
+</div>
+</body>

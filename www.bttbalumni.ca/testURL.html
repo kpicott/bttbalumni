@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <head>
 <title>BTTB Alumni - URL Test</title>
-<script type='text/javascript' src='js/bttbUrlParser.js'></script>
+<script type='text/javascript' src='/js/bttbUrlParser.js'></script>
 </head>
-<body>
+<body onhashchange="changeHash()" onload="loaded()">
 <script language='JavaScript'>
 <!--
 document.write( '<h1>Debugging</h1>' );
@@ -11,6 +11,19 @@ var p = new BTTBUrl.BTTBURLParser(window.location);
 p.debug();
 document.write( '<h1>Tests</h1>' );
 p.test();
+function changeHash()
+{
+	alert( location.search );
+}
+function loaded()
+{
+	alert( location );
+}
 //-->
 </script>
+<div id="1"><h1><a href="#2">Location 1</a></h1></div>
+<div id="2"><h1><a href="#3">Location 2</a></h1></div>
+<div id="3"><h1><a href="#4">Location 3</a></h1></div>
+<div id="4"><h1><a href="#5">Location 4</a></h1></div>
+<div id="5"><h1><a href="#1">Location 5</a></h1></div>
 </body>
