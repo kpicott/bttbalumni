@@ -15,31 +15,23 @@ function load_content(hash_field, search_field)
 		url_params = search_field.substr(1).split('&');
 	}
 
+	// Check for a current user
+	var user_info = CurrentUser();
+	if( user_info[0] !== null )
+	{
+		url_params.push( 'user=' + user_info[1] );
+		show_committee_content = parseInt(user_info[1]);
+	}
+
 	// Split the hash into the page to load and the user. If no
 	// user was defined try to populate it with the cookie value
 	var hash_types = hash_field.split(':');
-	if( hash_types.length === 2 )
+	if( hash_types.length > 0 )
 	{
 		url_params.push( 'page=' + hash_types[0].substr(1) );
-		url_params.push( 'user=' + hash_types[1] );
 	}
-	else
-	{
-		if( hash_types.length === 1 )
-		{
-			url_params.push( 'page=' + hash_types[0].substr(1) );
-		}
-		var user_info = CurrentUser();
-		if( user_info[0] !== null )
-		{
-			url_params.push( 'user=' + user_info[0] );
-			show_committee_content = parseInt(user_info[1]);
-		}
-	}
-	alert( url_params );
 
 	var page = '/cgi-bin/view.cgi?' + url_params.join( '&' );
-	alert( page );
 
 	$('#content').load( page );
 
@@ -118,22 +110,21 @@ function build_navigation()
 	var menu_html = '';
 	menus.forEach( function(menu_entry, index)
 	{
-        var committee_class = '';
-		if( 'Committee' === menu_entry[0] )
-		{
-			committee_class = ' class="committee-only"';
-		}
 		if( typeof menu_entry[1] == 'string' )
 		{
-			menu_html += '<a ' + committee_class;
-			menu_html += ' href="' + menu_entry[0] + '">';
+			menu_html += '<a href="' + menu_entry[0] + '">';
 			menu_html += menu_entry[1] + '</a>\n';
 		}
 		else
 		{
+			var committee_class = '';
+			if( 'Committee' === menu_entry[0] )
+			{
+				committee_class = ' committee-only';
+			}
 			var menu_name = menu_entry[0];
 			var submenu = menu_entry[1];
-			menu_html += '<div class="dropdown"' + committee_class + '>\n';
+			menu_html += '<div class="dropdown' + committee_class + '">\n';
 			menu_html += '  <button class="dropbtn">' + menu_name + '</button>\n';
 			menu_html += '  <div class="content">\n';
 
@@ -156,6 +147,59 @@ function build_navigation()
 		}
 	});
 	$('.nav').html( menu_html );
+}
+
+/*----------------------------------------------------------------------
+    Return the content of the login area, based on whether someone is
+    already logged in or not.
+*/
+function set_login_or_logout(user)
+{
+	var op = 'logout';
+    if( user === null )
+	{
+        op = 'login';
+    }
+    return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<button onclick="javascript:do_' + op + '();">' + op + '</button>\' );\n';
+}
+
+/*----------------------------------------------------------------------
+    Return the content of the welcome area, based on whether someone is
+    already logged in or not.
+*/
+function set_register_or_welcome(user_name)
+{
+    var welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>&nbsp;';
+    if( user_name === null )
+	{
+        welcome += '<button onclick="javascript:openPage(\\\'/#register\\\')">Register Now</button>';
+    }
+	else
+	{
+        welcome += 'Welcome ' + user_name.replace( /\s+$/, '' );
+    }
+    welcome += '\');\n';
+    return welcome;
+}
+
+/*----------------------------------------------------------------------
+    Look at the current configuration and set any scripts or styles needed
+    for the page.
+*/
+function add_preamble()
+{
+	// User data returns nulls when nobody is signed in
+	var user_info = CurrentUser();
+	var user_id = user_info[0];
+	var user_name = user_info[3];
+
+	var preamble = '$(document).ready(function() {\n'
+					   + set_register_or_welcome(user_name)
+    				   + set_login_or_logout(user_id)
+    				   + '});\n';
+	alert( preamble );
+
+	$('#preamble').html( preamble );
 }
 
 // ==================================================================

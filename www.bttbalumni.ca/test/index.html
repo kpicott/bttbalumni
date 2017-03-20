@@ -12,16 +12,19 @@
 <script type='text/javascript' src='/js/bttbUrlParser.js'></script>
 <script type='text/javascript' src='/js/jquery-3.1.1.min.js'></script>
 
+<!-- To be populated by the page load script -->
+<script type='text/javascript' id='preamble'></script>
+
 <!-- --------------------------------------------------------------------- -->
 <!-- Stylesheet imports                                                    -->
 <!-- --------------------------------------------------------------------- -->
 <link href="https://fonts.googleapis.com/css?family=Raleway|Source+Sans+Pro:700" rel="stylesheet" />
-<STYLE type='text/css' media='all'>
+<style type='text/css' media='all'>
 @import url( '/css/bttbNav.css' );
 @import url( '/css/bttbPage.css' );
 @import url( '/css/bttbEffects.css' );
 @import url( '/css/font-awesome.min.css' );
-</STYLE>
+</style>
 
 </head>
 <!-- --------------------------------------------------------------------- -->
@@ -37,6 +40,7 @@ function page_loaded()
 {
 	build_navigation();
 	load_content(location.hash, location.search);
+	add_preamble();
 }
 </script>
 
@@ -90,7 +94,7 @@ to turn it back on.</p>
 <!--    [link, text] for main level links                                  -->
 <!--    [text, [children]] for dropdowns, [children] = [[link,text],...]   -->
 <!--                                                                       -->
-<!-- Prepend a "?" to the link for a disabled coming soon style            -->
+<!-- Prepend a question mark to the link for a disabled coming soon style  -->
 <!-- --------------------------------------------------------------------- -->
 <div class="site-top">
   <div class="header" id="header">
@@ -109,12 +113,13 @@ to turn it back on.</p>
         </div>
       </div>
     </div>
-    <div class="nav-container">
-      <div class="nav">"""
+	<div class="nav-container">
+      <div class="nav">
       </div>
     </div>
   </div>
 </div>
+
 <!-- --------------------------------------------------------------------- -->
 <!-- Content pane - the part that changes on each page                     -->
 <!-- --------------------------------------------------------------------- -->

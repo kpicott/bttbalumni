@@ -123,6 +123,10 @@ function _deleteCookie (name)
 function do_logout()
 {
 	BTTBUserId = -1;
+	_deleteCookie ('User');
+	_deleteCookie ('OnCommittee');
+	_deleteCookie ('FirstName');
+	_deleteCookie ('FullName');
     var newUrl = document.location.href.replace( /:[0-9]+/, "" );
 	document.location.href = newUrl;
 	document.location.reload();

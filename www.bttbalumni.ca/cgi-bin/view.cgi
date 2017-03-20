@@ -29,7 +29,6 @@ class bttbContentPanel(object):
     by script-generated references, assumptions are made concerning the
     parameters being passed in (otherwise error page is shown):
         'page' is always present and valid in init_params
-        'user' is valid if present in init_params, None otherwise
 
     The 'content' and 'title' members are used to identify the raw HTML
     content and the new page title respectively.
@@ -57,14 +56,7 @@ class bttbContentPanel(object):
         except Exception:
             page = 'home'
 
-        # ID of the user requesting the page
-        try:
-            self.user = int(init_params['user'][0])    # Current logged-in user, if any
-            del self.params['user']
-        except Exception:
-            self.user = None
-
-        self.find_requestor( self.user )
+        self.find_requestor()
 
         try:
             # First check to see if the page exists as hardcoded HTML
@@ -109,22 +101,21 @@ class bttbContentPanel(object):
             self.log_history( 'error:', module_name )
 
     #----------------------------------------------------------------------
-    def find_requestor(self, user):
+    def find_requestor(self):
         '''
         Examine the web page data to see if the requestor can be found.
         Set self.requestor to the result, None if no requestor was found.
-        :param user: User ID passed to the script, None if none passed
         '''
         alumni = bttbAlumni()
-        self.requestor = alumni.getMemberFromId( user )
+        self.requestor = None
 
         cookie = Cookie.SimpleCookie()
 
         # If the requester wasn't already present then look in the cookies
-        if not self.requestor and cookie.has_key('User'):
+        if cookie.has_key('User'):
             self.requestor = alumni.getMemberFromId( int(cookie['User']) )
 
-        if self.requestor:
+        if self.requestor is not None:
             self.requestor_id = self.requestor.id
             try:
                 # Look for the last visited time, so that only new stuff will be shown
@@ -156,48 +147,14 @@ class bttbContentPanel(object):
             pass
 
     #----------------------------------------------------------------------
-    def set_login_or_logout(self):
-        '''
-        Define the content of the login area, based on whether someone is
-        already logged in or not.
-        '''
-        if self.requestor is None:
-            op = 'login'
-        else:
-            op = 'logout'
-        return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<button onclick="javascript:do_%s();">%s</button>\' );\n' % (op, op)
-
-    #----------------------------------------------------------------------
-    def set_register_or_welcome(self):
-        '''
-        Define the content of the welcome area, based on whether someone is
-        already logged in or not.
-        '''
-        welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>&nbsp;'
-        if self.requestor is None:
-            welcome += '<button onclick="javascript:openPage(\'/#register\')">Register Now</button>'
-        else:
-            welcome += 'Welcome %s' % self.requestor.fullName()
-        welcome += '\');\n'
-        return welcome
-
-    #----------------------------------------------------------------------
     def add_preamble(self):
         '''
         Look at the current configuration and set any scripts or styles needed
         for the page.
         '''
         self.content += '<script>$(document).ready(function() {\n'
-        self.content += self.set_register_or_welcome()
-        self.content += self.set_login_or_logout()
         self.content += '$("title").html( \'%s\' );\n' % self.title
         self.content += '});</script>\n'
-
-        if self.requestor is not None and self.requestor.onCommittee:
-            committee_display = 'inherit'
-        else:
-            committee_display = 'none'
-        self.content += '<style> .committee-only { display: %s; }</style>\n' % committee_display
 
     #----------------------------------------------------------------------
     def page_content(self):
@@ -216,7 +173,7 @@ class TestPage(unittest.TestCase):
     '''Unit test for a simple page'''
     def setUp(self):
         '''Initialize some sample page content'''
-        self.nav = bttbContentPanel( {'page':['test'], 'user':['2']} )
+        self.nav = bttbContentPanel( {'page':['test'] } )
         self.bad_nav = bttbContentPanel( {'page':['hello']} )
 
     def test_basics(self):
