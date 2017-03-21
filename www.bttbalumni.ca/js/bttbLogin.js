@@ -1,3 +1,8 @@
+//######################################################################
+
+// Standard cookie will last a month
+var default_expiration_days = 30;
+
 //----------------------------------------------------------------------
 //
 // Manage what little user information we keep track of.  For now just
@@ -8,40 +13,40 @@
 //
 CurrentUser = function()
 {
-	return [_getCookie('User'),
-			_getCookie('OnCommittee'),
-			_getCookie('FirstName'),
-			_getCookie('FullName')];
+	return [get_cookie('User'),
+			get_cookie('OnCommittee'),
+			get_cookie('FirstName'),
+			get_cookie('FullName')];
 };
 LastVisitTime = function()
 {
 	var rightNow = new Date();
 	var WWHTime = 0;
-	WWHTime = _getCookie('WWhenH');
+	WWHTime = get_cookie('WWhenH');
 	WWHTime = WWHTime * 1;
 	var lastHereFormatting = new Date(WWHTime);
 	var intLastVisit = (lastHereFormatting.getYear() * 10000)+(lastHereFormatting.getMonth() * 100) + lastHereFormatting.getDate();
 	var lastHereInDateFormat = "" + lastHereFormatting;
-	var dayOfWeek = lastHereInDateFormat.substring(0,3);
-	var dateMonth = lastHereInDateFormat.substring(4,11);
-	var timeOfDay = lastHereInDateFormat.substring(11,16);
-	var year = lastHereInDateFormat.substring(23,25);
+	var dayOfWeek = lastHereInDateFormat.substr(0,3);
+	var dateMonth = lastHereInDateFormat.substr(4,11);
+	var timeOfDay = lastHereInDateFormat.substr(11,16);
+	var year = lastHereInDateFormat.substr(23,25);
 	var WWHText = dayOfWeek + ", " + dateMonth + " at " + timeOfDay;
-	_setCookie ("WWhenH", rightNow.getTime(), exp);
+	set_cookie ("WWhenH", rightNow.getTime(), default_expiration_days);
 	return WWHText;
 };
 AddNewUser = function(user, onCommittee, firstName, fullName)
 { 
-	_setCookie ('User', user, exp);
-	_setCookie ('OnCommittee', onCommittee, exp);
-	_setCookie ('FirstName', firstName, exp);
-	_setCookie ('FullName', fullName, exp);
-	_setCookie ('WWHCount', 0, exp);
-	_setCookie ('WWhenH', 0, exp);
+	set_cookie ('User', user, default_expiration_days);
+	set_cookie ('OnCommittee', onCommittee, default_expiration_days);
+	set_cookie ('FirstName', firstName, default_expiration_days);
+	set_cookie ('FullName', fullName, default_expiration_days);
+	set_cookie ('WWHCount', 0, default_expiration_days);
+	set_cookie ('WWhenH', 0, default_expiration_days);
 };
 RegisterUserVisit = function()
 { 
-	var WWHCount = _getCookie('WWHCount');
+	var WWHCount = get_cookie('WWHCount');
 	if (WWHCount === null)
 	{
 		WWHCount = 1;
@@ -50,70 +55,63 @@ RegisterUserVisit = function()
 	{
 		WWHCount++;
 	}
-	_setCookie ('WWHCount', WWHCount, exp);
+	set_cookie ('WWHCount', WWHCount, default_expiration_days);
 	var rightNow = new Date();
-	_setCookie ("WWhenH", rightNow.getTime(), exp);
+	set_cookie ("WWhenH", rightNow.getTime(), default_expiration_days);
 };
-
-//######################################################################
-
-var expDays = 30;
-var exp = new Date();
-exp.setTime(exp.getTime() + (expDays*24*60*60*1000));
 
 //----------------------------------------------------------------------
 //
 // These functions are internal to the implementation which is, not
 // surprisingly, cookie-based.
 //
-function _getCookieVal (offset)
+function get_cookie( name )
 {
-	var endstr = document.cookie.indexOf (";", offset);
-	if (endstr == -1)
-		endstr = document.cookie.length;
-	return unescape(document.cookie.substring(offset, endstr));
-}
-function _getCookie (name)
-{
-	var arg = name + "=";
-	var alen = arg.length;
-	var clen = document.cookie.length;
-	var i = 0;
-	while (i < clen)
+	var encoded_name = encodeURIComponent(name) + "=";
+	var cookie_list = document.cookie.split( ';' );
+	var cookie_value = null;
+	cookie_list.forEach( function(cookie, index)
 	{
-		var j = i + alen;
-		if (document.cookie.substring(i, j) == arg)
-			return _getCookieVal (j);
-		i = document.cookie.indexOf(" ", i) + 1;
-		if (i === 0) break;
-	}
-	return null;
+		// Strip leading spaces
+		while( cookie.charAt(0) === ' ')
+		{
+			cookie = cookie.substr(1);
+		}
+		if( cookie.indexOf(encoded_name) === 0 )
+		{
+			cookie_value = decodeURIComponent( cookie.substr(encoded_name.length) );
+			return;
+		}
+	});
+	return cookie_value;
 }
 
 //----------------------------------------------------------------------
 //
 // Set the internal cookie value.
 //
-function _setCookie (name, value)
+// If days_before_expiration == 0 then there will be no expiration.
+// Use days_before_expiration == -1 to expire it immediately
+//
+function set_cookie (name, value, days_before_expiration)
 {
-	var argv = _setCookie.arguments;
-	var argc = _setCookie.arguments.length;
-	var expires = (argc > 2) ? argv[2] : null;
-	var path = (argc > 3) ? argv[3] : null;
-	var domain = (argc > 4) ? argv[4] : null;
-	var secure = (argc > 5) ? argv[5] : false;
-	document.cookie = name + "=" + escape (value) +
-	((expires === null) ? "" : ("; expires=" + expires.toGMTString())) +
-	((path === null) ? "" : ("; path=" + path)) +
-	((domain === null) ? "" : ("; domain=" + domain)) +
-	((secure === true) ? "; secure" : "");
+	var expires;
+	if( days_before_expiration !== 0 )
+	{
+		var expiration_date = new Date();
+		expiration_date.setTime(expiration_date.getTime() + (days_before_expiration*24*60*60*1000));
+		expires = '; expires=' + expiration_date.toGMTString();
+	}
+	else
+	{
+		expires = '';
+	}
+
+	document.cookie = name + "=" + encodeURIComponent (value) + expires;
 }
-function _deleteCookie (name)
+function delete_cookie (name)
 {
-	var exp = new Date();
-	exp.setTime (exp.getTime() - 1);
-	var cval = _getCookie (name);
-	document.cookie = name + "=" + cval + "; expires=" + exp.toGMTString();
+	set_cookie( name, '', -1 );
 }
 
 //----------------------------------------------------------------------
@@ -123,13 +121,13 @@ function _deleteCookie (name)
 function do_logout()
 {
 	BTTBUserId = -1;
-	_deleteCookie ('User');
-	_deleteCookie ('OnCommittee');
-	_deleteCookie ('FirstName');
-	_deleteCookie ('FullName');
-    var newUrl = document.location.href.replace( /:[0-9]+/, "" );
-	document.location.href = newUrl;
-	document.location.reload();
+	delete_cookie ('User');
+	delete_cookie ('OnCommittee');
+	delete_cookie ('FirstName');
+	delete_cookie ('FullName');
+    var newUrl = location.href.replace( /:[0-9]+/, "" );
+	location.href = newUrl;
+	location.reload();
 	return 1;
 }
 

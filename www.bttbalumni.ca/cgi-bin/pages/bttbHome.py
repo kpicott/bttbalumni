@@ -125,11 +125,11 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         Return a string with the content for this web page.
         """
         if self.requestor:
-            oldNewsTime = self.requestor.lastVisitTime - timedelta(7)
-            oldAlumniTime = self.requestor.lastVisitTime - timedelta(3)
+            oldNewsTime = self.requestor.lastVisitTime - timedelta(60)
+            oldAlumniTime = self.requestor.lastVisitTime - timedelta(14)
         else:
-            oldNewsTime = datetime.now() - timedelta(7)
-            oldAlumniTime = datetime.now() - timedelta(7)
+            oldNewsTime = datetime.now() - timedelta(60)
+            oldAlumniTime = datetime.now() - timedelta(14)
         html = MapLinks( """
         <NOSCRIPT>
         <p><b>
@@ -139,7 +139,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         </NOSCRIPT>
         """ )
         remaining = datetime(2017,6,14) - datetime.now()
-        html += '<div class="countdown">%d days left to the 70<sup>th</sup> Anniversary Celebration!!!</div>' % remaining.days
+        html += '<div class="countdown">%d days left to the <a href="/#store2017">70<sup>th</sup> Anniversary Celebration</a> and <a href="/#golf2017">Golf Tournament</a>!!!</div>' % remaining.days
 
         news = self.getNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
         oldNews = []

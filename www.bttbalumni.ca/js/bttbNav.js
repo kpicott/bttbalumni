@@ -160,7 +160,7 @@ function set_login_or_logout(user)
 	{
         op = 'login';
     }
-    return '\t$("#login").html( \'<i class="fa fa-key"></i>&nbsp;<button onclick="javascript:do_' + op + '();">' + op + '</button>\' );\n';
+    return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op + '</button>\' );\n';
 }
 
 /*----------------------------------------------------------------------
@@ -169,10 +169,10 @@ function set_login_or_logout(user)
 */
 function set_register_or_welcome(user_name)
 {
-    var welcome = '\t$("#welcome").html( \'<i class="fa fa-user"></i>&nbsp;';
+    var welcome = '\t$("#welcome").html( \'';
     if( user_name === null )
 	{
-        welcome += '<button onclick="javascript:openPage(\\\'/#register\\\')">Register Now</button>';
+        welcome += '<button onclick="javascript:openPage(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;Register Now</button>';
     }
 	else
 	{
@@ -191,13 +191,12 @@ function add_preamble()
 	// User data returns nulls when nobody is signed in
 	var user_info = CurrentUser();
 	var user_id = user_info[0];
-	var user_name = user_info[3];
+	var user_name = user_info[2];
 
 	var preamble = '$(document).ready(function() {\n'
 					   + set_register_or_welcome(user_name)
     				   + set_login_or_logout(user_id)
     				   + '});\n';
-	alert( preamble );
 
 	$('#preamble').html( preamble );
 }
