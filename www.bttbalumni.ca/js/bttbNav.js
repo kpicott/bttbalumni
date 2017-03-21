@@ -1,3 +1,6 @@
+// Set this to 1 to enable the 'test' parameter in page loads
+var is_testing = true;
+
 /*----------------------------------------------------------------------
 	Function to populate the #content element with the new page
 	 hash_field: #PAGE:USER specification for the page to load
@@ -8,6 +11,7 @@ function load_content(hash_field, search_field)
 	var show_committee_content = false;
 
     $('#content').html( 'Loading...' );
+	location.hash = hash_field;
 
 	var url_params = [];
 	if( search_field.length !== 0 )
@@ -23,18 +27,22 @@ function load_content(hash_field, search_field)
 		show_committee_content = parseInt(user_info[1]);
 	}
 
-	// Split the hash into the page to load and the user. If no
-	// user was defined try to populate it with the cookie value
-	var hash_types = hash_field.split(':');
-	if( hash_types.length > 0 )
+	// Reinterpret the hash as a page parameter
+	url_params.push( 'page=' + hash_field.substr(1) );
+
+	// Set this up for testing if requested
+	if( is_testing )
 	{
-		url_params.push( 'page=' + hash_types[0].substr(1) );
+		url_params.push( 'test=1' );
 	}
 
+	// Construct the final URL with the page parameter and the search parameters merged
 	var page = '/cgi-bin/view.cgi?' + url_params.join( '&' );
 
+	// Load the page into the content div
 	$('#content').load( page );
 
+	// Selectively enable or disable all of the committee content
 	if( show_committee_content )
 	{
 		$('.committee-only').show();
@@ -55,49 +63,88 @@ function hash_changed()
 }
 
 /*----------------------------------------------------------------------
+	Function to load a new page. If the page looks like an internal link
+	then embed it into the current page's content div, otherwise take
+	over the entire window.
+
+	Due to the way search fields work if you want to include that you have
+	to put it before the hash that identifies the page:
+
+		#store            : Open up the page called "store" within the current frame
+		http://google.com : Go to Google
+		?a=3#store        : Open up the page called "store" using the search field "?a=3"
+		?a=3              : Open up the home page using the search field "?a=3"
+*/
+function open_page(url)
+{
+    // Links within this site go through AJAX, others work as usual
+    //
+    if( url[0] === '#' )
+    {
+		load_content( url, '' );
+	}
+	else if( url[0] === '?' )
+	{
+		var url_split = url.split('#');
+		if( url_split.length > 1 )
+		{
+			load_content( '#' + url_split[1], url_split[0] );
+		}
+		else
+		{
+			load_content( '#home', url );
+		}
+    }
+    else
+    {
+        window.open( url, 'external' );
+    }
+}
+
+/*----------------------------------------------------------------------
 	Navigation menu configuration
 */
 var menus = [ ['/#home', '<img src="/Images/icon-home.png">']
-	, ['70th Anniversary', [ ['/#store2017', 'Buy Tickets']
-						   , ['/#golf2017', 'Golf Tournament']
-						   , ['?/#calendar2017', 'Calendar of Events']
-						   , ['?/#parade2017', 'Parade']
-						   , ['?/#concert2017', 'Concert']
-						   , ['?/#news2017', 'Reunion News']
+	, ['70th Anniversary', [ ['#store2017', 'Buy Tickets']
+						   , ['#golf2017', 'Golf Tournament']
+						   , ['?#calendar2017', 'Calendar of Events']
+						   , ['?#parade2017', 'Parade']
+						   , ['?#concert2017', 'Concert']
+						   , ['?#news2017', 'Reunion News']
 						   ]
 	  ]
-	, ['Alumni',    [ ['/#profiles', 'Profiles']
-					, ['/#register', 'My Profile']
-					, ['/#newsletters', 'News']
-					, ['/#security', 'Privacy Information']
+	, ['Alumni',    [ ['#profiles', 'Profiles']
+					, ['#register', 'My Profile']
+					, ['#newsletters', 'News']
+					, ['#security', 'Privacy Information']
 					]
 	  ]
-	, ['Memories',  [ ['/#wallaceb', 'Wallace B. Wallace']
-					, ['/#drumMajors', 'Drum Majors']
-					, ['/#memorials', 'Memorials']
-					, ['/#photos', 'Pictures']
-					, ['/#memories', 'Memories']
-					, ['/#tunes', 'Music Clips']
-					, ['?/#headChaperones', 'Former Head Chaperones']
-					, ['?/#bandExecutive', 'Former Band Executive']
-					, ['?/#boosterExecutive', 'Former Band Booster Executive']
+	, ['Memories',  [ ['#wallaceb', 'Wallace B. Wallace']
+					, ['#drumMajors', 'Drum Majors']
+					, ['#memorials', 'Memorials']
+					, ['#photos', 'Pictures']
+					, ['#memories', 'Memories']
+					, ['#tunes', 'Music Clips']
+					, ['?#headChaperones', 'Former Head Chaperones']
+					, ['?#bandExecutive', 'Former Band Executive']
+					, ['?#boosterExecutive', 'Former Band Booster Executive']
 					]
 	  ]
 	, ['Links',     [ ['http://teentourband.org', 'BTTB']
 					, ['http://teentourboosters.com', 'Band Boosters']
 					, ['http://www.cbc.ca/archives/entry/doug-wrights-family', 'Doug Wright']
-					, ['?bandPhotoAlbums', 'Band Photo Albums']
-					, ['?YouTube', 'BTTB on YouTube']
+					, ['?#bandPhotoAlbums', 'Band Photo Albums']
+					, ['?#YouTube', 'BTTB on YouTube']
 					]
 	  ]
-	, ['Committee', [ ['/#committee', 'Old Committee Page']
-					, ['?/#approve', 'Pending Approvals']
-					, ['?/#countdowns', 'Edit Countdowns']
-					, ['?/#newsAdd', 'Edit News Items']
-					, ['?/#database', 'Database Queries']
-					, ['?/#reunionData2017', 'Reunion Data']
-					, ['?/#webwork', 'Website Development Plan']
-					, ['?/#download', 'Download Alumni Data']
+	, ['Committee', [ ['#committee', 'Old Committee Page']
+					, ['?#approve', 'Pending Approvals']
+					, ['?#countdowns', 'Edit Countdowns']
+					, ['?#newsAdd', 'Edit News Items']
+					, ['?#database', 'Database Queries']
+					, ['?#reunionData2017', 'Reunion Data']
+					, ['?#webwork', 'Website Development Plan']
+					, ['?#download', 'Download Alumni Data']
 					]
 	  ]
 	];
@@ -135,11 +182,11 @@ function build_navigation()
 				// Leading "?" means the link is not yet available
 				if( link[0] === '?' )
 				{
-					menu_html += '    <a href="" class="coming-soon"><span>' + text + '</span></a>\n';
+					menu_html += '    <a class="coming-soon"><span>' + text + '</span></a>\n';
 				}
 				else
 				{
-					menu_html += '    <a href="' + link + '">' + text + '</a>\n';
+					menu_html += '    <a class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
 				}
 			});
             menu_html += '  </div>\n';
@@ -172,7 +219,7 @@ function set_register_or_welcome(user_name)
     var welcome = '\t$("#welcome").html( \'';
     if( user_name === null )
 	{
-        welcome += '<button onclick="javascript:openPage(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;Register Now</button>';
+        welcome += '<button onclick="javascript:open_page(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;Register Now</button>';
     }
 	else
 	{

@@ -366,7 +366,7 @@ function rebuild_golf_cart()
 	{
 		var msg = document.createElement( "h2" );
 		msg.innerHTML = empty_cart_msg;
-		cart_element.addChild( msg );
+		cart_element.appendChild( msg );
 		return;
 	}
 

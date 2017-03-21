@@ -4,7 +4,7 @@ multi-item Paypal cart.
 """
 import datetime
 from bttbPage import bttbPage
-from bttbConfig import MapLinks, PhoneParts
+from bttbConfig import MapLinks
 __all__ = ['bttbStore2017']
 
 #======================================================================
@@ -171,31 +171,21 @@ class bttbStore2017(bttbPage):
         script_list = ['__JAVASCRIPTPATH__/bttbStore2017.js'
                       , '__CSSPATH__/bttbStore2017.css'
                       ]
-
-        first_name = ''
-        last_name = ''
-        email = ''
-        phone = ['','','']
-        if self.requestor is not None:
-            first_name = self.requestor.first
-            last_name = self.requestor.last
-            email = self.requestor.email
-            phone = PhoneParts( self.requestor.phone )
-
-        script_list.append( '''JS: var member_info = { 'first_name' : '%s'
-               , 'last_name'     : '%s'
-               , 'email'         : '%s'
-               , 'night_phone_a' : '%s'
-               , 'night_phone_b' : '%s'
-               , 'night_phone_c' : '%s'
-               };''' % (first_name, last_name, email, phone[0], phone[1], phone[2]) )
-
+        script_list.append( 'JS: %s' % self.requestor_as_member_info() )
         return script_list
 
     #----------------------------------------
     def content(self):
         ''':return: a string with the content for this web page.'''
         html = title_html()
+
+        # Only embed the scripts if in testing mode
+        if 'test' in self.params:
+            html += """
+<script type='text/javascript' src='/js/bttbStore2017.js'></script>
+<link rel='stylesheet' href='/css/bttbStore20172.css'>
+<script> %s </script>""" % self.requestor_as_member_info()
+
         html += item_html( 'allin' )
         html += item_html( 'saturday' )
         html += item_html( 'parade' )

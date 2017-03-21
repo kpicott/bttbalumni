@@ -110,16 +110,16 @@ class bttbContentPanel(object):
         self.requestor = None
 
         cookie = Cookie.SimpleCookie()
+        cookie.load(os.environ['HTTP_COOKIE'])
 
         # If the requester wasn't already present then look in the cookies
         if cookie.has_key('User'):
-            self.requestor = alumni.getMemberFromId( int(cookie['User']) )
+            self.requestor = alumni.getMemberFromId( int(cookie['User'].value) )
 
         if self.requestor is not None:
             self.requestor_id = self.requestor.id
             try:
                 # Look for the last visited time, so that only new stuff will be shown
-                cookie.load(os.environ['HTTP_COOKIE'])
                 if cookie.has_key('WWhenH'):
                     try:
                         last_visit = datetime.fromtimestamp( int(cookie['WWhenH'].value)/1000 )

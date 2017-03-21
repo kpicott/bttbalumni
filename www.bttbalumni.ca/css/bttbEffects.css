@@ -103,6 +103,7 @@ a:active.grey_blur
     background-color:   #af4c50;
     color:				#fff;
     text-align:			center;
+    font-size:			12px;
     border-radius:		6px;
     padding:			5px 0;
     position:			absolute;
@@ -136,7 +137,7 @@ a:active.grey_blur
 */
 .coming-soon
 {
-	cursor:		default;
+	cursor:		wait;
 	opacity:	0.6;
 }
 
@@ -167,6 +168,20 @@ a:active.grey_blur
     display:			inline-block;
 	background-color:	#eeee22;
 }
+
+/*----------------------------------------------------------------------
+  When hovering over a link that uses onclick instead of href there won't
+  be a cursor indicating that it is a link, so add that explicitly.
+*/
+.non-link
+{
+    cursor: pointer;
+}
+.non-link:hover
+{
+    cursor: pointer;
+}
+
 
 /* ==================================================================
    Copyright (C) Kevin Peter Picott. All rights reserved. These coded

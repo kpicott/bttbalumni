@@ -1,0 +1,291 @@
+/*
+	The store page shows the information about the items for sale at the reunion.
+
+	The overall layout consists of a title section in two parts, a main store
+	section, and a shopping cart. On first opening the page will look like this:
+
+		|<----------------------------- 800px ------------------------------>
+		+--------------------------------------------+----------------------+
+		| .header                                    |  .golf_link          |
+		+--------------------------------------------+----------------------+
+		| .title                                                            |
+		|                                                                   |
+		+-------------------------------------------------------------------+
+		.item_big (for the all-in item)
+		+-------------------------------------------------------------------+
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
+		+-------------------------------------------------------------------+
+		.item (for all of the other items)
+		+-------------------------------------------------------------------+
+		|+---------------+                    +------+ +-----------------+  |
+		|| .image        |  .info             |.price| |.button_container|  |
+		|+---------------+                    +------+ +-----------------+  |
+		+-------------------------------------------------------------------+
+		+-------------------------------------------------------------------+
+		|  Your shopping cart is empty. Add items with the buttons above.   |
+		+--------------------------------------------------------+----------+
+		| +-----------------+  +------------------+              |          |
+		| | Pay with Paypal |  | Print Order Form |        Total |   $$$    |
+		| +-----------------+  +------------------+              |          |
+		+--------------------------------------------------------+----------+
+
+	When you click any order button the "empty" message is removed and a new
+	line is added based on what you ordered.
+
+	In addition, the first time you order anything a comment box is added
+	for instructions (max 200 characters due to a limitation of Paypal)
+
+		+--------------------------+-----------------------------+
+		|                          |                             |
+		|  Special Instructions:   |                             |
+		|                          |                             |
+		+--------------------------+-----------------------------+
+*/
+
+/*======================================================================
+	Subsections of the entire cart
+======================================================================*/
+
+/*----------------------------------------
+  Title images at the top
+*/
+#header
+{
+	display:		inline-block;
+	width:			490px;
+	height:			40px;
+	background:		url('/Images70th/Store/storeHeaderLeft.jpg') no-repeat top left;
+}
+#header:hover
+{
+	background:		url('/Images70th/Store/storeHeaderLeft_hover.jpg') no-repeat top left;
+}
+#golf_link
+{
+	display:		inline-block;
+	width:			300px;
+	height:			40px;
+	margin-left:	5px;
+	background:		url('/Images70th/Store/storeHeaderRight.jpg') no-repeat top left;
+}
+#golf_link:hover
+{
+	background:		url('/Images70th/Store/storeHeaderRight_hover.jpg') no-repeat top left;
+}
+#title
+{
+	display:		block;
+	width:			800px;
+	height:			80px;
+	margin-top:		-5px;
+	background:		url('/Images70th/Store/storeTitle.jpg') no-repeat top left;
+}
+
+/*----------------------------------------
+  Section containing the items up for sale
+*/
+div.item
+{
+	display:			block;
+	width:				780px;
+	height:				110px;
+	padding:			10px 10px 10px 10px;
+	background-color:	white;
+}
+div.item_big
+{
+	display:			block;
+	width:				780px;
+	height:				160px;
+	padding:			10px 10px 10px 10px;
+	background-color:	white;
+}
+div.item .image
+{
+	float:			left;
+	width:			100px;
+	height:			100px;
+	text-align:		center;
+}
+div.item_big .image
+{
+	float:			left;
+	width:			150px;
+	height:			150px;
+	text-align:		center;
+}
+div.item .info
+{
+	float:			left;
+	width:			375px;
+	font-size:		16px;
+	text-align:		left;
+	margin-left:	20px;
+}
+div.item_big .info
+{
+	float:			left;
+	width:			325px;
+	font-size:		16px;
+	text-align:		left;
+	margin-left:	20px;
+}
+div.price
+{
+	float:			left;
+	width:			100px;
+	height:			100px;
+	text-align:		center;
+	padding-left:	10px;
+	padding-right:	10px;
+}
+div.button_container
+{
+	float:			left;
+	width:			165px;
+	height:			100px;
+	text-align:		center;
+	vertical-align:	middle;
+}
+div.payment_buttons
+{
+	display:		block;
+}
+div.item ul
+{
+    list-style-position: inside;
+}
+
+/*----------------------------------------
+  Next is the buttons for ordering
+*/
+div.order_buttons
+{
+	display:	block;
+	width:		800px;
+	text-align:	center;
+}
+div.order_button
+{
+	display:	inline-block;
+	float:		left;
+}
+
+/*======================================================================
+  Cart lines all look the same, though content will vary
+  	<div class="cart_line">
+		<div class="name">  </div>
+		<div class="value"> </div>
+		<div class="info">  </div>
+		<div class="cost">  </div>
+	</div>
+*/
+#cart_contents
+{
+	display:			block;
+	width:				780px;
+	padding:			10px 10px 10px 10px;
+	background-color:	#ffeeee;
+	font-family:		Raleway;
+	border-collapse:	collapse;
+}
+
+#cart table
+{
+	border:		1px solid #ddd;
+}
+
+#cart td, #cart th
+{
+	border:		1px solid #ddd;
+	padding:	8px;
+}
+
+#cart tr
+{
+	width:	100%;
+}
+
+#cart tr:nth-child(even)
+{
+	background-color:	#f2f2f2;
+	width:			 	100%;
+}
+
+#cart tr:hover
+{
+	background-color:	#ddd;
+}
+
+#cart th
+{
+	padding-top:		12px;
+	padding-bottom:		12px;
+	text-align:			left;
+	background-color:	#aeaeae;
+	color:				white;
+}
+
+div.cart_line
+{
+	display:	block;
+	border:		1px solid #ddd;
+}
+div.cart_line .name
+{
+	font-style:	italic;
+}
+div.cart_line .value
+{
+}
+div.cart_line .info
+{
+	font-style:	italic;
+}
+div.cart_line cost
+{
+	font-weight:	bold;
+	width:			50px;
+}
+
+/*----------------------------------------
+  Total line is sectioned differently
+  	<div class="cart_total_line">
+		<div class="info"> </div>
+		<div class="cost"> </div>
+	</div>
+*/
+div.cart_total_line
+{
+}
+div.cart_total_line .info
+{
+}
+div.cart_total_line .cost
+{
+	width:			50px;
+}
+
+/*----------------------------------------
+  Instruction line is sectioned differently
+  	<div class="cart_instruction_line">
+		<div class="info">  </div>
+		<div class="field"> </div>
+	</div>
+*/
+div.cart_instruction_line
+{
+	display:	block;
+}
+div.cart_instruction_line .info
+{
+	font-style:	italic;
+	float:		left;
+}
+div.cart_instruction_line .field
+{
+	float:	left;
+}
+
