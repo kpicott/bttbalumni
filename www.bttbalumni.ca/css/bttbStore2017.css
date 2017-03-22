@@ -182,7 +182,7 @@ div.order_button
 		<div class="cost">  </div>
 	</div>
 */
-#cart_contents
+.cart_contents
 {
 	display:			block;
 	width:				780px;

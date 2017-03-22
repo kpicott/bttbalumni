@@ -53,9 +53,12 @@ def shirt_options(selector_name):
 #======================================================================
 def title_html():
     ''':return: HTML implementing the first section with the title information'''
-    return MapLinks( '''send:(info@bttbalumni.ca,<div class='box_shadow' id='header'></div>)
-              link:(/cgi-bin/nav.cgi#golf2017,<div class='box_shadow' id='golf_link'></div>)
-              <div class='box_shadow' id='title'></div>''' )
+    return MapLinks( '''
+<div class='store-title'>
+    send:(info@bttbalumni.ca,<div class='box_shadow' id='header'></div>)
+    link:(/cgi-bin/nav.cgi#golf2017,<div class='box_shadow' id='golf_link'></div>)
+    <div class='box_shadow' id='title'></div>
+</div>''' )
 
 #======================================================================
 #
@@ -149,7 +152,7 @@ def item_html( item_name ):
 #======================================================================
 def cart_html():
     ''':return: HTML implement the cart contents (starts blank)'''
-    return '''<div id='cart_contents' class='box_shadow'>
+    return '''<div id='cart_contents' class='cart_contents box_shadow'>
               <h2>Your cart is currently empty - add items above.</h2></div>'''
 
 #======================================================================
@@ -177,15 +180,16 @@ class bttbStore2017(bttbPage):
     #----------------------------------------
     def content(self):
         ''':return: a string with the content for this web page.'''
-        html = title_html()
 
         # Only embed the scripts if in testing mode
-        if 'test' in self.params:
-            html += """
-<script type='text/javascript' src='/js/bttbStore2017.js'></script>
+        html = ''
+        if self.param('test'):
+            html = """
+<script type='text/javascript' src='/js/bttbStore20172.js'></script>
 <link rel='stylesheet' href='/css/bttbStore20172.css'>
 <script> %s </script>""" % self.requestor_as_member_info()
 
+        html += title_html()
         html += item_html( 'allin' )
         html += item_html( 'saturday' )
         html += item_html( 'parade' )

@@ -4,6 +4,7 @@
   in the second row of the page container with a horizontally aligned set
   of menus. You create the menu as follows;
 
+  <div class="nav-container">
   	<div class="nav">
 		<a href="#">MAIN_MENU_LINK</a>
 
@@ -17,6 +18,7 @@
 			</div>
 		</div>
 	</div>
+  </div>
 
     .nav-container
 	+----------------------------------------------------------+
@@ -45,7 +47,7 @@
 {
     overflow:			hidden;
     background-color:	#333;
-	margin:				0px auto;
+	margin:				0 auto;
 	max-width:			1024px;
 }
 
@@ -78,7 +80,6 @@
 {
     font-size:			16px;    
     border:				none;
-    outline:			none;
     color:				white;
     padding:			14px 16px;
     background-color:	inherit;
@@ -102,7 +103,7 @@
     position:			absolute;
     background-color:	#f9f9f9;
     min-width:			160px;
-    box-shadow:			0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow:			0 8px 16px 0 rgba(0,0,0,0.2);
 	z-index:			99;
 }
 

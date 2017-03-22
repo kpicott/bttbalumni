@@ -64,13 +64,6 @@ div.splash
 	height:		300px;
 	z-index:	2;
 }
-div.splash_inset
-{
-	position:	absolute;
-	top:		10px;
-	left:		10px;
-	z-index:	1;
-}
 
 /*----------------------------------------
   Section containing the items up for sale
