@@ -528,7 +528,7 @@ function rebuild_cart()
 	total_row.appendChild( total_col );
 	//
 	total_col = document.createElement( "th" );
-	total_col.innerHTML = "including HST of $" + total_tax.toFixed(2);
+	total_col.innerHTML = "plus HST of $" + total_tax.toFixed(2);
 	total_row.appendChild( total_col );
 	//
 	total_cost += total_tax;
@@ -681,7 +681,7 @@ function print_cart()
     }
     print_wnd.document.write( "<tr bgcolor='#d2d2d2'>" );
     print_wnd.document.write( "<td>Total</td>" );
-    print_wnd.document.write( "<td>including HST of $" + total_tax.toFixed(2) + "</td>" );
+    print_wnd.document.write( "<td>plus HST of $" + total_tax.toFixed(2) + "</td>" );
 	total_cost += total_tax;
     print_wnd.document.write( "<td align='right'>$" + total_cost.toFixed(2) + "</td>" );
 

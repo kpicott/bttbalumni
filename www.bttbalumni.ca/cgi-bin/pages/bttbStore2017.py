@@ -16,7 +16,7 @@ NOW = datetime.datetime.now()
 EARLY = 'Early'
 if NOW > EARLYBIRD_CUTOFF:
     EARLY = ''
-    
+
 #======================================================================
 #
 # List of available shirt options
@@ -54,10 +54,10 @@ def shirt_options(selector_name):
 def title_html():
     ''':return: HTML implementing the first section with the title information'''
     return MapLinks( '''
-<div class='store-title'>
-    send:(info@bttbalumni.ca,<div class='box_shadow' id='header'></div>)
-    link:(/cgi-bin/nav.cgi#golf2017,<div class='box_shadow' id='golf_link'></div>)
-    <div class='box_shadow' id='title'></div>
+<div class='store-header'>
+    send:(info@bttbalumni.ca,<div class='contact-link box_shadow'></div>)
+    link:(#golf2017,<div class='golf-link box_shadow'></div>)
+    <div class='store-title box_shadow'></div>
 </div>''' )
 
 #======================================================================
@@ -92,7 +92,7 @@ CART_DATA = {
                              , 'size_select'  : ''
                              }
             ,   'parade' :   { 'image'        : 'merch_parade.jpg'
-                             , 'size'         : ''
+                             , 'size'         : '_tall'
                              , 'info'         : '''<b>Sound of Music Parade, Alumni Band</b><ul>
                                                    <li>Includes Shirt as uniform</li>
                                                    <li>Over 300 in the band at the 60<sup>th</sup>!</li>
@@ -130,13 +130,27 @@ CART_DATA = {
             }
 
 #======================================================================
-def item_html( item_name ):
+def item_html( item_name, in_test_mode ):
     ''':return: HTML implementing the given cart item'''
     if item_name not in CART_DATA:
         return ''
 
     cart_item = CART_DATA[item_name]
-    html = "<div class='item%s box_shadow'>" % cart_item['size']
+
+    # In regular mode use item and item_big, in test mode use combined
+    # classes item, item big, and item tall
+    if in_test_mode:
+        if len(cart_item['size']) > 0:
+            item_type = cart_item['size'][1:]
+        else:
+            item_type = "normal"
+        html = "<div class='item %s-item box_shadow'>" % item_type
+    else:
+        if cart_item['size'] == '_tall':
+            html = "<div class='item box_shadow'>"
+        else:
+            html = "<div class='item%s box_shadow'>" % cart_item['size']
+
     html += "<div class='image'><img src='/Images70th/Store/%s'></div>" % cart_item['image']
     html += "<div class='info'>%s</div>" % cart_item['info']
     html += "<div class='price'><img src='/Images70th/Store/%s'></div>" % cart_item['cost_image']
@@ -185,16 +199,16 @@ class bttbStore2017(bttbPage):
         html = ''
         if self.param('test'):
             html = """
-<script type='text/javascript' src='/js/bttbStore20172.js'></script>
+<script type='text/javascript' src='/js/bttbStore2017.js'></script>
 <link rel='stylesheet' href='/css/bttbStore20172.css'>
 <script> %s </script>""" % self.requestor_as_member_info()
 
         html += title_html()
-        html += item_html( 'allin' )
-        html += item_html( 'saturday' )
-        html += item_html( 'parade' )
-        html += item_html( 'shirt' )
-        html += item_html( 'hat' )
+        html += item_html( 'allin', self.param('test') )
+        html += item_html( 'saturday', self.param('test') )
+        html += item_html( 'parade', self.param('test') )
+        html += item_html( 'shirt', self.param('test') )
+        html += item_html( 'hat', self.param('test') )
         html += cart_html()
 
         return html

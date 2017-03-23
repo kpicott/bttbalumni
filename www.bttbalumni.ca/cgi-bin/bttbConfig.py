@@ -6,6 +6,9 @@ import os
 import os.path
 from urlparse import urlparse
 
+# Global testing mode
+TEST_MODE = False
+
 MENU_BUTTON_WIDTH = 109
 MENU_BUTTON_HEIGHT = 31
 SUBMENU_BUTTON_WIDTH = 77
@@ -34,12 +37,14 @@ __all__ = [ "ArchiveFormat",
             "EmailLink",
             "EmbeddedJS",
             "EmbeddedCSS",
+            "EnableTestMode",
             "Error",
             "ErrorMsg",
             "ErrorsInHtml",
             "HomeHref",
             "ImagePath",
             "InstrumentList",
+            "InTestMode",
             "JavascriptPath",
             "LoginRequired",
             "MailChair",
@@ -549,17 +554,27 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
     explicit <a> tag) so that the proper cookies and parameters are
     passed on.
     """
-    if not tooltip: tooltip = link
     (scheme, netloc, url, params, query, fragment) = urlparse(newUrl)
     if len(fragment) > 0:
-        newUrl = '/#' + fragment
-        if not link: link = fragment
-        if not tooltip: tooltip = fragment
-    if not link: link = newUrl
-    if not tooltip: tooltip = link
-    if len(colour) > 0: colour = "style='background:%s;'" % colour
+        if InTestMode():
+            newUrl = '#' + fragment
+        else:
+            newUrl = '/#' + fragment
+        if link is None:
+            link = fragment
+        if tooltip is None:
+            tooltip = fragment
+    if link is None:
+        link = newUrl
+    if tooltip is None:
+        tooltip = link
+    if len(colour) > 0:
+        colour = "style='background:%s;'" % colour
     newUrl = re.sub("'", "\\'", newUrl)
-    href = "<a %s href=\"javascript:openPage('%s')\"" % (colour, newUrl)
+    if InTestMode():
+        href = "<a title='%s' %s href=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
+    else:
+        href = "<a title='%s' %s href=\"javascript:openPage('%s')\"" % (tooltip, colour, newUrl)
     href += ">%s</a>" % link
     return href
 
@@ -643,6 +658,21 @@ def EmbeddedCSS(style):
         html += MapLinks( style )
     html += '</style>'
     return html
+
+#======================================================================
+def EnableTestMode():
+    """
+    Set the global state to be in testing mode
+    """
+    global TEST_MODE
+    TEST_MODE = True
+
+#======================================================================
+def InTestMode():
+    """
+    Check the global test mode state
+    """
+    return TEST_MODE
 
 #======================================================================
 def EmbeddedJS(script):

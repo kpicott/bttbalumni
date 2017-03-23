@@ -7,7 +7,7 @@ import re
 import os
 import Cookie
 from bttbDB import bttbDB
-from bttbConfig import MapLinks, ErrorMsg, PagePath
+from bttbConfig import MapLinks, ErrorMsg, PagePath, EnableTestMode
 import pages
 from bttbAlumni import bttbAlumni
 from pages.bttbPage import bttbPage
@@ -36,6 +36,9 @@ class bttbContentPanel(object):
     #----------------------------------------------------------------------
     def __init__(self, init_params):
         self.params = init_params
+
+        if 'test' in init_params:
+            EnableTestMode()
 
         # Who requested the page, defaults to unknown
         self.requestor_id = UNKNOWN_ID
