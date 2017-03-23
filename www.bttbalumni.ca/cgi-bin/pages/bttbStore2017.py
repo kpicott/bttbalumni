@@ -4,7 +4,7 @@ multi-item Paypal cart.
 """
 import datetime
 from bttbPage import bttbPage
-from bttbConfig import MapLinks
+from bttbConfig import MapLinks, InTestMode
 __all__ = ['bttbStore2017']
 
 #======================================================================
@@ -130,7 +130,7 @@ CART_DATA = {
             }
 
 #======================================================================
-def item_html( item_name, in_test_mode ):
+def item_html( item_name ):
     ''':return: HTML implementing the given cart item'''
     if item_name not in CART_DATA:
         return ''
@@ -139,7 +139,7 @@ def item_html( item_name, in_test_mode ):
 
     # In regular mode use item and item_big, in test mode use combined
     # classes item, item big, and item tall
-    if in_test_mode:
+    if InTestMode():
         if len(cart_item['size']) > 0:
             item_type = cart_item['size'][1:]
         else:
@@ -197,18 +197,18 @@ class bttbStore2017(bttbPage):
 
         # Only embed the scripts if in testing mode
         html = ''
-        if self.param('test'):
+        if InTestMode():
             html = """
 <script type='text/javascript' src='/js/bttbStore2017.js'></script>
 <link rel='stylesheet' href='/css/bttbStore20172.css'>
 <script> %s </script>""" % self.requestor_as_member_info()
 
         html += title_html()
-        html += item_html( 'allin', self.param('test') )
-        html += item_html( 'saturday', self.param('test') )
-        html += item_html( 'parade', self.param('test') )
-        html += item_html( 'shirt', self.param('test') )
-        html += item_html( 'hat', self.param('test') )
+        html += item_html( 'allin' )
+        html += item_html( 'saturday' )
+        html += item_html( 'parade' )
+        html += item_html( 'shirt' )
+        html += item_html( 'hat' )
         html += cart_html()
 
         return html
