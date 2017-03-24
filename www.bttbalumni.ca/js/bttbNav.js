@@ -10,7 +10,12 @@ function load_content(hash_field, search_field)
 {
 	var show_committee_content = false;
 
+	// Temporary loading message
     $('#content').html( 'Loading...' );
+
+	// Shut off any document-ready processing from this page
+	$(document).ready(function() {});
+
 	location.hash = hash_field;
 
 	var url_params = [];

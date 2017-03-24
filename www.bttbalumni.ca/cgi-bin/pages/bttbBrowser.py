@@ -9,36 +9,30 @@ from bttbConfig import *
 __all__ = ['bttbBrowser']
 
 class bttbBrowser(bttbPage):
-	def __init__(self):
-		bttbPage.__init__(self)
-	
-	def title(self): return 'Browser Information'
+    def __init__(self):
+        bttbPage.__init__(self)
+    
+    def title(self): return 'Browser Information'
 
-	def scripts(self):	return ['__JAVASCRIPTPATH__/browser.js']
-
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-		html = """
-		<form method='POST' onsubmit='setBrowserInfo(); return true;' action='javascript:setBrowserInfo();'>
-		<div id='browserInfo'>
-		<input type='submit' value='Click here to load browser info'>
-		</div>
-		</form>
-		"""
-		return html
+    def content(self):
+        """
+        Return a string with the content for this web page.
+        """
+        html = """
+        <script type='text/javascript' src='/js/browser.js'></script>
+        <form method='POST' onsubmit='setBrowserInfo(); return true;' action='javascript:setBrowserInfo();'>
+        <div id='browserInfo'>
+        <input type='submit' value='Click here to load browser info'>
+        </div>
+        </form>
+        """
+        return html
 
 # ==================================================================
 
-import unittest
-class testPrintChart(unittest.TestCase):
-	def testDump(self):
-		printChartPage = bttbParade()
-		print printChartPage.content()
-	
 if __name__ == '__main__':
-	unittest.main()
+    TEST_PAGE = bttbBrowser()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

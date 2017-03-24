@@ -22,26 +22,13 @@ class bttbGolf2017(bttbPage):
     def title(self): return 'BTTB 70th Anniversary Reunion Golf Tournament'
 
     #----------------------------------------
-    def scripts(self):
-        script_list = ['__JAVASCRIPTPATH__/bttbGolf2017.js'
-                      , '__CSSPATH__/bttbGolf2017.css'
-                      ]
-
-        script_list.append( 'JS: %s' % self.requestor_as_member_info() )
-        return script_list
-
-    #----------------------------------------
     def content(self):
         """
         Return a string with the content for this web page.
         """
-        html = ''
-
-        # Only embed the scripts if in testing mode
-        if 'test' in self.params:
-            html = """
+        html = """
 <script type='text/javascript' src='/js/bttbGolf2017.js'></script>
-<link rel='stylesheet' href='/css/bttbGolf20172.css'>
+<link rel='stylesheet' href='/css/bttbGolf2017.css'>
 <script> %s </script>""" % self.requestor_as_member_info()
 
         html += MapLinks( """

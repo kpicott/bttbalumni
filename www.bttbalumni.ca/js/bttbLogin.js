@@ -125,8 +125,6 @@ function do_logout()
 	delete_cookie ('OnCommittee');
 	delete_cookie ('FirstName');
 	delete_cookie ('FullName');
-    var newUrl = location.href.replace( /:[0-9]+/, "" );
-	location.href = newUrl;
 	location.reload();
 	return 1;
 }
@@ -183,7 +181,7 @@ function check_login()
 						AddNewUser( id, onCommittee, firstName, fullName );
 						// Reload the page so that all of the elements reflect the new user
 						close_login();
-            			document.location.href = document.location.hash + ':' + id + document.location.search;
+            			document.location.href = '/' + document.location.search + document.location.hash;
 						document.location.reload();
 					}
 					else

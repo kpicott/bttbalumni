@@ -17,16 +17,9 @@ class bttbDbQuery(bttbPage):
         ''':return: The page title'''
         return 'BTTB Alumni Committee database queries'
 
-    def scripts(self):
-        ''':return: The list of scripts to load in this page'''
-        return ['__JAVASCRIPTPATH__/bttbDbForm.js']
-
     def content(self):
         ''':return: a string with the content for this web page.'''
-        # Only embed the script if in testing mode
-        html = ''
-        if InTestMode():
-            html = "<script type='text/javascript' src='/js/bttbDbForm.js'></script>"
+        html = "<script type='text/javascript' src='/js/bttbDbForm.js'></script>"
 
         queries = (
              ("All Profiles", "all", "Profile information for all of the alumni currently")

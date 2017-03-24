@@ -5,7 +5,7 @@ Show the registration page
 import re
 import bttbMember
 from bttbAlumni import bttbAlumni
-from bttbConfig import ErrorMsg, MapLinks, InTestMode, InstrumentList, PositionList
+from bttbConfig import ErrorMsg, MapLinks, InstrumentList, PositionList
 from bttbPage import bttbPage
 
 __all__ = ['bttbRegister']
@@ -50,20 +50,11 @@ class bttbRegister(bttbPage):
         ''':return: The page title'''
         return 'BTTB Alumni Registration'
 
-    def scripts(self):
-        ''':return: The list of scripts to load in this page'''
-        return [ '__CSSPATH__/formValidation.css',
-                 '__JAVASCRIPTPATH__/formValidation.js',
-                 '__JAVASCRIPTPATH__/bttbRegister.js' ]
-
     def content(self):
         ''':return: a string with the content for this web page.'''
-        # Only embed the scripts if in testing mode
-        html = ''
-        if InTestMode():
-            html = """<script type='text/javascript' src='/js/formValidation.js'></script>
-                      <script type='text/javascript' src='/js/bttbRegister.js'></script>
-                      <link rel='stylesheet' href='/css/formValidation.css' />"""
+        html = """<script type='text/javascript' src='/js/formValidation.js'></script>
+                  <script type='text/javascript' src='/js/bttbRegister.js'></script>
+                  <link rel='stylesheet' href='/css/formValidation.css' />"""
 
         try:
             member_id = int(self.param('id'))

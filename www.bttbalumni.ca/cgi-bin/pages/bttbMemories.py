@@ -4,7 +4,7 @@ Page that shows the current list of memories, in order by approximate date.
 
 from bttbAlumni import bttbAlumni
 from bttbPage import bttbPage
-from bttbConfig import Error, MapLinks, InTestMode
+from bttbConfig import Error, MapLinks
 from datetime import datetime,timedelta
 __all__ = ['bttbMemories']
 
@@ -26,31 +26,24 @@ class bttbMemories(bttbPage):
         ''':return: The page title'''
         return 'BTTB Alumni Memories'
 
-    def scripts(self):
-        ''':return: The list of scripts to load in this page'''
-        return ['__JAVASCRIPTPATH__/bttbYearFilter.js']
-
     def content(self):
         ''':return: a string with the content for this web page.'''
-        # Only embed the scripts if in testing mode
-        html = ''
-        if InTestMode():
-            html = """<script type='text/javascript' src='/js/bttbMemories.js'></script>
-                      <style>
-                        .recent-memory { display: none; }
-                        input[type=text]
-                        {
-                            width:	100px;
-                            padding:	6px 10px;
-                        }
-                        .date
-                        {
-                            font-size:   16pt;
-                            font-weight: bold;
-                            color:       blue;
-                            padding:     10px 0px 0px 0px;
-                        }
-                      </style>"""
+        html = """<script type='text/javascript' src='/js/bttbMemories.js'></script>
+                  <style>
+                    .recent-memory { display: none; }
+                    input[type=text]
+                    {
+                        width:	100px;
+                        padding:	6px 10px;
+                    }
+                    .date
+                    {
+                        font-size:   16pt;
+                        font-weight: bold;
+                        color:       blue;
+                        padding:     10px 0px 0px 0px;
+                    }
+                  </style>"""
 
         old_news_time = datetime.now() - timedelta(30)
         old_news_time = old_news_time.toordinal()

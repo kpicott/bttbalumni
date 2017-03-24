@@ -14,15 +14,15 @@
 		+-------------------------------------------------------------------+
 		.item_big (for the all-in item)
 		+-------------------------------------------------------------------+
-		|+---------------+                    +------+ +-----------------+  |
-		|| .image        |  .info             |.price| |.button_container|  |
-		|+---------------+                    +------+ +-----------------+  |
+		| +---------------+                    +------+ +-----------------+ |
+		| | .image        |  .info             |.price| |.button_container| |
+		| +---------------+                    +------+ +-----------------+ |
 		+-------------------------------------------------------------------+
 		.item (for all of the other items)
 		+-------------------------------------------------------------------+
-		|+---------------+                    +------+ +-----------------+  |
-		|| .image        |  .info             |.price| |.button_container|  |
-		|+---------------+                    +------+ +-----------------+  |
+		| +---------------+                    +------+ +-----------------+ |
+		| | .image        |  .info             |.price| |.button_container| |
+		| +---------------+                    +------+ +-----------------+ |
 		+-------------------------------------------------------------------+
 		+-------------------------------------------------------------------+
 		|  Your shopping cart is empty. Add items with the buttons above.   |
@@ -59,7 +59,7 @@
 }
 .contact-link
 {
-	display:		inline-block;
+	float:			left;
 	width:			490px;
 	height:			40px;
 	background:		url('/Images70th/Store/storeHeaderLeft.jpg') no-repeat top left;
@@ -75,12 +75,13 @@
 	height:			40px;
 	background:		url('/Images70th/Store/storeHeaderRight.jpg') no-repeat top left;
 }
-.golf-link:hover
+.golf_link:hover
 {
 	background:		url('/Images70th/Store/storeHeaderRight_hover.jpg') no-repeat top left;
 }
 .store-title
 {
+	clear:			both;
 	display:		block;
 	width:			800px;
 	height:			80px;
@@ -93,51 +94,43 @@
 */
 .item
 {
+	overflow:			hidden;
 	display:			block;
-	width:				780px;
-	height:				110px;
+	width:				800px;
 	padding:			10px 10px 10px 10px;
 	background-color:	white;
 }
-.item_big
-{
-	display:			block;
-	width:				780px;
-	height:				160px;
-	padding:			10px 10px 10px 10px;
-	background-color:	white;
-}
+
+/* Variations of item sizing */
+.normal-item		{ height:	120px; }
+.tall-item			{ height:	160px; }
+.big-item			{ height:	170px; }
+.normal-item .info	{ width:	375px; height:	120px; }
+.tall-item   .info	{ width:	375px; height:	140px; }
+.big-item    .info	{ width:	325px; height:	150px; }
+.normal-item .image	{ width:	100px; height:	100px; }
+.tall-item   .image	{ width:	100px; height:	100px; }
+.big-item    .image	{ width:	150px; height:	150px; }
+
+/* Common item layout paramters */
 .item .image
 {
-	float:			left;
-	width:			100px;
-	height:			100px;
-	text-align:		center;
-}
-.item_big .image
-{
-	float:			left;
-	width:			150px;
-	height:			150px;
-	text-align:		center;
+	float:		left;
+	text-align:	center;
 }
 .item .info
 {
 	float:			left;
-	width:			375px;
 	font-size:		16px;
 	text-align:		left;
 	margin-left:	20px;
 }
-.item_big .info
+.item ul
 {
-	float:			left;
-	width:			325px;
-	font-size:		16px;
-	text-align:		left;
-	margin-left:	20px;
+    list-style-position: inside;
 }
-.price
+
+.item .price
 {
 	float:			left;
 	width:			100px;
@@ -146,36 +139,19 @@
 	padding-left:	10px;
 	padding-right:	10px;
 }
-.button_container
+
+.item .button_container
 {
-	float:			left;
+	float:			right;
 	width:			165px;
 	height:			100px;
 	text-align:		center;
 	vertical-align:	middle;
 }
-.payment_buttons
+.item .button_container input[type="text"]
 {
-	display:		block;
-}
-.item ul
-{
-    list-style-position: inside;
-}
-
-/*----------------------------------------
-  Next is the buttons for ordering
-*/
-.order_buttons
-{
-	display:	block;
-	width:		800px;
-	text-align:	center;
-}
-.order_button
-{
-	display:	inline-block;
 	float:		left;
+	padding:	2px 4px;
 }
 
 /*======================================================================
@@ -190,41 +166,41 @@
 .cart_contents
 {
 	display:			block;
-	width:				780px;
+	width:				800px;
 	padding:			10px 10px 10px 10px;
 	background-color:	#ffeeee;
 	font-family:		Raleway;
 	border-collapse:	collapse;
 }
 
-#cart table
+.cart table
 {
 	border:		1px solid #ddd;
 }
 
-#cart td, #cart th
+.cart td, .cart th
 {
 	border:		1px solid #ddd;
 	padding:	8px;
 }
 
-#cart tr
+.cart tr
 {
 	width:	100%;
 }
 
-#cart tr:nth-child(even)
+.cart tr:nth-child(even)
 {
 	background-color:	#f2f2f2;
 	width:			 	100%;
 }
 
-#cart tr:hover
+.cart tr:hover
 {
 	background-color:	#ddd;
 }
 
-#cart th
+.cart th
 {
 	padding-top:		12px;
 	padding-bottom:		12px;
@@ -242,9 +218,6 @@
 {
 	font-style:	italic;
 }
-.cart_line .value
-{
-}
 .cart_line .info
 {
 	font-style:	italic;
@@ -254,6 +227,10 @@
 	font-weight:	bold;
 	width:			50px;
 }
+.payment_buttons
+{
+	display:		block;
+}
 
 /*----------------------------------------
   Total line is sectioned differently
@@ -262,12 +239,6 @@
 		<div class="cost"> </div>
 	</div>
 */
-.cart_total_line
-{
-}
-.cart_total_line .info
-{
-}
 .cart_total_line .cost
 {
 	width:			50px;
@@ -294,3 +265,11 @@
 	float:	left;
 }
 
+/* ==================================================================
+   Copyright (C) Kevin Peter Picott. All rights reserved. These coded
+   instructions, statements and computer programs contain unpublished
+   information proprietary to Kevin Picott, which is protected by the
+   Canadian and US federal copyright law and may not be  disclosed to
+   third  parties  or  duplicated or  copied,  in whole  or in  part,
+   without   the  prior  written   consent  of  Kevin  Peter  Picott.
+   ==================================================================*/

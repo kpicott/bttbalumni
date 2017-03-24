@@ -69,11 +69,25 @@
 {
 	border:			1px dashed #fff;
 	border-color:	#fff rgba(255, 255, 255, 0.5);
+	padding:		5px;
 	height:			40px;
-	font-size:		30px;
+	font-size:		13pt;
 	font-style:		italic;
 	text-align:		center;
 	color:			#fff;
+}
+
+.banner-link
+{
+	font-size:		13pt;
+	font-style:		italic;
+	color:			#fff;
+}
+
+.banner-link:hover,
+.banner-link:focus
+{
+	color:	blue;
 }
 
 .bk
@@ -359,6 +373,32 @@ input[type=text], input[type=password]
     }
 }
 
+/*======================================================================
+  Formatting for news articles
+*/
+.newsTitle
+{
+    font-size:   12pt;
+    font-weight: bold;
+    color:       blue;
+    padding:     0px 0px 0px 0px;
+}
+.newsTitle .newsDate
+{
+    font-size:   6pt;
+    color:       blue;
+    padding:     0px 0px 0px 10px;
+}
+.newsArticle
+{
+    font:        10.5pt/16pt Raleway, Tahoma, Arial;
+    color:       #411;
+    margin:      0px 0px 10px 30px;
+}
+.newsArticle p
+{
+    margin: 0px auto;
+}
 /* ==================================================================
    Copyright (C) Kevin Peter Picott. All rights reserved. These coded
    instructions, statements and computer programs contain unpublished

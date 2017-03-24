@@ -582,9 +582,9 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
         colour = "style='background:%s;'" % colour
     newUrl = re.sub("'", "\\'", newUrl)
     if InTestMode():
-        href = "<a title='%s' %s onclick=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
+        href = "<a class='non-link' title='%s' %s onclick=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
     else:
-        href = "<a title='%s' %s href=\"javascript:openPage('%s')\"" % (tooltip, colour, newUrl)
+        href = "<a class='non-link' title='%s' %s href=\"javascript:openPage('%s')\"" % (tooltip, colour, newUrl)
     href += ">%s</a>" % link
     return href
 

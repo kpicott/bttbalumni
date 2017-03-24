@@ -64,13 +64,6 @@ div.splash
 	height:		300px;
 	z-index:	2;
 }
-div.splash_inset
-{
-	position:	absolute;
-	top:		10px;
-	left:		10px;
-	z-index:	1;
-}
 
 /*----------------------------------------
   Section containing the items up for sale
@@ -78,16 +71,16 @@ div.splash_inset
 div.golf_item
 {
 	position:			relative;
-	width:				780px;
-	height:				110px;
+	width:				800px;
+	height:				120px;
 	padding:			10px 10px 10px 10px;
 	background-color:	white;
 }
 div.golf_info
 {
 	float:			left;
-	width:			405px;
-	font-size:		16px;
+	width:			355px;
+	height:			100px;
 	text-align:		left;
 }
 div.golf_image
@@ -103,13 +96,13 @@ div.golf_price
 	width:			100px;
 	height:			100px;
 	text-align:		center;
-	padding-left:	10px;
-	padding-right:	10px;
+	margin-left:	10px;
+	margin-right:	10px;
 }
 div.golf_button_container
 {
-	float:			left;
-	width:			155px;
+	float:			right;
+	width:			165px;
 	height:			100px;
 	text-align:		center;
 	vertical-align:	middle;
@@ -118,9 +111,13 @@ div.golf_payment_buttons
 {
 	display:		block;
 }
-div.golf_item ul
+div.golf_info ul
 {
     list-style-position: inside;
+}
+div.golf_info li
+{
+	font-size:		9.5pt;
 }
 
 /*----------------------------------------
@@ -150,7 +147,7 @@ div.order_button
 #cart_contents
 {
 	display:			block;
-	width:				780px;
+	width:				800px;
 	padding:			10px 10px 10px 10px;
 	background-color:	#ffeeee;
 	font-family:		Raleway;

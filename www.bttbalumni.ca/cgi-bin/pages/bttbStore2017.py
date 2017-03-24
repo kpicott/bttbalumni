@@ -4,7 +4,7 @@ multi-item Paypal cart.
 """
 import datetime
 from bttbPage import bttbPage
-from bttbConfig import MapLinks, InTestMode
+from bttbConfig import MapLinks
 __all__ = ['bttbStore2017']
 
 #======================================================================
@@ -137,19 +137,12 @@ def item_html( item_name ):
 
     cart_item = CART_DATA[item_name]
 
-    # In regular mode use item and item_big, in test mode use combined
-    # classes item, item big, and item tall
-    if InTestMode():
-        if len(cart_item['size']) > 0:
-            item_type = cart_item['size'][1:]
-        else:
-            item_type = "normal"
-        html = "<div class='item %s-item box_shadow'>" % item_type
+    if len(cart_item['size']) > 0:
+        item_type = cart_item['size'][1:]
     else:
-        if cart_item['size'] == '_tall':
-            html = "<div class='item box_shadow'>"
-        else:
-            html = "<div class='item%s box_shadow'>" % cart_item['size']
+        item_type = "normal"
+
+    html = "<div class='item %s-item box_shadow'>" % item_type
 
     html += "<div class='image'><img src='/Images70th/Store/%s'></div>" % cart_item['image']
     html += "<div class='info'>%s</div>" % cart_item['info']
@@ -183,24 +176,11 @@ class bttbStore2017(bttbPage):
         return 'BTTB 70th Anniversary Reunion Events'
 
     #----------------------------------------
-    def scripts(self):
-        ''':return: The list of scripts to load in this page'''
-        script_list = ['__JAVASCRIPTPATH__/bttbStore2017.js'
-                      , '__CSSPATH__/bttbStore2017.css'
-                      ]
-        script_list.append( 'JS: %s' % self.requestor_as_member_info() )
-        return script_list
-
-    #----------------------------------------
     def content(self):
         ''':return: a string with the content for this web page.'''
-
-        # Only embed the scripts if in testing mode
-        html = ''
-        if InTestMode():
-            html = """
+        html = """
 <script type='text/javascript' src='/js/bttbStore2017.js'></script>
-<link rel='stylesheet' href='/css/bttbStore20172.css'>
+<link rel='stylesheet' href='/css/bttbStore2017.css'>
 <script> %s </script>""" % self.requestor_as_member_info()
 
         html += title_html()

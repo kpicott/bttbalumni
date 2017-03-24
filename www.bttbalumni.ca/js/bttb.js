@@ -71,112 +71,18 @@ function clustrMapError()
 
 //----------------------------------------------------------------------
 //
-// For opening up new pages in the content area
-//
-var _openingPage = false;
-function openPage(url)
-{
-    if( dismissAll ) dismissAll();
-
-    var p = new BTTBUrl.BTTBURLParser(url, 'page.cgi');
-    if( BTTBUserId >= 0 )
-    {
-        p.setUser( BTTBUserId );
-    }
-    //
-    // Links within this site go through AJAX, others work as usual
-    //
-    if( (p.getHost().search('bttbalumni') >= 0)
-    ||  (p.getHost() == 'localhost')
-    ||  (p.getHost() == 'band.local')
-    ||  (p.getHost() === '') )
-    {
-		if( _openingPage ) return;
-        _openingPage = true;
-        var pageUrl = p.assembledURL(false);
-        var hashUrl = p.assembledURL(true);
-        if( _debug) alert( "AJAX openPage:" + pageUrl[0] + ' | ' + hashUrl[0] );
-
-        if( useHistory )
-        {
-            dhtmlHistory.add(hashUrl[0], pageUrl[1]);
-        }
-		var content = document.getElementById( 'content' );
-		// Empty out any previous content
-		while( content.hasChildNodes() )
-		{
-			content.removeChild( content.firstChild );
-		}
-
-        content.innerHTML = "Loading...";
-        new Ajax.Request(pageUrl[1],
-        {
-            method: 'get',
-            onComplete: function (req)
-            {
-                if( req.status === undefined
-                ||  req.status === 0
-                ||  (req.status >= 200 && req.status < 300) )
-                {
-                    var response = req.responseText.split('|', 3);
-                    var title = response[0];
-                    var scriptList = response[1].split('#!#');
-                    if( /MSIE/.test(navigator.userAgent) && !window.opera )
-                    {
-                        // Try to force IE to not cache this information
-                        content.innerHTML = "<META HTTP-EQUIV='Pragma' CONTENT='no-cache'>";
-                        content.innerHTML += "<META HTTP-EQUIV='Expires' CONTENT='-1'>";
-                        content.innerHTML += response[2];
-                    }
-                    else
-                    {
-                        content.innerHTML = response[2];
-                    }
-                    if( title.length > 0 ) document.title = title;
-                    if( scriptList.length > 0 ) loadScripts( scriptList );
-                    if( useHistory )
-                    {
-                        document.location.hash = hashUrl[0];
-                    }
-                    _openingPage = false;
-    				if( initializePanel ) initializePanel();
-                }
-                else
-                {
-                    content.innerHTML = '<div class="outlinedTitle">Page Load Error</div>' + req.responseText;
-                    content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
-                    _openingPage = false;
-                }
-            }
-          });
-        onSizeChange();
-    }
-    else
-    {
-        window.open( url, 'external' );
-    }
-}
-
-//----------------------------------------------------------------------
-//
 // For processing form data then opening up a follow-up page.
 // Do not use dhtmlHistory on this page since a user will never want
 // to go back to this intermediate state, only back to their form input.
 //
 function openForm(url,parameters,followUp)
 {
-	var content = document.getElementById( 'content' );
-	// Empty out any previous content
-	while( content.hasChildNodes() )
-	{
-		content.removeChild( content.firstChild );
-	}
-    var p = new BTTBUrl.BTTBURLParser(url, 'page.cgi');
+    var p = new BTTBUrl.BTTBURLParser(url, 'page2.cgi');
     var hashUrl = p.assembledURL(true);
 
     _openingPage = true;
     if( _debug) alert( "AJAX openForm:" + url + ' | ' + parameters + ' | ' + followUp );
-    content.innerHTML = "Processing...";
+    $("#content").html( "Processing..." );
 
     // Force the POST method on forms since the general case will not know
     // how much data is being sent.
@@ -193,7 +99,7 @@ function openForm(url,parameters,followUp)
                 _openingPage = false;
                 if( followUp )
                 {
-                    content.innerHTML = 'Form accepted. Forwarding to ' + followUp;
+                    $("#content").html( 'Form accepted. Forwarding to ' + followUp );
                     if( _debug ) alert( 'Following up to ' + followUp + '\nResults : ' + req.responseText );
                     openPage( followUp );
                 }
@@ -205,24 +111,33 @@ function openForm(url,parameters,followUp)
                     var response = req.responseText.split('|', 3);
                     var title = response[0];
                     var scriptList = response[1].split('#!#');
-                    content.innerHTML = response[2];
-                    if( title.length > 0 ) document.title = title;
-                    if( scriptList.length > 0 ) loadScripts( scriptList );
+                    $("#content").html( response[2] );
+                    if( title.length > 0 )
+					{
+						$("title").html( title );
+					}
+                    if( scriptList.length > 0 )
+					{
+						loadScripts( scriptList );
+					}
                     document.location.hash = hashUrl[0];
-    				if( initializePanel ) initializePanel();
+
+					var initializePanel = initializePanel || {};
+    				if( isFunction(initializePanel) ) initializePanel();
                 }
             }
             else
             {
-                content.innerHTML = '<div class="outlinedTitle">Forms Processing Error</div>' + req.responseText;
-                content.innerHTML += '<p>Please try again. If problem persists please notify the webmaster</p>';
+                $("#content").html( '<div class="outlinedTitle">Forms Processing Error</div>'
+								  + req.responseText
+                				  + '<p>Please try again. If problem persists please notify the webmaster</p>' );
                 _openingPage = false;
                 if( _debug ) alert( 'Check errors please' );
             }
         },
         onFailure: function (req)
         {
-            content.innerHTML = 'ERROR: ' + req.responseText;
+            $("#content").html( 'ERROR: ' + req.responseText );
             _openingPage = false;
             if( _debug ) alert( 'Check errors please' );
         }
@@ -246,66 +161,51 @@ function submitForm(form,url,followUp)
 // doing an AJAX load does not seem to execute them when they are embedded
 // within a loaded file.
 //
-var _loadedScripts = '';
 function loadScripts(scripts)
 {
-    var head = document.getElementsByTagName("head").item(0);
-
     for( var i=0; i<scripts.length; i++ )
     {
-        var file     = scripts[i];
-        var fileRef  = "";
-        var isScript = false;
+        var content = scripts[i];
 
-        // Only load the file if it has not already been loaded.
-        if( _loadedScripts.indexOf(file) >= 0 )
+        // Only load the script if it has not already been loaded.
+        if( $.inArray(content, _loadedScripts) >= 0 )
+		{
             continue;
+		}
+		_loadedScripts.push( content );
 
 		// Raw script code
-		if( file.indexOf("JS:") != -1 )
+		if( content.indexOf("JS:") != -1 )
 		{
-            fileRef = document.createElement('script');
-			if( _debug ) alert( 'Raw Javascript:\n' + file );
-            fileRef.innerHTML = file.substring( file.indexOf("JS:") + 3 );
+			if( _debug ) alert( 'Raw Javascript:\n' + content );
+            $('<script></script>').html( content.substring( content.indexOf("JS:") + 3 ) )
+				.appendTo( "head" );
 		}
 		// Raw CSS code
-		else if( file.indexOf("CSS:") != -1 )
+		else if( content.indexOf("CSS:") != -1 )
 		{
-            fileRef = document.createElement('style');
-			if( _debug ) alert( 'Raw CSS:\n' + file );
-            fileRef.innerHTML = file.substring( file.indexOf("CSS:") + 4 );
+			if( _debug ) alert( 'Raw CSS:\n' + content );
+            $('<style></style>').html( content.substring( content.indexOf("CSS:") + 4 ) )
+				.appendTo( "head" );
 		}
 		// Reference to a Javascript file
-        else if( file.indexOf(".js") != -1 )
+        else if( content.indexOf(".js") != -1 )
         {
             // Javascript files have to create a <script> tag
-            fileRef = document.createElement('script');
-			if( _debug ) alert( 'Javascript file:\n' + file );
-            fileRef.setAttribute("type", "text/javascript");
-            fileRef.setAttribute("src", file);
-        	isScript = true;
+			if( _debug ) alert( 'Javascript file:\n' + content );
+            $('<script></script>').attr("type", "text/javascript")
+					   .attr("src", content)
+					   .appendTo( "head" );
         }
 		// Reference to a CSS file
-        else if( file.indexOf(".css") != -1 )
+        else if( content.indexOf(".css") != -1 )
         {
             // CSS files have to create a <link> tag
-            fileRef=document.createElement("link");
-			if( _debug ) alert( 'CSS file:\n' + file );
-            fileRef.setAttribute("rel",  "stylesheet");
-            fileRef.setAttribute("type", "text/css");
-            fileRef.setAttribute("href", file);
-        	isScript = true;
-        }
-
-        if( fileRef !== "" )
-        {
-            head.appendChild(fileRef);
-
-            // Remember this script being already added to page
-			if( isScript )
-			{
-				_loadedScripts += file + " ";
-			}
+			if( _debug ) alert( 'CSS file:\n' + content );
+            $("<link></link>").attr("rel",  "stylesheet")
+					 .attr("type", "text/css")
+            		 .attr("href", content)
+					 .appendTo( "head" );
         }
     }
 }
@@ -339,72 +239,6 @@ function historyChange(newLocation, historyData)
         // When there was no historyData that means the user typed in
         // something, so translate that into a direct link.
         openPage( '/#' + newLocation );
-    }
-}
-
-// the onload event handler that starts the fading.
-function initialize()
-{
-    if( _debug) alert( "Initialize..." );
-    if( createMenu ) createMenu();
-    //setInterval('swapFade()',wait);
-
-    //----------------------------------------------------------------------
-    if( useHistory )
-    {
-        dhtmlHistory.initialize();
-        if( dhtmlHistory.isFirstLoad() )
-        {
-            if( document.location.hash )
-            {
-                if( _debug ) alert('INITIAL history' + document.location );
-                openPage(document.location.hash + document.location.search);
-            }
-            else
-            {
-                if( _debug ) alert('INITIAL DEFAULT history');
-                openPage("/cgi-bin/page.cgi?page=home");
-            }
-        }
- 
-        //----------------------------------------------------------------------
-        // subscribe to DHTML history change events
-        dhtmlHistory.addListener(historyChange);
-    }
-    else
-    {
-        if( document.location.hash )
-        {
-            if( _debug ) alert('INITIAL no history' + document.location.search);
-            openPage(document.location.hash + document.location.search);
-        }
-        else
-        {
-            if( _debug ) alert('INITIAL DEFAULT no history');
-            openPage("/cgi-bin/page.cgi?page=home");
-        }
-    }
-
-    //----------------------------------------------------------------------
-    // The main menu has a highlight along the edge. Randomly use one of 3
-    // smooth transitions to make this highlight appear.
-    //
-	var mainMenuHighlight = document.getElementById( 'mainMenuHighlight' );
-    if( mainMenuHighlight )
-    {
-        var rnd = Math.random() * 4;
-        if( rnd < 2 )
-        {
-            Effect.Appear( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
-        }
-        else if( rnd < 3 )
-        {
-            Effect.BlindDown( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
-        }
-        else
-        {
-            Effect.SlideDown( "mainMenuHighlight", { duration:1, from:0.0, to:1.0 } );
-        }
     }
 }
 

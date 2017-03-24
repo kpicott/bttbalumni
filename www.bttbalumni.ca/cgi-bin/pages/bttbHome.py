@@ -6,7 +6,7 @@ import os
 from bttbAlumni import bttbAlumni
 from bttbMember import *
 from bttbPage import bttbPage
-from bttbConfig import *
+from bttbConfig import MapLinks, RootPath, EmbeddedJS, EmbeddedCSS
 from datetime import datetime,timedelta
 __all__ = ['bttbHome']
 
@@ -18,53 +18,59 @@ class bttbHome(bttbPage):
         except Exception, e:
             Error( 'Could not find parade information', e )
 
+    #----------------------------------------------------------------------
     def title(self): return 'BTTB Alumni'
 
-    def scripts(self):    return ['__JAVASCRIPTPATH__/browserWarning.js', '__JAVASCRIPTPATH__/bttbPriceless.js']
-
+    #----------------------------------------------------------------------
     def getOldNewsList(self, before):
-        (interest,description) = self.alumni.processQuery("""
+        (interest,description) = self.alumni.process_query("""
         SELECT appeared,title,description FROM news
         WHERE appeared <= '%s'
         ORDER BY appeared DESC
         """ % before)
         return interest
 
+    #----------------------------------------------------------------------
     def getNewsList(self, asOf):
-        (interest,description) = self.alumni.processQuery("""
+        (interest,description) = self.alumni.process_query("""
         SELECT appeared,title,description FROM news
         WHERE appeared > '%s'
         ORDER BY appeared DESC
         """ % asOf)
         return interest
 
+    #----------------------------------------------------------------------
     def getOldNewsCount(self, asOf):
-        (interest,description) = self.alumni.processQuery("""
+        (interest,description) = self.alumni.process_query("""
         SELECT COUNT(*) FROM news
         WHERE appeared <= '%s'
         """ % asOf)
         return interest[0][0]
 
+    #----------------------------------------------------------------------
     def getFriendCount(self):
-        (friends,description) = self.alumni.processQuery("""
+        (friends,description) = self.alumni.process_query("""
         SELECT COUNT(*) from alumni where isFriend = 1
         """)
         return friends[0]
 
+    #----------------------------------------------------------------------
     def getWallaceCount(self):
-        (wallace,description) = self.alumni.processQuery("""
+        (wallace,description) = self.alumni.process_query("""
         SELECT COUNT(*)
         FROM wallace
         """)
         return wallace[0]
 
+    #----------------------------------------------------------------------
     def getMemoryCount(self):
-        (memory,description) = self.alumni.processQuery("""
+        (memory,description) = self.alumni.process_query("""
         SELECT COUNT(*)
         FROM memories
         """)
         return memory[0]
 
+    #----------------------------------------------------------------------
     def contact_content(self):
         """
         Get the HTML that will populate the contact form.
@@ -120,15 +126,46 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 </p>
 </form>""")
 
+    #----------------------------------------------------------------------
+    def add_countdowns(self, countdowns):
+        '''Define the Javscript used in this page'''
+        # The countdowns want to extend the entire page width, but this page
+        # is limited to the 'content' div, which is fixed width. Solve that
+        # by adding the countdown dcontainer to the 'header' div.
+        if len(countdowns) == 0:
+            return ''
+        html = '<div class="ribbon-container">\n'
+        for (days, title) in countdowns:
+            html += '''
+            <div class='ribbon one'>
+                <div class='bk l shadow'>
+                    <div class='arrow top'></div>
+                    <div class='arrow bottom'></div>
+                </div>
+                <div class='skew l shadow'></div>
+                <div class='banner shadow'>
+                    <div>%s days to go : %s</div>
+                </div>
+                <div class='skew r shadow'></div>
+                <div class='bk r shadow'>
+                    <div class='arrow top'></div>
+                    <div class='arrow bottom'></div>
+                </div>
+            </div>
+            ''' % (days, title)
+        html += "</div>\n"
+        return html
+
+    #----------------------------------------------------------------------
     def content(self):
         """
         Return a string with the content for this web page.
         """
         if self.requestor:
-            oldNewsTime = self.requestor.lastVisitTime - timedelta(60)
+            oldNewsTime = self.requestor.lastVisitTime - timedelta(30)
             oldAlumniTime = self.requestor.lastVisitTime - timedelta(14)
         else:
-            oldNewsTime = datetime.now() - timedelta(60)
+            oldNewsTime = datetime.now() - timedelta(30)
             oldAlumniTime = datetime.now() - timedelta(14)
         html = MapLinks( """
         <NOSCRIPT>
@@ -136,10 +173,27 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         <font color='red'>Warning: This site relies heavily on JavaScript,
         which you currently have disabled. Please enable it or use another
         browser in order to enjoy the full experience.</font></b></p>
+        <p>
+        link:(/pages/javascript.html,To learn how to enable Javascript click here.)
+        </p>
         </NOSCRIPT>
         """ )
-        remaining = datetime(2017,6,14) - datetime.now()
-        html += '<div class="countdown">%d days left to the <a href="/#store2017">70<sup>th</sup> Anniversary Celebration</a> and <a href="/#golf2017">Golf Tournament</a>!!!</div>' % remaining.days
+        html += EmbeddedJS(  'browserWarning.js' )
+        html += EmbeddedCSS( 'bttbHome.css' )
+
+        # Add in the active countdowns
+        try:
+            countdown_fd = open(os.path.join(RootPath(),'countdowns.txt'))
+            countdowns = []
+            for line in countdown_fd:
+                (date, event_title) = line.rstrip().split( ',' )
+                (yyyy, mm, dd) = date.split( '-' )
+                remaining = datetime(int(yyyy),int(mm),int(dd)) - datetime.now()
+                countdowns.append( [remaining.days, event_title] )
+            countdown_fd.close()
+            html += self.add_countdowns( countdowns )
+        except Exception:
+            pass
 
         news = self.getNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
         oldNews = []
@@ -243,7 +297,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
                 html += "%s<span class='newsDate'>%s</span></div>" % (title, when.strftime('%Y-%m-%d'))
                 html += "<div class='newsArticle'>%s</div></div>" % article
         else:
-            html += MapLinks("%d old articles not displayed, link:(#home?full=1,click here to see them)" % oldArticleCount)
+            html += MapLinks("%d old articles not displayed, link:(?full=1#home,click here to see them)" % oldArticleCount)
         html += MapLinks( """
         <div class='copyright'>Copyright 2006 BTTB Alumni. All rights reserved.
         <br>

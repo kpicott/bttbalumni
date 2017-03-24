@@ -1,1 +1,1 @@
-2017-06-16,<a href="/#store2017">70th Anniversary Reunion - Buy tickets Now!</a>
+2017-06-16,<a class='banner-link' href='#store2017'>70th Anniversary Reunion - Buy tickets Now!</a>
