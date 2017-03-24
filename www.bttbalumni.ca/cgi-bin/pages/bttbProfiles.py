@@ -3,47 +3,42 @@ URL page that shows all of the globally visible user profile information
 """
 
 from bttbAlumni import bttbAlumni
-from bttbMember import *
 from bttbPage import bttbPage
-from bttbConfig import *
+from bttbConfig import ErrorMsg
 __all__ = ['bttbProfiles']
 
 class bttbProfiles(bttbPage):
-	def __init__(self):
-		bttbPage.__init__(self)
-	
-	def title(self): return 'BTTB Alumni Profiles'
+    '''Class that generates the committee database query page'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPage.__init__(self)
 
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-		try:
-			try:
-				alumni = bttbAlumni()
-				if( self.isCommittee() and self.requestor and self.requestor.onCommittee ):
-					return alumni.getCommitteeSummary( self.param('sort') )
-				else:
-					return alumni.getSummary( self.param('sort'), self.requestor )
-			except:
-				if( self.isCommittee() and self.requestor and self.requestor.onCommittee ):
-					return alumni.getCommitteeSummary( 'firstYear' )
-				else:
-					return alumni.getSummary( 'firstYear', self.requestor )
-		except Exception, e:
-			return ErrorMsg( 'Could not read member information', e )
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni Profiles'
 
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+        try:
+            try:
+                alumni = bttbAlumni()
+                if self.isCommittee() and self.requestor and self.requestor.onCommittee:
+                    return alumni.getCommitteeSummary( self.param('sort') )
+                else:
+                    return alumni.getSummary( self.param('sort'), self.requestor )
+            except Exception:
+                if self.isCommittee() and self.requestor and self.requestor.onCommittee:
+                    return alumni.getCommitteeSummary( 'firstYear' )
+                else:
+                    return alumni.getSummary( 'firstYear', self.requestor )
+        except Exception, ex:
+            return ErrorMsg( 'Could not read member information', ex )
 
 # ==================================================================
 
-import unittest
-class testProfiles(unittest.TestCase):
-	def testDump(self):
-		page = bttbProfiles()
-		print page.content()
-	
 if __name__ == '__main__':
-	unittest.main()
+    TEST_PAGE = bttbProfiles()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

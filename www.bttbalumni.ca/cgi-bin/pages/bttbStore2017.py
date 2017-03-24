@@ -215,16 +215,9 @@ class bttbStore2017(bttbPage):
 
 # ==================================================================
 
-import unittest
-class TestStore2017(unittest.TestCase):
-    '''Unit tests for this module'''
-    def testDump(self):
-        '''Simple test to dump the page content'''
-        testPage = bttbStore2017()
-        print testPage.content()
-
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbStore2017()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

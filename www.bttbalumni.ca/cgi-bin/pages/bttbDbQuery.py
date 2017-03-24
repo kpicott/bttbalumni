@@ -12,7 +12,7 @@ class bttbDbQuery(bttbPage):
         '''Set up the page'''
         bttbPage.__init__(self)
         self.committeeOnly = True
-    
+
     def title(self):
         ''':return: The page title'''
         return 'BTTB Alumni Committee database queries'
@@ -26,13 +26,7 @@ class bttbDbQuery(bttbPage):
         # Only embed the script if in testing mode
         html = ''
         if InTestMode():
-            html = """<script type='text/javascript' src='/js/bttbDbForm.js'></script>
-                      <style>
-                      input
-                      {
-                        
-                      }
-                      </style>"""
+            html = "<script type='text/javascript' src='/js/bttbDbForm.js'></script>"
 
         queries = (
              ("All Profiles", "all", "Profile information for all of the alumni currently")
@@ -84,16 +78,9 @@ class bttbDbQuery(bttbPage):
 
 # ==================================================================
 
-import unittest
-class testDbQuery(unittest.TestCase):
-    '''Unit tests for this module'''
-    def testDump(self):
-        '''Simple test to dump the page content'''
-        dbQueryPage = bttbDbQuery()
-        print dbQueryPage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbDbQuery()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

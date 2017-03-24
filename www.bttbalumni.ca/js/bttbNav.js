@@ -104,7 +104,7 @@ function open_page(url)
 /*----------------------------------------------------------------------
 	Navigation menu configuration
 */
-var menus = [ ['/#home', '<img src="/Images/icon-home.png">']
+var menus = [ ['#home', '<img src="/Images/icon-home.png">']
 	, ['70th Anniversary', [ ['#store2017', 'Buy Tickets']
 						   , ['#golf2017', 'Golf Tournament']
 						   , ['?#calendar2017', 'Calendar of Events']

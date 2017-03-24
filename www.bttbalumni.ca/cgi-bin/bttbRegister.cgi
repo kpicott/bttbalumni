@@ -154,7 +154,7 @@ Mailing Profile Signups Over Networks
 There was a new registration requiring your attention dude. Surf on over to
 this link to review it:
 
-http://www.bttbalumni.ca/cgi-bin/nav.cgi#profiles?committee=1
+http://www.bttbalumni.ca/#profiles
 
 ---
 Robo-Mail

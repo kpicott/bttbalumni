@@ -1,21 +1,23 @@
 """
-URL page that says thanks for registering to new alumni
+Manage the Memorials web page
 """
 
 from bttbPageFile import bttbPageFile
-from bttbConfig import *
+from bttbConfig import MapLinks
 __all__ = ['bttbMemorials']
 
 class bttbMemorials(bttbPageFile):
+    '''Class that generates the committee database query page'''
     def __init__(self):
+        '''Set up the page'''
         bttbPageFile.__init__(self, '__ROOTPATH__/memorials.html')
-    
-    def title(self): return 'BTTB Alumni Memorials'
+
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni Memorials'
 
     def content(self):
-        """
-        Return a string with the content for this web page.
-        """
+        ''':return: a string with the content for this web page.'''
         memorials = [
             ("Elgin", "Corlett", 1947, 1967, "Founder, Director"),
             ("Larry", "Duke", 1947, 1953, "Flute"),
@@ -47,14 +49,20 @@ class bttbMemorials(bttbPageFile):
             ("Willem", "Murray", 1987, 1989, "Percussion")
         ]
         html = MapLinks( """
+        <style>
+        *
+        {
+            color:  white;
+        }
+        </style>
         <p>
         <table width='100%' border='0' cellspacing='5' cellpadding='10' bgcolor='black'>
         <tr valign='top' height='118'><th colspan='3'><img width='600' height='118' border='0' src='__IMAGEPATH__/WeRemember.jpg'></th></tr>
         """ )
-        for first,last,fYear,lYear,instrument in memorials:
+        for first,last,first_year,last_year,instrument in memorials:
             html += '<tr valign="center" height="30">'
             html += '<td class="memorial">%s&nbsp;%s</td>' % (first,last)
-            html += '<td class="memorial">%d&nbsp;-&nbsp;%d</td>' % (fYear,lYear)
+            html += '<td class="memorial">%d&nbsp;-&nbsp;%d</td>' % (first_year,last_year)
             html += '<td class="memorial">%s</td>' % (instrument)
             html += '</tr>'
         html += '<tr><th>&nbsp;</th></tr>'
@@ -71,14 +79,9 @@ class bttbMemorials(bttbPageFile):
 
 # ==================================================================
 
-import unittest
-class testMemorials(unittest.TestCase):
-    def testDump(self):
-        memoryPage = bttbMemorials()
-        print memoryPage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbMemorials()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

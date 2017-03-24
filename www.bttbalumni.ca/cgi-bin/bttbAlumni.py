@@ -3,101 +3,108 @@
 BTTB Alumni profile information.
 """
 #
-import re
-import os
-import os.path
 from datetime import datetime
-from bttbMember import *
-from bttbConfig import *
-from bttbDB import *
+from bttbMember import bttbMember, SensibleName
+from bttbConfig import Error, Pluralize, PageLink, SortDictByValue, EmailLink, CommitteeMark
+from bttbDB import bttbDB
 
 __all__ = ['bttbAlumni']
 
-def fieldString(value):
+def field_string(value):
     """
     Utility to return the given string or an empty string if it's 'None'
     """
     return value and value.replace('\n','\\n').replace('\t',' ') or ''
 
-class bttbAlumni:
+class bttbAlumni(object):
+    '''Manage access to the alumni data'''
     def __init__(self):
-        self.memberList = []
-        self.__db = bttbDB()
-        if __name__ == '__main__': self.__db.TurnDebugOn()
-        self.__db.Initialize()
+        self.member_list = []
+        try:
+            self.__db = bttbDB()
+            if __name__ == '__main__':
+                self.__db.TurnDebugOn()
+            self.__db.Initialize()
+        except Exception, ex:
+            Error( 'Connecting to database', ex )
 
+    #----------------------------------------------------------------------
     def __del__(self):
         self.__db.Finalize()
 
-    def sortInverse(self,sortIndex):
+    #----------------------------------------------------------------------
+    def sort_inverse(self,sort_index):
         """
         Return the string representing the opposite sorting method (e.g.
         ascending instead of descending)
         """
-        forwards = sortIndex.replace('_desc','')
-        if sortIndex == forwards:
-            return sortIndex + '_desc'
+        forwards = sort_index.replace('_desc','')
+        if sort_index == forwards:
+            return sort_index + '_desc'
         else:
             return forwards
 
-    def sortLink(self,columnName,columnIndex,sortIndex):
+    #----------------------------------------------------------------------
+    def sort_link(self,column_name,column_index,sort_index):
         """
-        Construct a link to the table sorted by the columnIndex, given that
-        the current sort is by sortIndex
+        Construct a link to the table sorted by the column_index, given that
+        the current sort is by sort_index
         """
-        newColumnLink = columnIndex
-        sortedBy = ''
+        new_column_link = column_index
+        sorted_by = ''
         colour = ''
-        if sortIndex == columnIndex:
-            sortedBy = '&nbsp;&uarr;'
+        if sort_index == column_index:
+            sorted_by = '&nbsp;&uarr;'
             colour = '#eeee88'
-            newColumnLink = self.sortInverse( newColumnLink )
-        elif sortIndex == self.sortInverse( columnIndex ):
-            sortedBy = '&nbsp;&darr;'
+            new_column_link = self.sort_inverse( new_column_link )
+        elif sort_index == self.sort_inverse( column_index ):
+            sorted_by = '&nbsp;&darr;'
             colour = '#eeee88'
-            newColumnLink = self.sortInverse( newColumnLink )
-        page = '#profiles?sort=%s' % newColumnLink
-        link = '%s%s' % (columnName, sortedBy)
-        return PageLink( page, link, 'Sort by ' + columnName, colour )
+            new_column_link = self.sort_inverse( new_column_link )
+        page = '#profiles?sort=%s' % new_column_link
+        link = '%s%s' % (column_name, sorted_by)
+        return PageLink( page, link, 'Sort by ' + column_name, colour )
 
-    def sortLinkC(self,columnName,columnIndex,sortIndex):
+    #----------------------------------------------------------------------
+    def sort_link_c(self,column_name,column_index,sort_index):
         """
-        Construct a link to the table sorted by the columnIndex, given that
-        the current sort is by sortIndex
+        Construct a link to the table sorted by the column_index, given that
+        the current sort is by sort_index
         """
-        newColumnLink = columnIndex
-        sortedBy = ''
+        new_column_link = column_index
+        sorted_by = ''
         colour = ''
-        if sortIndex == columnIndex:
-            sortedBy = '&nbsp;&uarr;'
+        if sort_index == column_index:
+            sorted_by = '&nbsp;&uarr;'
             colour = '#eeee88'
-            newColumnLink = self.sortInverse( newColumnLink )
-        elif sortIndex == self.sortInverse( columnIndex ):
-            sortedBy = '&nbsp;&darr;'
+            new_column_link = self.sort_inverse( new_column_link )
+        elif sort_index == self.sort_inverse( column_index ):
+            sorted_by = '&nbsp;&darr;'
             colour = '#eeee88'
-            newColumnLink = self.sortInverse( newColumnLink )
-        return PageLink( '#profiles?sort=%s&committee=1' % newColumnLink, '%s%s' % (columnName, sortedBy), 'Sort by ' + columnName, colour )
+            new_column_link = self.sort_inverse( new_column_link )
+        return PageLink( '#profiles?sort=%s&committee=1' % new_column_link, '%s%s' % (column_name, sorted_by), 'Sort by ' + column_name, colour )
 
-    def getSummary(self,sortColumn,whoWantsIt):
+    #----------------------------------------------------------------------
+    def getSummary(self,sort_column,who_wants_it):
         """
         Display a summary of the alumni so far in HTML format.
         Only show the fields relevant to other alumni (e.g. omit
         address information)
         """
-        keys = self.__db.GetPublicMemberKeys()
+        self.__db.GetPublicMemberKeys()
         descending = False
-        sortKey = None
-        if sortColumn.replace('_desc','') == sortColumn:
-            sortKey = sortColumn
+        sort_key = None
+        if sort_column.replace('_desc','') == sort_column:
+            sort_key = sort_column
         else:
             descending = True
-            sortKey = self.sortInverse(sortColumn)
-        (memberList, items) = self.__db.GetPublicMemberList(sortKey, descending)
+            sort_key = self.sort_inverse(sort_column)
+        (member_list, items) = self.__db.get_public_member_list(sort_key, descending)
         html = ''
-        if( len(memberList) < 2 ):
+        if len(member_list) < 2:
             html += '<h2>No members have registered yet</h2>'
         else:
-            html += '<h2>%d Registered Alumni</h2>' % (len(memberList)-1)
+            html += '<h2>%d Registered Alumni</h2>' % (len(member_list)-1)
             html += 'If you need to correct something '
             html += EmailLink('info@bttbalumni.ca', 'email us')
             html += ' and we will get it fixed right up!'
@@ -105,32 +112,32 @@ class bttbAlumni:
             html += 'Click on a column heading to sort by that column.'
             html += "<table cellspacing='0' cellpadding='5' border='1'>"
             html += '<tr bgcolor=\'#ffaaaa\'>'
-            html += '<th valign="center">%s' % self.sortLink('First', 'first', sortColumn)
-            html += self.sortLink('&nbsp;(nee)', 'nee', sortColumn)
-            html += self.sortLink('&nbsp;Last', 'last', sortColumn)
+            html += '<th valign="center">%s' % self.sort_link('First', 'first', sort_column)
+            html += self.sort_link('&nbsp;(nee)', 'nee', sort_column)
+            html += self.sort_link('&nbsp;Last', 'last', sort_column)
             html += '</th>'
-            html += '<th valign="center">%s</th>' % self.sortLink('Start&nbsp;Year', 'firstYear', sortColumn)
-            html += '<th valign="center">%s</th>' % self.sortLink('End&nbsp;Year', 'lastYear', sortColumn)
-            html += '<th valign="center">%s</th>' % self.sortLink('Email', 'email', sortColumn)
-            html += '<th valign="center">%s</th>' % self.sortLink('Instrument(s)', 'instruments', sortColumn)
+            html += '<th valign="center">%s</th>' % self.sort_link('Start&nbsp;Year', 'firstYear', sort_column)
+            html += '<th valign="center">%s</th>' % self.sort_link('End&nbsp;Year', 'lastYear', sort_column)
+            html += '<th valign="center">%s</th>' % self.sort_link('Email', 'email', sort_column)
+            html += '<th valign="center">%s</th>' % self.sort_link('Instrument(s)', 'instruments', sort_column)
             html += '</tr>'
-            foundUnapproved = 0
+            found_unapproved = 0
             try:
-                for member in memberList:
+                for member in member_list:
                     if member and member[items['approved']]:
                         html += '<tr>'
                         html += '<td valign=\'top\'>'
                         if member[items['onCommittee']]:
                             html += CommitteeMark()
-                        sensibleName = SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
-                        html += sensibleName
-                        if whoWantsIt and whoWantsIt.id == member[items['id']]:
+                        sensible_name = SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
+                        html += sensible_name
+                        if who_wants_it and who_wants_it.id == member[items['id']]:
                             link = '#register?id=%d' % member[items['id']]
                             html += '<br>' + PageLink(link, 'Click to Edit', 'Edit your profile')
                         html += '</td>'
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['firstYear']]
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['lastYear']]
-                        if( member[items['email']] and member[items['emailVisible']] ):
+                        if member[items['email']] and member[items['emailVisible']]:
                             html += '<td valign=\'top\'>'
                             html += EmailLink( member[items['email']] )
                             html += '</td>'
@@ -139,14 +146,14 @@ class bttbAlumni:
                         html += '<td valign=\'top\'>%s</td>' % member[items['instruments']]
                         html += '</tr>'
                     elif member:
-                        foundUnapproved = foundUnapproved + 1
-            except Exception, e:
-                Error( 'Displaying list', e );
+                        found_unapproved = found_unapproved + 1
+            except Exception, ex:
+                Error( 'Displaying list', ex )
             html += "</table>\n"
-            if foundUnapproved > 0:
+            if found_unapproved > 0:
                 html += '<p>&nbsp;</p>'
-                html += '<h2>%d %s Awaiting Confirmation</h2><ol>' % (foundUnapproved, Pluralize('Member',foundUnapproved))
-                for member in memberList:
+                html += '<h2>%d %s Awaiting Confirmation</h2><ol>' % (found_unapproved, Pluralize('Member',found_unapproved))
+                for member in member_list:
                     if member and not member[items['approved']]:
                         html += '<li>'
                         html += SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
@@ -154,60 +161,61 @@ class bttbAlumni:
                 html += '</ol>\n'
             return html
 
-    def processQuery(self, query):
+    def process_query(self, query):
         """
         Process a generic query with unknown result type.
         """
-        return self.__db.ProcessQuery(query)
+        return self.__db.process_query(query)
 
-    def getCommitteeSummary(self,sortColumn):
+    def getCommitteeSummary(self,sort_column):
         """
         Display a summary of the alumni so far in HTML format.
         Only show the fields relevant to other alumni (e.g. omit
         address information)
         """
-        keys = self.__db.GetPublicMemberKeys()
+        self.__db.GetPublicMemberKeys()
         descending = False
-        sortKey = None
-        if sortColumn.replace('_desc','') == sortColumn:
-            sortKey = sortColumn
+        sort_key = None
+        if sort_column.replace('_desc','') == sort_column:
+            sort_key = sort_column
         else:
             descending = True
-            sortKey = self.sortInverse(sortColumn)
-        (memberList, items) = self.__db.GetFullMemberList(sortKey, descending)
+            sort_key = self.sort_inverse(sort_column)
+        (member_list, items) = self.__db.get_full_member_list(sort_key, descending)
         html = ''
-        if( len(memberList) < 2 ):
+        if len(member_list) < 2:
             html += '<h2>No members have registered yet</h2>'
         else:
-            foundUnapproved = 0
+            found_unapproved = 0
             try:
-                for member in memberList:
+                for member in member_list:
                     if member and not member[items['approved']]:
-                        foundUnapproved = foundUnapproved + 1
-            except Exception, e:
-                Error( 'Searching for unapproved members', e );
+                        found_unapproved = found_unapproved + 1
+            except Exception, ex:
+                Error( 'Searching for unapproved members', ex )
 
-            if( foundUnapproved > 0 ):
+            if found_unapproved > 0:
                 html += '<form name="approveForm" id="approveForm" '
                 html += ' action="javascript:submitForm(\'approveForm\', \'/cgi-bin/bttbApprove.cgi\', \'/#profiles?committee=1\');">'
-                html += self.getCommitteeTitle( '%d %s %s' % (foundUnapproved, Pluralize('Member',foundUnapproved), 'Awaiting Confirmation'), sortColumn )
-                for member in memberList:
+                html += self.getCommitteeTitle( '%d %s %s' % (found_unapproved, Pluralize('Member',found_unapproved), 'Awaiting Confirmation'), sort_column )
+                for member in member_list:
                     if member and not member[items['approved']]:
-                        memberObj = bttbMember()
-                        memberObj.loadFromTuple( items, member )
-                        html += memberObj.getCommitteeSummaryRow('XXX')
+                        member_obj = bttbMember()
+                        member_obj.loadFromTuple( items, member )
+                        html += member_obj.getCommitteeSummaryRow('XXX')
                 html += '</table>'
                 html += '<input type="submit" name="submit" value="Approve">'
                 html += '</form>'
             else:
                 html += '<h2>No New Members</h2>'
 
-            html += '<h2>%d Registered Alumni (click to edit)</h2>' % (len(memberList)-1)
+            html += '<h2>%d Registered Alumni (click to edit)</h2>' % (len(member_list)-1)
             try:
                 column = 0
                 html += '<table><tr>'
-                for member in memberList:
-                    if not member or not member[items['approved']]: continue
+                for member in member_list:
+                    if not member or not member[items['approved']]:
+                        continue
                     if column == 4:
                         html += '</tr>\n<tr>'
                         column = 0
@@ -216,12 +224,13 @@ class bttbAlumni:
                     link = '#register?id=%d' % member[items['id']]
                     html += PageLink(link, SensibleName( member[items['first']], member[items['nee']], member[items['last']] ))
                     html += '</td>'
-            except Exception, e:
-                Error( 'Displaying registered alumni list', e );
+            except Exception, ex:
+                Error( 'Displaying registered alumni list', ex )
             html += "</tr></table>\n"
             return html
 
-    def getCommitteeTitle(self,title,sortColumn):
+    #----------------------------------------------------------------------
+    def getCommitteeTitle(self,title,sort_column):
         """
         Print out the title line of the table showing the profile
         information visible to the committee members.
@@ -233,32 +242,35 @@ class bttbAlumni:
         html += '<th>Approve</th>'
         html += '<th>Committee</th>'
         html += '<th>Friend<br>of the<br>Alumni</th>'
-        html += '<th>%s %s %s</th>' % (self.sortLinkC('First', 'first', sortColumn), self.sortLinkC('&nbsp;(nee)', 'nee', sortColumn), self.sortLinkC('&nbsp;Last', 'last', sortColumn))
-        html += '<th>%s</th>' % self.sortLinkC('Start&nbsp;Year', 'firstYear', sortColumn)
-        html += '<th>%s</th>' % self.sortLinkC('End&nbsp;Year', 'lastYear', sortColumn)
-        html += '<th>%s</th>' % self.sortLinkC('Email', 'email', sortColumn)
-        html += '<th>%s</th>' % self.sortLinkC('Instrument(s)', 'instruments', sortColumn)
-        html += '<th>%s</th>' % self.sortLinkC('Highest Rank', 'rank', sortColumn)
+        html += '<th>%s %s %s</th>' % (self.sort_link_c('First', 'first', sort_column), self.sort_link_c('&nbsp;(nee)', 'nee', sort_column), self.sort_link_c('&nbsp;Last', 'last', sort_column))
+        html += '<th>%s</th>' % self.sort_link_c('Start&nbsp;Year', 'firstYear', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('End&nbsp;Year', 'lastYear', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('Email', 'email', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('Instrument(s)', 'instruments', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('Highest Rank', 'rank', sort_column)
         html += '<th>Address</th>'
-        html += '<th>%s</th>' % self.sortLinkC('Positions', 'positions', sortColumn)
-        html += '<th>%s</th>' % self.sortLinkC('Keep Private?', 'emailVisible', sortColumn)
+        html += '<th>%s</th>' % self.sort_link_c('Positions', 'positions', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('Keep Private?', 'emailVisible', sort_column)
         html += '</tr>'
         return html
 
+    #----------------------------------------------------------------------
     def ArchiveData(self):
         """
         Archive all of the database table information, just in case
         """
         return self.__db.Archive()
 
-    def getMemberFromId(self, id):
+    #----------------------------------------------------------------------
+    def getMemberFromId(self, member_id):
         """
         Get back a bttbMember whose id matches the given one.
         """
-        if id == None:
+        if member_id is None:
             return None
-        return self.__db.GetMember(id)
+        return self.__db.GetMember(member_id)
 
+    #----------------------------------------------------------------------
     def getMemberFromLogin(self, name, password):
         """
         Get back a bttbMember whose login information matches the given one,
@@ -270,31 +282,34 @@ class bttbAlumni:
                 member = None
         return member
 
-    def getMostRecent(self, howMany):
+    #----------------------------------------------------------------------
+    def getMostRecent(self, how_many):
         """
-        Return a tuple consisting of the list of the most recent 'howMany'
+        Return a tuple consisting of the list of the most recent 'how_many'
         members to join and the size of the entire membership list.
         """
-        (memberList, items) = self.__db.GetPublicMemberList('joinTime', True)
-        return (memberList[0:howMany], len(memberList))
+        (member_list, _) = self.__db.get_public_member_list('joinTime', True)
+        return (member_list[0:how_many], len(member_list))
 
-    def getJoinedAfter(self, earliestTime):
+    #----------------------------------------------------------------------
+    def getJoinedAfter(self, earliest_time):
         """
         Return a tuple consisting of the list of the members who joined
-        after the 'earliestTime' and the size of the entire membership list.
+        after the 'earliest_time' and the size of the entire membership list.
         """
-        (memberList, items, totalRegistration) = self.__db.GetPublicMemberListJoinedAfter(earliestTime)
-        return (memberList, totalRegistration)
+        (member_list, _, total_registration) = self.__db.get_public_member_list_since(earliest_time)
+        return (member_list, total_registration)
 
+    #----------------------------------------------------------------------
     def getCommitteeText(self):
         """
         Display full text of all alumni in an Excel/Word-friendly format.
         That is, tab-separated text with a heading line.
         """
-        (memberList, items) = self.__db.GetFullMemberList('last', False)
+        (member_list, items) = self.__db.get_full_member_list('last', False)
         html = '\t'.join([a[0].upper()+a[1:] for a in SortDictByValue(items)])
-        eventList = self.__db.GetEvents()
-        for event in eventList:
+        event_list = self.__db.GetEvents()
+        for event in event_list:
             if event.canAttend:
                 html += '\tAttend' + event.summary
             if event.canVolunteer:
@@ -303,90 +318,97 @@ class bttbAlumni:
 
         attendance = self.__db.GetFullEventAttendance()
         volunteers = self.__db.GetFullEventVolunteers()
-        if( len(memberList) == 0 ):
+        if len(member_list) == 0:
             return
-        for member in memberList:
-            alumniId = member[items['id']]
-            html += '\t'.join([fieldString(str(a)) for a in member])
-            for event in eventList:
+        for member in member_list:
+            alumni_id = member[items['id']]
+            html += '\t'.join([field_string(str(a)) for a in member])
+            for event in event_list:
                 if event.canAttend:
                     attend = '0'
-                    for (aid, eid, ename) in attendance:
-                        if aid == alumniId and eid == event.id:
+                    for (aid, eid, _) in attendance:
+                        if aid == alumni_id and eid == event.id:
                             attend = '1'
                             break
                     html += '\t' + attend
                 if event.canVolunteer:
                     volunteer = '0'
-                    for (aid, eid, ename) in volunteers:
-                        if aid == alumniId and eid == event.id:
+                    for (aid, eid, _) in volunteers:
+                        if aid == alumni_id and eid == event.id:
                             volunteer = '1'
                             break
                     html += '\t' + volunteer
             html += '\n'
         return html
 
-    def getMemories(self, id=None):
+    #----------------------------------------------------------------------
+    def get_memories(self, member_id=None):
         """
         Return the list of memories from the alumni (or all if id=None).
         """
-        return self.__db.GetMemories(id)
+        return self.__db.get_memories(member_id)
 
-    def getMemoriesAfter(self, earliestTime):
+    #----------------------------------------------------------------------
+    def get_memories_after(self, earliest_time):
         """
         Return the list of memories from the alumni submitted after the given
         date.
         """
-        return self.__db.GetMemoriesAddedAfter(earliestTime)
+        return self.__db.get_memories_added_after(earliest_time)
 
-    def getParadeInstrumentation(self, paradeTable):
+    #----------------------------------------------------------------------
+    def getParadeInstrumentation(self, parade_table):
         """
         Return the list of current parade participants
         """
-        return self.__db.GetParadeInstrumentation(paradeTable)
+        return self.__db.GetParadeInstrumentation(parade_table)
 
-    def updateMember(self, member, memory, memoryId):
+    #----------------------------------------------------------------------
+    def updateMember(self, member, memory, memory_id):
         """
         Add a new member into the database if it isn't there already,
         or replace it's data if it is already there.
         """
         self.__db.UpdateMember( member, True )
-        self.__db.UpdateMemberMemory( member, memory, memoryId )
+        self.__db.UpdateMemberMemory( member, memory, memory_id )
         self.ArchiveData()
 
-    def updateMemory(self, member, memory, memoryTime, memoryId):
+    #----------------------------------------------------------------------
+    def updateMemory(self, member, memory, memory_time, memory_id):
         """
         Update the memory in the table. If the memory doesn't exist
         then add a new one to the table.
         """
-        self.__db.UpdateMemory( member.id, memory, memoryTime, memoryId )
+        self.__db.UpdateMemory( member.id, memory, memory_time, memory_id )
 
-    def removeMemory(self, memoryId):
+    #----------------------------------------------------------------------
+    def removeMemory(self, memory_id):
         """
         Remove the memory from the table.
         """
-        self.__db.RemoveMemory( memoryId )
+        self.__db.RemoveMemory( memory_id )
 
-    def approveMember(self, id, isFriend, onCommittee):
+    #----------------------------------------------------------------------
+    def approveMember(self, member_id, is_friend, on_committee):
         """
-        Officially approve a new member. The "isFriend" and "onCommittee"
+        Officially approve a new member. The "is_friend" and "on_committee"
         flags are only accessible to committee members so access them
         from here.
         """
-        member = self.getMemberFromId( id )
+        member = self.getMemberFromId( member_id )
         if member:
             member.approved = True
-            member.isFriend = isFriend
-            member.onCommittee = onCommittee
+            member.isFriend = is_friend
+            member.onCommittee = on_committee
             member.editTime = datetime.now()
             self.__db.UpdateMember( member, True )
         else:
-            Error( 'Tried to approve non-existing member', '%d' % id )
+            Error( 'Tried to approve non-existing member', '%d' % member_id )
 
-if( __name__ == '__main__' ):
-    alum = bttbAlumni()
-    print alum.getCommitteeSummary('last')
-    print alum.approveMember(3, True, True)
+if __name__ == '__main__':
+    ALUM = bttbAlumni()
+    print ALUM.getCommitteeSummary('last')
+    print ALUM.approveMember(3, True, True)
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

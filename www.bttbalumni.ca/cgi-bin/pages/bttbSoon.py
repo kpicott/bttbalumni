@@ -1,50 +1,50 @@
 """
-URL page that says thanks for registering to new alumni
+Web page that hints at things to come
 """
 
-from bttbDB import *
 from bttbPage import bttbPage
-from bttbConfig import *
 __all__ = ['bttbSoon']
 
 class bttbSoon(bttbPage):
-	def __init__(self):
-		bttbPage.__init__(self)
-	
-	def title(self): return 'BTTB Alumni : Coming Soon'
+    '''Class that generates the "coming soon" page'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPage.__init__(self)
 
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-		page = ''
-		try:
-			page = ' '.join(' and '.join(self.params).split('_'))
-		except:
-			pass
-		if len(page) < 1:
-			page = 'future developments'
-		html = """
-		<h1>Watch this space for %s</h1>
-		<p>
-		Behind the scenes we're working diligently to bring you the
-		information you need. This particular function isn't running
-		yet but check back soon!
-		</p>
-		""" % page
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni : Coming Soon'
 
-		return html
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+
+        # If parameters were passed use that to indicate what's coming...
+        page = ''
+        try:
+            page = ' '.join(' and '.join(self.params).split('_'))
+        except Exception:
+            pass
+
+        # ... otherwise be vague
+        if len(page) < 1:
+            page = 'future developments'
+
+        html = """
+        <h1>Watch this space for %s</h1>
+        <p>
+        Behind the scenes we're working diligently to bring you the
+        information you need. This particular function isn't running
+        yet but check back soon!
+        </p>
+        """ % page
+
+        return html
 
 # ==================================================================
 
-import unittest
-class testSoon(unittest.TestCase):
-	def testDump(self):
-		soonPage = bttbSoon()
-		print soonPage.content()
-	
 if __name__ == '__main__':
-	unittest.main()
+    TEST_PAGE = bttbSoon()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

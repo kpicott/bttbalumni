@@ -18,6 +18,7 @@ ERRORS_IN_HTML = True
 __all__ = [ "ArchiveFormat",
             "ArticlePath",
             "AsYYYY",
+            "attend_list_2017",
             "AudioPath",
             "Backup",
             "BackupHref",
@@ -80,6 +81,15 @@ def PositionList():
     """
     return { 'Drum Major':1, 'Section Leader':1, 'Loading Crew':1, 'Band Executive':1, 'Yearbook':1, 'Salon Group':1, 'Jazz Band':1, 'Dixieland Band':1, 'Choir':1, 'Dance Band':1 }
 
+#======================================================================
+def attend_list_2017():
+    """
+    List of all events to attend at the 60th. Values are the ID of the event
+    in the database.
+    """
+    return { 'Golf':3, 'Social':4, 'Parade':1, 'Concert':2 }
+
+#======================================================================
 rootSubst = None
 rootMain = None
 if not 'SERVER_ADDR' in os.environ:
@@ -572,7 +582,7 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
         colour = "style='background:%s;'" % colour
     newUrl = re.sub("'", "\\'", newUrl)
     if InTestMode():
-        href = "<a title='%s' %s href=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
+        href = "<a title='%s' %s onclick=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
     else:
         href = "<a title='%s' %s href=\"javascript:openPage('%s')\"" % (tooltip, colour, newUrl)
     href += ">%s</a>" % link

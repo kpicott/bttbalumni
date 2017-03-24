@@ -110,14 +110,9 @@ class bttbGolf2017(bttbPage):
 
 # ==================================================================
 
-import unittest
-class testGolf2017(unittest.TestCase):
-    def testDump(self):
-        testPage = bttbGolf2017()
-        print testPage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbGolf2017()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

@@ -9,7 +9,7 @@ __all__ = ['bttbMenuTest']
 class bttbMenuTest(bttbPage):
     def __init__(self):
         bttbPage.__init__(self)
-    
+
     #----------------------------------------------------------------------
     def scripts(self): return ['''CSS:
 .container {
@@ -33,7 +33,7 @@ class bttbMenuTest(bttbPage):
 }
 
 .dropdown .dropbtn {
-    font-size: 16px;    
+    font-size: 16px;
     border: none;
     outline: none;
     color: white;
@@ -92,7 +92,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Parade</a>
       <a href="#">Concert</a>
     </div>
-  </div> 
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Alumni</button>
     <div class="dropdown-content">
@@ -102,7 +102,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Security Information</a>
       <a href="#">Privacy Information</a>
     </div>
-  </div> 
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Memories</button>
     <div class="dropdown-content">
@@ -113,7 +113,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Memories</a>
       <a href="#">Music Clips</a>
     </div>
-  </div> 
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Links</button>
     <div class="dropdown-content">
@@ -121,7 +121,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Band Boosters</a>
       <a href="#">Doug Wright</a>
     </div>
-  </div> 
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Contact Us</button>
     <div class="dropdown-content">
@@ -129,7 +129,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Golf Tournament</a>
       <a href="#">Website Questions</a>
     </div>
-  </div> 
+  </div>
   <div class="dropdown">
     <button class="dropbtn">Committee</button>
     <div class="dropdown-content">
@@ -138,7 +138,7 @@ class bttbMenuTest(bttbPage):
       <a href="#">Download Alumni Data</a>
       <a href="#"></a>
     </div>
-  </div> 
+  </div>
 </div>
 
 <h3>Dropdown Menu inside a Navigation Bar</h3>
@@ -146,14 +146,9 @@ class bttbMenuTest(bttbPage):
 
 # ==================================================================
 
-import unittest
-class testMenuTest(unittest.TestCase):
-    def testDump(self):
-        testPage = bttbMenuTest()
-        print testPage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbMenuTest()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

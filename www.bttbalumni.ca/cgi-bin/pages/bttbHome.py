@@ -211,7 +211,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 
         html += "</tr></table></div>"
         #===================================================================
-        memoryList = self.alumni.getMemoriesAfter(oldAlumniTime)
+        memoryList = self.alumni.get_memories_after(oldAlumniTime)
         count = len(memoryList)
         if count > 10:
             count = 10

@@ -180,6 +180,7 @@ a:active.grey_blur
 .non-link:hover
 {
     cursor: pointer;
+	color:	blue;
 }
 
 
