@@ -240,10 +240,10 @@ class ImportAlumniDB:
 		#------------------------------------------------------
 		self.execute( """
 		CREATE TABLE IF NOT EXISTS parade (
-  		  alumni_id       INT(10) UNSIGNED NOT NULL,
-		  approved        TINYINT(1)       NOT NULL DEFAULT '0',
-		  needsInstrument TINYINT(1)       NOT NULL DEFAULT '0',
-  		  instrument_id   INT(10) UNSIGNED NOT NULL,
+  		  alumni_id        INT(10) UNSIGNED NOT NULL,
+		  approved         TINYINT(1)       NOT NULL DEFAULT '0',
+		  needs_instrument TINYINT(1)       NOT NULL DEFAULT '0',
+  		  instrument_id    INT(10) UNSIGNED NOT NULL,
 
 		  PRIMARY KEY(alumni_id),
 

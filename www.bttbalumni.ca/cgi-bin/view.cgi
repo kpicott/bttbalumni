@@ -113,7 +113,10 @@ class bttbContentPanel(object):
         self.requestor = None
 
         cookie = Cookie.SimpleCookie()
-        cookie.load(os.environ['HTTP_COOKIE'])
+        try:
+            cookie.load(os.getenv('HTTP_COOKIE'))
+        except (AttributeError, TypeError):
+            return
 
         # If the requester wasn't already present then look in the cookies
         if cookie.has_key('User'):
