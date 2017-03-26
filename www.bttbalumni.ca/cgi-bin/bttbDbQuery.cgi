@@ -1,16 +1,14 @@
-#!env python
+#!/usr/bin/env python
 """
 Process the database query.
 Unlike most form replies this one explicitly prints out its responses so there
 is no post-load after this script completes.
 """
-
-import os
 import cgi
 from bttbAlumni import bttbAlumni
-from bttbConfig import *
+from bttbConfig import Error, MapLinks
 
-def getParam(name,default):
+def get_param(name,default):
     """
     Simple trick to get cgi params using default values
     """
@@ -20,7 +18,7 @@ def getParam(name,default):
         value = default
     return value
 
-def getIntParam(name,default):
+def get_int_param(name,default):
     """
     Simple trick to get numeric cgi params using default values
     """
@@ -32,9 +30,9 @@ def getIntParam(name,default):
 
 try:
     params = cgi.parse()
-    outputWeb = (getIntParam( 'outputType', 0 ) == 0)
-    query = getParam('queryText', 'SELECT * FROM alumni ORDER BY LAST')
-    if outputWeb:
+    output_web = (get_int_param( 'outputType', 0 ) == 0)
+    query = get_param('queryText', 'SELECT * FROM alumni ORDER BY LAST')
+    if output_web:
         print 'Content-type: text/html\n'
         #print 'Query Results||'
         print '<head><title>' + query + '</title>'
@@ -51,36 +49,36 @@ try:
 
     alumni = bttbAlumni()
     results,description = alumni.process_query( query )
-    if outputWeb:
+    if output_web:
         print "<div class='outlinedTitle'>", len(results), " results returned from '%s'</div>" % query
         print "<table border='1'><tr>"
-    isPassword = []
+    is_password = []
     try:
         for info in description:
-            if outputWeb:
+            if output_web:
                 print "<td>", info[0], "</td>"
             else:
                 print info[0], '\t',
             if (type(info[0]) == type('a')) and (info[0] == 'password'):
-                isPassword.append( True )
+                is_password.append( True )
             else:
-                isPassword.append( False )
+                is_password.append( False )
     except:
         print "<td>", description, "</td>"
-    if outputWeb:
+    if output_web:
         print "</tr>"
     else:
         print
     try:
         for result in results:
-            if outputWeb:
+            if output_web:
                 print "<tr>"
             idx = 0
             for item in result:
-                if isPassword[idx]:
+                if is_password[idx]:
                     if item:
                         item = '[SET]'
-                if outputWeb:
+                if output_web:
                     print "<td>"
                     if item:
                         print item,
@@ -90,18 +88,18 @@ try:
                 else:
                     print item, "\t",
                 idx = idx + 1
-            if outputWeb:
+            if output_web:
                 print "</tr>"
             else:
                 print
     except:
         print "<tr><td>", results, "</td></tr>"
-    if outputWeb:
+    if output_web:
         print "</table>"
 except Exception, e:
     Error( 'Processing query', e )
 
-if outputWeb:
+if output_web:
     print '</body>'
 
 # ==================================================================

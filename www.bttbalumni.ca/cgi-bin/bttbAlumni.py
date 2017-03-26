@@ -61,7 +61,7 @@ class bttbAlumni(object):
             sorted_by = '&nbsp;&darr;'
             colour = '#eeee88'
             new_column_link = self.sort_inverse( new_column_link )
-        page = '#profiles?sort=%s' % new_column_link
+        page = '?sort=%s#profiles' % new_column_link
         link = '%s%s' % (column_name, sorted_by)
         return PageLink( page, link, 'Sort by ' + column_name, colour )
 
@@ -82,7 +82,7 @@ class bttbAlumni(object):
             sorted_by = '&nbsp;&darr;'
             colour = '#eeee88'
             new_column_link = self.sort_inverse( new_column_link )
-        return PageLink( '#profiles?sort=%s&committee=1' % new_column_link, '%s%s' % (column_name, sorted_by), 'Sort by ' + column_name, colour )
+        return PageLink( '?sort=%s&committee=1#profiles' % new_column_link, '%s%s' % (column_name, sorted_by), 'Sort by ' + column_name, colour )
 
     #----------------------------------------------------------------------
     def getSummary(self,sort_column,who_wants_it):
@@ -132,7 +132,7 @@ class bttbAlumni(object):
                         sensible_name = SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
                         html += sensible_name
                         if who_wants_it and who_wants_it.id == member[items['id']]:
-                            link = '#register?id=%d' % member[items['id']]
+                            link = '?id=%d#register' % member[items['id']]
                             html += '<br>' + PageLink(link, 'Click to Edit', 'Edit your profile')
                         html += '</td>'
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['firstYear']]
@@ -221,7 +221,7 @@ class bttbAlumni(object):
                         column = 0
                     column = column + 1
                     html += '<td>'
-                    link = '#register?id=%d' % member[items['id']]
+                    link = '?id=%d#register' % member[items['id']]
                     html += PageLink(link, SensibleName( member[items['first']], member[items['nee']], member[items['last']] ))
                     html += '</td>'
             except Exception, ex:
