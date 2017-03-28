@@ -357,6 +357,13 @@ class bttbAlumni(object):
         return self.__db.get_memories_added_after(earliest_time)
 
     #----------------------------------------------------------------------
+    def getConcertInstrumentation(self, concert_table):
+        """
+        Return the list of current concert participants
+        """
+        return self.__db.GetConcertInstrumentation(concert_table)
+
+    #----------------------------------------------------------------------
     def getParadeInstrumentation(self, parade_table):
         """
         Return the list of current parade participants

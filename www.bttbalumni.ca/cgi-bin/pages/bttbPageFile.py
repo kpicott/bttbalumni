@@ -4,42 +4,42 @@ with only structural and location modifications.
 """
 
 import os
-from bttbPage import bttbPage
-from bttbConfig import *
+from bttbPage import bttbPage, NOT_COMMITTEE
+from bttbConfig import ErrorMsg, MapLinks
 
 __all__ = ['bttbPageFile']
 
 class bttbPageFile(bttbPage):
-	def __init__(self, fileName, altFileName=None):
-		bttbPage.__init__(self)
-		self.fileName = MapLinks( fileName )
-		self.altFileName = self.fileName
-		if altFileName: self.altFileName = MapLinks( altFileName )
-		self.committeeOnly = False
-	
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-		fileName = self.fileName
-		try:
-			if self.requestor:
-				if (not self.committeeOnly) or self.requestor.onCommittee:
-					fileName = self.altFileName
-		except:
-			pass
-		if os.path.isfile( fileName ):
-			info = ""
-			fd = open( fileName )
-			try:
-				for line in fd:
-					info = info + MapLinks(line)
-			finally:
-				fd.close()
+    '''Base class for pages that are read from hardcoded files'''
+    def __init__(self, fileName, altFileName=None):
+        '''Set up the page'''
+        bttbPage.__init__(self)
+        self.file_name = MapLinks( fileName )
+        self.alt_file_name = self.file_name
+        if altFileName is not None:
+            self.alt_file_name = MapLinks( altFileName )
 
-			return info
-		else:
-			return ErrorMsg( 'File contents missing', fileName )
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+        file_name = self.file_name
+        try:
+            if self.requestor:
+                if self.can_view_page() == NOT_COMMITTEE:
+                    file_name = self.alt_file_name
+        except Exception:
+            pass
+        if os.path.isfile( file_name ):
+            info = ""
+            html_fd = open( file_name )
+            try:
+                for line in html_fd:
+                    info = info + MapLinks(line)
+            finally:
+                html_fd.close()
+
+            return info
+        else:
+            return ErrorMsg( 'File contents missing', file_name )
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

@@ -118,17 +118,17 @@ var menus = [ ['#home', '<img src="/Images/icon-home.png">']
 						   , ['?#news2017', 'Reunion News']
 						   ]
 	  ]
-	, ['Alumni',    [ ['#profiles', 'Profiles']
-					, ['#register', 'My Profile']
+	, ['Alumni',    [ ['@#profiles', 'Profiles']
+					, ['@#register', 'My Profile']
 					, ['#newsletters', 'News']
 					, ['#security', 'Privacy Information']
 					]
 	  ]
-	, ['Memories',  [ ['#wallaceb', 'Wallace B. Wallace']
-					, ['#drumMajors', 'Drum Majors']
-					, ['#memorials', 'Memorials']
-					, ['#photos', 'Pictures']
-					, ['#memories', 'Memories']
+	, ['Memories',  [ ['@#wallaceb', 'Wallace B. Wallace']
+					, ['@#drumMajors', 'Drum Majors']
+					, ['@#memorials', 'Memorials']
+					, ['@#photos', 'Pictures']
+					, ['@#memories', 'Memories']
 					, ['#tunes', 'Music Clips']
 					, ['?#headChaperones', 'Former Head Chaperones']
 					, ['?#bandExecutive', 'Former Band Executive']
@@ -184,6 +184,11 @@ function build_navigation()
 			{
 				var link = submenu_entry[0];
 				var text = submenu_entry[1];
+				if( link[0] === '@' )
+				{
+					text = "<i class='fa fa-user'></i>&nbsp;" + text;
+					link = link.substr(1);
+				}
 				// Leading "?" means the link is not yet available
 				if( link[0] === '?' )
 				{

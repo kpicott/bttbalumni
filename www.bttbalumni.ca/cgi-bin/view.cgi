@@ -7,10 +7,10 @@ import re
 import os
 import Cookie
 from bttbDB import bttbDB
-from bttbConfig import MapLinks, ErrorMsg, PagePath, EnableTestMode
+from bttbConfig import MapLinks, ErrorMsg, PagePath, EnableTestMode, CommitteeAccessRequired, MemberAccessRequired
 import pages
 from bttbAlumni import bttbAlumni
-from pages.bttbPage import bttbPage
+from pages.bttbPage import bttbPage, VIEW_OKAY, NOT_MEMBER, NOT_COMMITTEE
 from datetime import datetime,timedelta
 
 # Token used by error logging when requestor is not known
@@ -63,6 +63,7 @@ class bttbContentPanel(object):
 
         try:
             # First check to see if the page exists as hardcoded HTML
+            # (No access checks here - everybody can view the hardcoded pages.)
             page_name = os.path.join( PagePath(), page + '.html' )
             if os.path.isfile( page_name ):
                 try:
@@ -85,10 +86,16 @@ class bttbContentPanel(object):
             module = __import__ (module_name, globals(), locals(), [page])
             class_object = getattr(module, page)
             page = class_object ()
-            page.setParams( init_params )
-            page.setRequestor( self.requestor )
-            self.content = page.content()
+            page.set_params( init_params )
+            page.set_requestor( self.requestor )
+            view_status = page.can_view_page()
             self.title = page.title()
+            if view_status == VIEW_OKAY:
+                self.content = page.content()
+            elif view_status == NOT_MEMBER:
+                self.content = MemberAccessRequired( self.title )
+            elif view_status == NOT_COMMITTEE:
+                self.content = CommitteeAccessRequired( self.title )
 
             self.log_history( '', module_name )
         except Exception, ex:

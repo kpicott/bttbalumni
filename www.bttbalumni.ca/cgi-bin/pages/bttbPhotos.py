@@ -12,6 +12,7 @@ class bttbPhotos(bttbPage):
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
+        self.members_only = True
 
     def title(self):
         ''':return: The page title'''

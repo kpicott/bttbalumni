@@ -47,9 +47,9 @@ __all__ = [ "ArchiveFormat",
             "InstrumentList",
             "InTestMode",
             "JavascriptPath",
-            "LoginRequired",
             "MailChair",
             "MapLinks",
+            "MemberAccessRequired",
             "MusicPath",
             "NewsletterPath",
             "PackageImagePath",
@@ -703,27 +703,6 @@ def EmbeddedJS(script):
     return html
 
 #======================================================================
-def LoginRequired(title):
-    """
-    Return a string with the HTML for a warning that the current page with
-    given title requires a user login to access.
-    """
-    return """
-    <h1>Login Required for %s</h1>
-    <p>
-    Sorry, but this page is only accessible after login.
-    Use the login at left to access it.
-    </p>
-    <div class='indented'><h2>NOTE:</h2>
-    Login requires registration. After you have registered use
-    first and last name as USERNAME - your default password is blank.
-    <br>
-    You may set your password (and update any other information) through
-    the 'My Profile' link after you login.
-    </div>
-    """ % title
-
-#======================================================================
 def CommitteeAccessRequired(title):
     """
     Return a string with the HTML for a warning that the current page with
@@ -734,6 +713,27 @@ def CommitteeAccessRequired(title):
     <p>
     Sorry, but this page is only accessible to committee members.
     </p>
+    """ % title
+
+#======================================================================
+def MemberAccessRequired(title):
+    """
+    Return a string with the HTML for a warning that the current page with
+    given title requires a member login to access.
+    """
+    return """
+    <h1>Member Only Page - %s</h1>
+    <p>
+    Sorry, but this page is only accessible to logged-in members. Use the
+    "LOGIN" or "REGISTER" buttons at the top of the page to gain access.
+    </p>
+    <div class='indented'><h2>NOTE:</h2>
+    Login requires registration. After you have registered use
+    first and last name as USERNAME - your default password is blank.
+    <br>
+    You may set your password (and update any other information) through
+    the 'My Profile' link after you login.
+    </div>
     """ % title
 
 import smtplib

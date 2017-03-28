@@ -11,6 +11,7 @@ class bttbMemorials(bttbPageFile):
     def __init__(self):
         '''Set up the page'''
         bttbPageFile.__init__(self, '__ROOTPATH__/memorials.html')
+        self.members_only = True
 
     def title(self):
         ''':return: The page title'''

@@ -11,9 +11,10 @@ class bttbError(bttbPage):
     '''Class that generates the error page'''
     def __init__(self, error, page):
         '''Set up the page'''
+        bttbPage.__init__(self)
         self.error = '%s' % error
         self.page = ' Error loading page %s' % page
-    
+
     def content(self):
         ''':return: a string with the content for this web page.'''
         return ErrorMsg( self.page, self.error )

@@ -8,26 +8,23 @@ from bttbPage import bttbPage
 from bttbConfig import *
 __all__ = ['bttbAddMemory']
 
-def _sortByMemoryDate(x,y):    return cmp(x[2], y[2])
 class bttbAddMemory(bttbPage):
+    '''Class that generates the new memory query page'''
     def __init__(self):
+        '''Set up the page'''
         bttbPage.__init__(self)
+        self.members_only = True
         try:
             self.alumni = bttbAlumni()
         except Exception, e:
             Error( 'Could not find alumni information', e )
     
-    def title(self): return 'BTTB Alumni : Add a Memory'
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni : Add a Memory'
 
     def content(self):
-        """
-        Return a string with the content for this web page.
-        """
-        try:
-            if not self.requestor:
-                return LoginRequired( 'Adding Memories' )
-        except:
-            pass
+        ''':return: a string with the content for this web page.'''
         html = MapLinks( """
         <p>
         Below are all the memories you have submitted so far, and
@@ -87,16 +84,11 @@ class bttbAddMemory(bttbPage):
 
 # ==================================================================
 
-import unittest
-class testMemories(unittest.TestCase):
-    def testDump(self):
-        addMemoryPage = bttbAddMemory()
-        addMemoryPage.requestor = bttbMember()
-        print addMemoryPage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
-
+    TEST_PAGE = bttbAddMemory()
+    TEST_PAGE.requestor = bttbMember()
+    print TEST_PAGE.content()
+    
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded
 # instructions, statements and computer programs contain unpublished

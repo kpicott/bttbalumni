@@ -1,16 +1,23 @@
 """
-URL page that shows committee member links
+Web page that shows committee member links.
+
+It's really a hardcoded page, it's just access through here to allow
+putting the restriction on that only committee members can see it
 """
 
 from bttbPageFile import bttbPageFile
 __all__ = ['bttbCommittee']
 
 class bttbCommittee(bttbPageFile):
-	def __init__(self):
-		bttbPageFile.__init__(self, '__ROOTPATH__/accessDenied.html', '__ROOTPATH__/committee.html')
-		self.committeeOnly = True
-	
-	def title(self): return 'BTTB Alumni Committee Links'
+    '''Class that generates the committee database query page'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPageFile.__init__(self, '__ROOTPATH__/accessDenied.html', '__ROOTPATH__/committee.html')
+        self.commitee_only = True
+
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni Committee Links'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

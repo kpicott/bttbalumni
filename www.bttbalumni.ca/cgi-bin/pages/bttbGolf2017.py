@@ -8,24 +8,26 @@ from bttbConfig import MapLinks
 __all__ = ['bttbGolf2017']
 
 class bttbGolf2017(bttbPage):
+    '''Class that generates the golf store page'''
     def __init__(self):
+        '''Set up the page'''
         bttbPage.__init__(self)
 
         # Compute the early-bird discounts
-        GOLF_CUTOFF = datetime.datetime( 2017, 4, 15 )
-        NOW = datetime.datetime.now()
+        golf_cutoff = datetime.datetime( 2017, 4, 15 )
+        now = datetime.datetime.now()
         self.early = 'Early'
-        if NOW > GOLF_CUTOFF:
-            self_early = ''
-    
+        if now > golf_cutoff:
+            self.early = ''
+
     #----------------------------------------
-    def title(self): return 'BTTB 70th Anniversary Reunion Golf Tournament'
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB 70th Anniversary Reunion Golf Tournament'
 
     #----------------------------------------
     def content(self):
-        """
-        Return a string with the content for this web page.
-        """
+        ''':return: a string with the content for this web page.'''
         html = """
 <script type='text/javascript' src='/js/bttbGolf2017.js'></script>
 <link rel='stylesheet' href='/css/bttbGolf2017.css'>

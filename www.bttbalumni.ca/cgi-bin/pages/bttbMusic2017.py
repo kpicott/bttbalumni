@@ -1,15 +1,19 @@
 """
-URL page that shows website security information
+Web page that shows music for the 2017 parade and concert
 """
 
 from bttbPageFile import bttbPageFile
 __all__ = ['bttbMusic2017']
 
 class bttbMusic2017(bttbPageFile):
-	def __init__(self):
-		bttbPageFile.__init__(self, '__ROOTPATH__/music2017.html')
-	
-	def title(self): return 'BTTB Alumni 70th Anniversary Music Downloads'
+    '''Class to manage music information for the 2017 parade and concert'''
+    def __init__(self):
+        '''Initialize the page'''
+        bttbPageFile.__init__(self, '__ROOTPATH__/music2017.html')
+
+    def title(self):
+        ''':return: the page title'''
+        return 'BTTB Alumni 70th Anniversary Music Downloads'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

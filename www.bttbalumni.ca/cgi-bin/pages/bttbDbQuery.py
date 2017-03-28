@@ -3,7 +3,7 @@ Page that allows entry of database queries (random and hardcoded)
 """
 
 from bttbPage import bttbPage
-from bttbConfig import InTestMode
+#from bttbConfig import InTestMode
 __all__ = ['bttbDbQuery']
 
 class bttbDbQuery(bttbPage):
@@ -11,7 +11,7 @@ class bttbDbQuery(bttbPage):
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
-        self.committeeOnly = True
+        self.committee_only = True
 
     def title(self):
         ''':return: The page title'''
@@ -53,7 +53,7 @@ class bttbDbQuery(bttbPage):
         for value,tag,info in queries:
             html += "<tr>"
             html += "    <td align='right'><button class='shadow_button'"
-            html += "        onclick='query_select(\"%s\")' \>%s</button>" % (tag, value)
+            html += r"        onclick='query_select(\"%s\")' \>%s</button>" % (tag, value)
             html += "    </td>"
             html += "    <td>" + info + "</td>"
             html += "</tr>"

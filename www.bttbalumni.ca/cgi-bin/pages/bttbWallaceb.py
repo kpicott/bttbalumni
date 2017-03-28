@@ -12,9 +12,10 @@ class bttbWallaceb(bttbPage):
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
+        self.members_only = True
         self.__db = bttbDB()
         if __name__ == '__main__':
-            self.__db.TurnDebugOn()
+            self.__db.turn_debug_on()
         self.__db.Initialize()
 
     def title(self):

@@ -1,58 +1,47 @@
 """
-Page that lets a user add new memories
+Page that lets a user add new news
 """
 
-from bttbAlumni import bttbAlumni
-from bttbMember import *
 from bttbPage import bttbPage
-from bttbConfig import *
-__all__ = ['bttbAddMemory']
+__all__ = ['bttbAddNews']
 
-def _sortByMemoryDate(x,y):	return cmp(x[2], y[2])
-class bttbAddMemory(bttbPage):
-	def __init__(self):
-		bttbPage.__init__(self)
-	
-	def title(self):
+class bttbAddNews(bttbPage):
+    '''Manage the interface to the page through which committe members add news articles'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPage.__init__(self)
+        self.committee_only = True
+    
+    def title(self):
+        ''':return: The page title'''
         return 'BTTB Alumni : Add a News Article'
 
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-        if not self.isCommittee():
-            return CommitteAccessRequired()
-
-		html = """
-		<h2>Add a News Article</h2>
-		<table border='1'><tr><td>
-		<table>
-		<tr>
-			<td>Date&nbsp;(YYYY-MM-DD):</td>
-			<td><input type='text' name='newNewsDate' value=''></td>
-		</tr>
-		<tr>
-			<td valign='top'>Article (HTML allowed):</td>
-			<td><textarea rows='10' cols='70' name='newNews'></textarea></td>
-		</tr>
-		</table>
-		</td></tr></table>
-		"""
-		html += "<input type='submit' value='Submit News'>"
-		html += "</form>"
-		return html
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+        html = """
+        <h2>Add a News Article</h2>
+        <table border='1'><tr><td>
+        <table>
+        <tr>
+            <td>Date&nbsp;(YYYY-MM-DD):</td>
+            <td><input type='text' name='newNewsDate' value=''></td>
+        </tr>
+        <tr>
+            <td valign='top'>Article (HTML allowed):</td>
+            <td><textarea rows='10' cols='70' name='newNews'></textarea></td>
+        </tr>
+        </table>
+        </td></tr></table>
+        """
+        html += "<input type='submit' value='Submit News'>"
+        html += "</form>"
+        return html
 
 # ==================================================================
 
-import unittest
-class testAddNews(unittest.TestCase):
-	def testDump(self):
-		testPage = bttbAddNews()
-        bttbAddNews.params['committee'] = [True]
-		print testPage.content()
-	
 if __name__ == '__main__':
-	unittest.main()
+    TEST_PAGE = bttbAddNews()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

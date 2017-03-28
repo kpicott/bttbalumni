@@ -10,26 +10,23 @@ from bttbPage import bttbPage
 from bttbConfig import MapLinks, Error
 __all__ = ['bttbParade']
 
-def _sortByMemoryDate(x,y):    return cmp(x[2], y[2])
 class bttbParade(bttbPage):
+    '''Class that generates the parade information page'''
     def __init__(self):
+        '''Set up the page'''
         bttbPage.__init__(self)
+        self.members_only = True
         try:
             self.alumni = bttbAlumni()
-        except Exception, e:
-            Error( 'Could not find parade information', e )
-    
-    def title(self): return 'Sound of Music Festival Parade Alumni Band'
+        except Exception, ex:
+            Error( 'Could not find parade information', ex )
+
+    def title(self):
+        ''':return: The page title'''
+        return 'Sound of Music Festival Parade Alumni Band'
 
     def content(self):
-        """
-        Return a string with the content for this web page.
-        """
-        try:
-            if not self.requestor:
-                return LoginRequired( 'Parade Signup' )
-        except:
-            pass
+        ''':return: a string with the content for this web page.'''
         html = MapLinks( """
         <h1>Parade Music</h1>
         <p>
@@ -48,28 +45,28 @@ class bttbParade(bttbPage):
         parts = self.alumni.getParadeInstrumentation('parade65')
         html += "<table><tr>"
         col = 0
-        instCount = 0
-        for iName,iId,iDownload,who in parts:
-            instCount = instCount + 1
+        instrument_count = 0
+        for instrument_name,instrument_id,_,who in parts:
+            instrument_count = instrument_count + 1
             if not who.find(','):
-                whoSize = 0
+                who_size = 0
             else:
-                whoSize = len(who.split(','))
+                who_size = len(who.split(','))
             who = re.sub('<sup>.</sup>', '', who)
             checked = ""
             if col == 4:
                 html += '</tr><tr>'
                 col = 0
             col = col + 1
-            if iName == 'Marching Without Instrument':
+            if instrument_name == 'Marching Without Instrument':
                 checked = ' checked'
-            if iName == 'Can only ride':
-                iName = "Want to participate but am unable to march. Will ride in float with band."
-            html += "<td width='25%%' valign='top'><input type='radio' name='part' align='middle'%s value='%s'>%s" % (checked, iId, iName)
-            html += "&nbsp;<a title='%s' href='#' onClick='Effect.toggle(\"signedUp%d" % (who, instCount)
+            if instrument_name == 'Can only ride':
+                instrument_name = "Want to participate but am unable to march. Will ride in float with band."
+            html += "<td width='25%%' valign='top'><input type='radio' name='part' align='middle'%s value='%s'>%s" % (checked, instrument_id, instrument_name)
+            html += "&nbsp;<a title='%s' href='#' onClick='Effect.toggle(\"signedUp%d" % (who, instrument_count)
             html += "\", \"slide\"); return false;'>"
-            html += "%d so far &hellip;</a>" % whoSize
-            html += "<div id='signedUp%d' style='display:none;'>" % instCount
+            html += "%d so far &hellip;</a>" % who_size
+            html += "<div id='signedUp%d' style='display:none;'>" % instrument_count
             html += "<div style='background-color:#ffa0a0;"
             html += "border:2px solid red;padding:10px;'>"
             html += who

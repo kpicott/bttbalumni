@@ -4,26 +4,31 @@ URL page that says thanks for registering to new alumni
 
 import os
 from bttbAlumni import bttbAlumni
-from bttbMember import *
+from bttbMember import SensibleName
 from bttbPage import bttbPage
-from bttbConfig import MapLinks, RootPath, EmbeddedJS, EmbeddedCSS
+from bttbConfig import MapLinks, RootPath, EmbeddedJS, EmbeddedCSS, Error, CommitteeMark
 from datetime import datetime,timedelta
 __all__ = ['bttbHome']
 
 class bttbHome(bttbPage):
+    '''Class that generates the home page'''
     def __init__(self):
+        '''Set up the page'''
         bttbPage.__init__(self)
         try:
             self.alumni = bttbAlumni()
-        except Exception, e:
-            Error( 'Could not find parade information', e )
+        except Exception, ex:
+            Error( 'Could not find parade information', ex )
 
     #----------------------------------------------------------------------
-    def title(self): return 'BTTB Alumni'
+    def title(self):
+        ''':return: The page title'''
+        return 'BTTB Alumni'
 
     #----------------------------------------------------------------------
-    def getOldNewsList(self, before):
-        (interest,description) = self.alumni.process_query("""
+    def get_old_news_list(self, before):
+        ''':return: List of news older than "before"'''
+        (interest,_) = self.alumni.process_query("""
         SELECT appeared,title,description FROM news
         WHERE appeared <= '%s'
         ORDER BY appeared DESC
@@ -31,54 +36,58 @@ class bttbHome(bttbPage):
         return interest
 
     #----------------------------------------------------------------------
-    def getNewsList(self, asOf):
-        (interest,description) = self.alumni.process_query("""
+    def get_news_list(self, as_of):
+        ''':return: List of news older than "as_of"'''
+        (interest,_) = self.alumni.process_query("""
         SELECT appeared,title,description FROM news
         WHERE appeared > '%s'
         ORDER BY appeared DESC
-        """ % asOf)
+        """ % as_of)
         return interest
 
     #----------------------------------------------------------------------
-    def getOldNewsCount(self, asOf):
-        (interest,description) = self.alumni.process_query("""
+    def get_old_news_count(self, as_of):
+        ''':return: Size of news list older than "as_of"'''
+        (interest,_) = self.alumni.process_query("""
         SELECT COUNT(*) FROM news
         WHERE appeared <= '%s'
-        """ % asOf)
+        """ % as_of)
         return interest[0][0]
 
     #----------------------------------------------------------------------
-    def getFriendCount(self):
-        (friends,description) = self.alumni.process_query("""
+    def get_friend_count(self):
+        ''':return: Number of "Friends of the Alumni"'''
+        (friends,_) = self.alumni.process_query("""
         SELECT COUNT(*) from alumni where isFriend = 1
         """)
         return friends[0]
 
     #----------------------------------------------------------------------
-    def getWallaceCount(self):
-        (wallace,description) = self.alumni.process_query("""
+    def get_wallace_count(self):
+        ''':return: Number of Wallace B. Wallace winners'''
+        (wallace,_) = self.alumni.process_query("""
         SELECT COUNT(*)
         FROM wallace
         """)
         return wallace[0]
 
     #----------------------------------------------------------------------
-    def getMemoryCount(self):
-        (memory,description) = self.alumni.process_query("""
+    def get_memory_count(self):
+        ''':return: Number of available memories'''
+        (memory,_) = self.alumni.process_query("""
         SELECT COUNT(*)
         FROM memories
         """)
         return memory[0]
 
     #----------------------------------------------------------------------
-    def contact_content(self):
-        """
-        Get the HTML that will populate the contact form.
-        """
+    @staticmethod
+    def contact_content():
+        ''':return: a string with the content for this web page.'''
         return MapLinks("""
 Don't want to sign up but still want to get news by email?
 Enter your name and email address below to be added to the mailing list:<br/>
-<form method='POST' onsubmit='return validateRegistration();' 
+<form method='POST' onsubmit='return validateRegistration();'
       name="contactForm" id="contactForm"
       action="javascript:submitForm('contactForm', '/cgi-bin/bttbContact.cgi', '/#thanksContact');">
 <table border='2'>
@@ -127,7 +136,8 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 </form>""")
 
     #----------------------------------------------------------------------
-    def add_countdowns(self, countdowns):
+    @staticmethod
+    def add_countdowns(countdowns):
         '''Define the Javscript used in this page'''
         # The countdowns want to extend the entire page width, but this page
         # is limited to the 'content' div, which is fixed width. Solve that
@@ -162,11 +172,11 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         Return a string with the content for this web page.
         """
         if self.requestor:
-            oldNewsTime = self.requestor.lastVisitTime - timedelta(30)
-            oldAlumniTime = self.requestor.lastVisitTime - timedelta(14)
+            old_news_time = self.requestor.lastVisitTime - timedelta(30)
+            old_alumni_time = self.requestor.lastVisitTime - timedelta(14)
         else:
-            oldNewsTime = datetime.now() - timedelta(30)
-            oldAlumniTime = datetime.now() - timedelta(14)
+            old_news_time = datetime.now() - timedelta(30)
+            old_alumni_time = datetime.now() - timedelta(14)
         html = MapLinks( """
         <NOSCRIPT>
         <p><b>
@@ -187,86 +197,93 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
             countdowns = []
             for line in countdown_fd:
                 (date, event_title) = line.rstrip().split( ',' )
-                (yyyy, mm, dd) = date.split( '-' )
-                remaining = datetime(int(yyyy),int(mm),int(dd)) - datetime.now()
+                (year, month, day) = date.split( '-' )
+                remaining = datetime(int(year),int(month),int(day)) - datetime.now()
                 countdowns.append( [remaining.days, event_title] )
             countdown_fd.close()
             html += self.add_countdowns( countdowns )
         except Exception:
             pass
 
-        news = self.getNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
-        oldNews = []
+        news = self.get_news_list( "%s" % (old_news_time.strftime('%Y-%m-%d')) )
+        old_news = []
         if 'full' in self.params:
-            oldNews = self.getOldNewsList( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
-            oldArticleCount = len(oldNews)
-            showOld = True
+            old_news = self.get_old_news_list( "%s" % (old_news_time.strftime('%Y-%m-%d')) )
+            old_article_count = len(old_news)
+            show_old = True
         else:
-            oldArticleCount = self.getOldNewsCount( "%s" % (oldNewsTime.strftime('%Y-%m-%d')) )
-            showOld = False
+            old_article_count = self.get_old_news_count( "%s" % (old_news_time.strftime('%Y-%m-%d')) )
+            show_old = False
         #===================================================================
         for when, title, article in news:
             html += "<div class='newsTitle'>"
-            if showOld:
+            if show_old:
                 html += "<img border='0' width='33' height='15' src='"
                 html += MapLinks("__IMAGEPATH__/New.png'>&nbsp;")
             html += "%s<span class='newsDate'>%s</span></div>" % (title, when.strftime('%Y-%m-%d'))
             html += "<div class='newsArticle'>%s</div></div>" % article
-        for when, title, article in oldNews:
+        for when, title, article in old_news:
             html += "<div class='newsTitle'>"
             html += "%s<span class='newsDate'>%s</span></div>" % (title, when.strftime('%Y-%m-%d'))
             html += "<div class='newsArticle'>%s</div></div>" % article
         #===================================================================
-        memberList = []
-        (memberList, outOf) = self.alumni.getJoinedAfter( oldAlumniTime )
-        count = len(memberList)
+        member_list = []
+        (member_list, out_of) = self.alumni.getJoinedAfter( old_alumni_time )
+        count = len(member_list)
         if count > 10:
             count = 10
         html += "<div class='newsTitle'>Member Stats"
-        html += "<span class='newsDate'>%s</span></div>" % (oldNewsTime.strftime('%Y-%m-%d'))
+        html += "<span class='newsDate'>%s</span></div>" % (old_news_time.strftime('%Y-%m-%d'))
         html += MapLinks("<div class='newsArticle'><table background='__IMAGEPATH__/semiOpaque.png' border='1'><tr>")
         if count > 0:
-            html += "<td valign='top'><table>"
-            for (first, nee, last, firstYear, lastYear, email, instruments, emailVisible, approved, onCommittee, id) in memberList:
-                count = count - 1
-                if count < 0:
-                    continue
-                try:
-                    html += "<tr>\n"
-                    html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
-                    html += "<th align='left'>"
-                    if onCommittee: html += CommitteeMark()
-                    html += SensibleName(first,nee,last) + "</th>\n"
-                    html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
-                    html += "<td><i>(%d&nbsp;-&nbsp;%d)</i></td>\n" % (firstYear, lastYear)
-                    html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
-                    html += "<td>" + instruments + "</td>\n"
-                    html += "</tr>\n"
-                except:
-                    html += "<tr><td colspan='4'>Record error</td></tr>"
-            if len(memberList) > 0:
-                html += "</table></td>"
+            html += "<td valign='top'>"
+            if self.is_member():
+                html += "<table>"
+                for (first, nee, last, first_year, last_year, _, instruments, _, _, on_committee, _) in member_list:
+                    count = count - 1
+                    if count < 0:
+                        continue
+                    try:
+                        html += "<tr>\n"
+                        html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
+                        html += "<th align='left'>"
+                        if on_committee:
+                            html += CommitteeMark()
+                        html += SensibleName(first,nee,last) + "</th>\n"
+                        html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
+                        html += "<td><i>(%d&nbsp;-&nbsp;%d)</i></td>\n" % (first_year, last_year)
+                        html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
+                        html += "<td>" + instruments + "</td>\n"
+                        html += "</tr>\n"
+                    except Exception:
+                        html += "<tr><td colspan='4'>Record error</td></tr>"
+                if len(member_list) > 0:
+                    html += "</table>"
+            else:
+                html += "Sign in to see who the latest members are!"
+            html += "</td>"
+
         html += "<td valign='top'><table>"
         html += "<tr>\n"
         html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
-        html += MapLinks("<th>link:(#profiles,%d members signed up)" % outOf)
-        html += MapLinks("<br>link:(#profiles,%d are friends)" % self.getFriendCount())
-        html += MapLinks("<br>link:(#memories,%d memories added)" % self.getMemoryCount())
-        html += MapLinks("<br>link:(#wallaceb,%d Wallace B. Wallace winners)" % self.getWallaceCount())
+        html += MapLinks("<th>link:(#profiles,%d members signed up)" % out_of)
+        html += MapLinks("<br>link:(#profiles,%d are friends)" % self.get_friend_count())
+        html += MapLinks("<br>link:(#memories,%d memories added)" % self.get_memory_count())
+        html += MapLinks("<br>link:(#wallaceb,%d Wallace B. Wallace winners)" % self.get_wallace_count())
         #html += MapLinks("<br>link:(#johnNewby, only 345 John Newby prints remain)")
         html += "</tr>\n"
         html += "</table>"
         html += "</td>"
 
-        if self.requestor is None:
+        if not self.is_member():
             html += "<td>"
             html += self.contact_content()
             html += "</td>"
 
         html += "</tr></table></div>"
         #===================================================================
-        memoryList = self.alumni.get_memories_after(oldAlumniTime)
-        count = len(memoryList)
+        memory_list = self.alumni.get_memories_after(old_alumni_time)
+        count = len(memory_list)
         if count > 10:
             count = 10
         if count > 0:
@@ -274,32 +291,35 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
             <div class='newsTitle'>New Memories
             <span class='newsDate'>%s</span></div>
             <div class='newsArticle'><table width='90%%' background='__IMAGEPATH__/semiOpaque.png' border='1'><tr><td>
-            """ % oldNewsTime.strftime('%Y-%m-%d') )
-            for alumniId, memory, memoryTime, memoryEntryTime, memoryId in memoryList:
-                count = count - 1
-                if count < 0:
-                    continue
-                try:
-                    member = self.alumni.getMemberFromId( alumniId )
-                    html += "<b>%s %s</b>" % (memoryTime.strftime('%Y'), member.fullName())
-                    html += "<p>%s</p>\n" % memory
-                except:
-                    pass
+            """ % old_news_time.strftime('%Y-%m-%d') )
+            if self.is_member():
+                for alumni_id, memory, memory_time, _, _ in memory_list:
+                    count = count - 1
+                    if count < 0:
+                        continue
+                    try:
+                        member = self.alumni.getMemberFromId( alumni_id )
+                        html += "<b>%s %s</b>" % (memory_time.strftime('%Y'), member.fullName())
+                        html += "<p>%s</p>\n" % memory
+                    except Exception:
+                        pass
+            else:
+                html += "Sign in to see the member's memories"
             html += '</td></tr></table></div>'
         #===================================================================
         html += "<div class='newsTitle'>"
-        if showOld:
-            html += MapLinks("link:(#home, %d of these %d articles are old - click here to hide them)" % (oldArticleCount, len(oldNews) + len(news)))
+        if show_old:
+            html += MapLinks("link:(#home, %d of these %d articles are old - click here to hide them)" % (old_article_count, len(old_news) + len(news)))
             for when, title, article in news:
-                if (when > oldNewsTime):
+                if when > old_news_time:
                     continue
                 html += "<div class='newsTitle'>"
                 html += "%s<span class='newsDate'>%s</span></div>" % (title, when.strftime('%Y-%m-%d'))
                 html += "<div class='newsArticle'>%s</div></div>" % article
         else:
-            html += MapLinks("%d old articles not displayed, link:(?full=1#home,click here to see them)" % oldArticleCount)
+            html += MapLinks("%d old articles not displayed, link:(?full=1#home,click here to see them)" % old_article_count)
         html += MapLinks( """
-        <div class='copyright'>Copyright 2006 BTTB Alumni. All rights reserved.
+        <div class='copyright'>Copyright 2006-2017 BTTB Alumni Association. All rights reserved.
         <br>
         Contact Us: Bob Webb - Organizing Committee Chair: send:(info@bttbalumni.ca),
         Kevin Picott, Webmaster: send:(web@bttbalumni.ca)
@@ -316,14 +336,9 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
 
 # ==================================================================
 
-import unittest
-class testHome(unittest.TestCase):
-    def testDump(self):
-        homePage = bttbHome()
-        print homePage.content()
-    
 if __name__ == '__main__':
-    unittest.main()
+    TEST_PAGE = bttbHome()
+    print TEST_PAGE.content()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

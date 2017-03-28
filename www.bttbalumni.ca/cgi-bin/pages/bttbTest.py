@@ -7,14 +7,14 @@ from bttbPage import bttbPage
 __all__ = ['bttbTest']
 
 class bttbTest(bttbPage):
-	def __init__(self):
-		pass
-	
-	def content(self):
-		"""
-		Return a string with the content for this web page.
-		"""
-		return 'TEST'
+    '''Class that generates the test page'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPage.__init__(self)
+
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+        return 'TEST'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

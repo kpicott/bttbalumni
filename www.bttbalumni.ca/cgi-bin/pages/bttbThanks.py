@@ -6,10 +6,14 @@ from bttbPageFile import bttbPageFile
 __all__ = ['bttbThanks']
 
 class bttbThanks(bttbPageFile):
-	def __init__(self):
-		bttbPageFile.__init__(self, '__ROOTPATH__/thanks.html', '__ROOTPATH__/thanksAgain.html')
-	
-	def title(self): return 'Welcome to the BTTB Alumni'
+    '''Class that generates the registration thanks page'''
+    def __init__(self):
+        '''Set up the page'''
+        bttbPageFile.__init__(self, '__ROOTPATH__/thanks.html', '__ROOTPATH__/thanksAgain.html')
+
+    def title(self):
+        ''':return: The page title'''
+        return 'Welcome to the BTTB Alumni'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

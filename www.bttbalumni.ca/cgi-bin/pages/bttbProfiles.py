@@ -8,10 +8,11 @@ from bttbConfig import ErrorMsg
 __all__ = ['bttbProfiles']
 
 class bttbProfiles(bttbPage):
-    '''Class that generates the committee database query page'''
+    '''Class that generates the user profiles page'''
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
+        self.members_only = True
 
     def title(self):
         ''':return: The page title'''
@@ -22,12 +23,12 @@ class bttbProfiles(bttbPage):
         try:
             try:
                 alumni = bttbAlumni()
-                if self.isCommittee() and self.requestor and self.requestor.onCommittee:
+                if self.requestor and self.requestor.onCommittee:
                     return alumni.getCommitteeSummary( self.param('sort') )
                 else:
                     return alumni.getSummary( self.param('sort'), self.requestor )
             except Exception:
-                if self.isCommittee() and self.requestor and self.requestor.onCommittee:
+                if self.requestor and self.requestor.onCommittee:
                     return alumni.getCommitteeSummary( 'firstYear' )
                 else:
                     return alumni.getSummary( 'firstYear', self.requestor )
