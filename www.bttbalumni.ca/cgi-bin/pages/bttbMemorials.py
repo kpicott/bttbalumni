@@ -51,13 +51,18 @@ class bttbMemorials(bttbPageFile):
         ]
         html = MapLinks( """
         <style>
-        *
+        .inverted
+        {
+            color:              white;
+            background-color:   black;
+        }
+        .inverted td
         {
             color:  white;
         }
         </style>
         <p>
-        <table width='100%' border='0' cellspacing='5' cellpadding='10' bgcolor='black'>
+        <table class='inverted' width='100%' border='0' cellspacing='5' cellpadding='10'>
         <tr valign='top' height='118'><th colspan='3'><img width='600' height='118' border='0' src='__IMAGEPATH__/WeRemember.jpg'></th></tr>
         """ )
         for first,last,first_year,last_year,instrument in memorials:

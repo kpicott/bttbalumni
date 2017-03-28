@@ -727,12 +727,16 @@ def MemberAccessRequired(title):
     Sorry, but this page is only accessible to logged-in members. Use the
     "LOGIN" or "REGISTER" buttons at the top of the page to gain access.
     </p>
-    <div class='indented'><h2>NOTE:</h2>
+    <p>&nbsp;</p>
+    <div class="box_shadow">
+    <h1>NOTE:</h1>
+    <p>
     Login requires registration. After you have registered use
     first and last name as USERNAME - your default password is blank.
     <br>
     You may set your password (and update any other information) through
     the 'My Profile' link after you login.
+    </p>
     </div>
     """ % title
 
