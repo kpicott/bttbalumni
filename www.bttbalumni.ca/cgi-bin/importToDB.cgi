@@ -240,10 +240,10 @@ class ImportAlumniDB:
 		#------------------------------------------------------
 		self.execute( """
 		CREATE TABLE IF NOT EXISTS parade (
-  		  alumni_id       INT(10) UNSIGNED NOT NULL,
-		  approved        TINYINT(1)       NOT NULL DEFAULT '0',
-		  needsInstrument TINYINT(1)       NOT NULL DEFAULT '0',
-  		  instrument_id   INT(10) UNSIGNED NOT NULL,
+  		  alumni_id        INT(10) UNSIGNED NOT NULL,
+		  approved         TINYINT(1)       NOT NULL DEFAULT '0',
+		  needs_instrument TINYINT(1)       NOT NULL DEFAULT '0',
+  		  instrument_id    INT(10) UNSIGNED NOT NULL,
 
 		  PRIMARY KEY(alumni_id),
 
@@ -691,7 +691,7 @@ awarded the 1995 Wallace B. Wallace Award.
 		CREATE TABLE IF NOT EXISTS concert (
   		  alumni_id      INT(10) UNSIGNED NOT NULL COMMENT 'Alumni signing up',
   		  instrument_id  INT(10) UNSIGNED NOT NULL COMMENT 'Part to play',
-		  signupTime     DATETIME         NOT NULL DEFAULT '2007-01-01 00:00:00' COMMENT 'When the music was downloaded',
+		  signup_time    DATETIME         NOT NULL DEFAULT '2007-01-01 00:00:00' COMMENT 'When the music was downloaded',
 
 		  PRIMARY KEY(alumni_id),
 

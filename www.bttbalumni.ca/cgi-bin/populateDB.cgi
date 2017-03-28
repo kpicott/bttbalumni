@@ -222,7 +222,7 @@ class PopulateAlumniDB:
 		(
   		  ('alumni_id',       'INT(10) UNSIGNED', 'NOT NULL', None,  'Alumni in the parade'),
 		  ('approved',        'TINYINT(1)',       'NOT NULL', '0',   'Is participation approved?'),
-		  ('needsInstrument', 'TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
+		  ('needs_instrument','TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
   		  ('instrument_id',   'INT(10) UNSIGNED', 'NOT NULL', None,  'What are they playing?')
 		  ), """
 		  PRIMARY KEY(alumni_id),
@@ -243,7 +243,7 @@ class PopulateAlumniDB:
 		(
   		  ('alumni_id',       'INT(10) UNSIGNED', 'NOT NULL', None,  'Alumni in the parade'),
 		  ('approved',        'TINYINT(1)',       'NOT NULL', '0',   'Is participation approved?'),
-		  ('needsInstrument', 'TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
+		  ('needs_instrument','TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
   		  ('instrument_id',   'INT(10) UNSIGNED', 'NOT NULL', None,  'What are they playing?')
 		  ), """
 		  PRIMARY KEY(alumni_id),
@@ -277,7 +277,7 @@ class PopulateAlumniDB:
 		(
   		  ('alumni_id',       'INT(10) UNSIGNED', 'NOT NULL', None,  'Alumni in the concert'),
 		  ('approved',        'TINYINT(1)',       'NOT NULL', '0',   'Is participation approved?'),
-		  ('needsInstrument', 'TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
+		  ('needs_instrument','TINYINT(1)',       'NOT NULL', '0',   'Do they need an instrument?'),
   		  ('instrument_id',   'INT(10) UNSIGNED', 'NOT NULL', None,  'What are they playing?')
 		  ), """
 		  PRIMARY KEY(alumni_id),
