@@ -217,7 +217,7 @@ function set_login_or_logout(user)
 	{
         op = 'login';
     }
-    return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op + '</button>\' );\n';
+    return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op.upper() + '</button>\' );\n';
 }
 
 /*----------------------------------------------------------------------
@@ -229,11 +229,11 @@ function set_register_or_welcome(user_name)
     var welcome = '\t$("#welcome").html( \'';
     if( user_name === null )
 	{
-        welcome += '<button onclick="javascript:open_page(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;Register Now</button>';
+        welcome += '<button onclick="javascript:open_page(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;REGISTER NOW</button>';
     }
 	else
 	{
-        welcome += 'Welcome ' + user_name.replace( /\s+$/, '' );
+        welcome += 'WELCOME ' + user_name.replace( /\s+$/, '' );
     }
     welcome += '\');\n';
     return welcome;
