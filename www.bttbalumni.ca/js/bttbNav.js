@@ -217,7 +217,7 @@ function set_login_or_logout(user)
 	{
         op = 'login';
     }
-    return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op.upper() + '</button>\' );\n';
+    return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op.toUpperCase() + '</button>\' );\n';
 }
 
 /*----------------------------------------------------------------------
