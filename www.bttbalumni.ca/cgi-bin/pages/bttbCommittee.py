@@ -12,7 +12,7 @@ class bttbCommittee(bttbPageFile):
     '''Class that generates the committee database query page'''
     def __init__(self):
         '''Set up the page'''
-        bttbPageFile.__init__(self, '__ROOTPATH__/accessDenied.html', '__ROOTPATH__/committee.html')
+        bttbPageFile.__init__(self, '__ROOTPATH__/committee.html')
         self.commitee_only = True
 
     def title(self):

@@ -28,7 +28,7 @@ function load_content(hash_field, search_field)
 	var user_info = CurrentUser();
 	if( user_info[0] !== null )
 	{
-		url_params.push( 'user=' + user_info[1] );
+		url_params.push( 'user=' + user_info[0] );
 		show_committee_content = parseInt(user_info[1]);
 	}
 

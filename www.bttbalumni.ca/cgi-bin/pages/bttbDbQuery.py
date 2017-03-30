@@ -53,7 +53,7 @@ class bttbDbQuery(bttbPage):
         for value,tag,info in queries:
             html += "<tr>"
             html += "    <td align='right'><button class='shadow_button'"
-            html += r"        onclick='query_select(\"%s\")' \>%s</button>" % (tag, value)
+            html += "        onclick='query_select(\"%s\")'>%s</button>" % (tag, value)
             html += "    </td>"
             html += "    <td>" + info + "</td>"
             html += "</tr>"

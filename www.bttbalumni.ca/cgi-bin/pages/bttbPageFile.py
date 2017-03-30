@@ -24,7 +24,7 @@ class bttbPageFile(bttbPage):
         file_name = self.file_name
         try:
             if self.requestor:
-                if self.can_view_page() == NOT_COMMITTEE:
+                if self.can_view_page() == VIEW_OKAY:
                     file_name = self.alt_file_name
         except Exception:
             pass
