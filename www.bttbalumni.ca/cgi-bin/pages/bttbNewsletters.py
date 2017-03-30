@@ -19,18 +19,28 @@ class bttbNewsletters(bttbPage):
     def content(self):
         ''':return: a string with the content for this web page.'''
         html = MapLinks( """
-        <h1>Previous Newsletters</h1>
-        <p>
-        Click on the newsletter to download the PDF file.
-        </p><ol>
-        download:(__NEWSLETTERPATH__/Vol1No6.pdf, <div class='date'>June 2007</div>Volume 1 - Number 6)
-        download:(__NEWSLETTERPATH__/Vol1No5.pdf, <div class='date'>May 2007</div>Volume 1 - Number 5)
-        download:(__NEWSLETTERPATH__/Vol1No4.pdf, <div class='date'>April 2007</div>Volume 1 - Number 4)
-        download:(__NEWSLETTERPATH__/Vol1No3.pdf, <div class='date'>March 2007</div>Volume 1 - Number 3)
-        download:(__NEWSLETTERPATH__/Vol1No2.pdf, <div class='date'>February 2007</div>Volume 1 - Number 2)
-        download:(__NEWSLETTERPATH__/Vol1No1.pdf, <div class='date'>December 2006</div>Volume 1 - Number 1)
-        </ol>
-        """)
+<style>
+.date
+{
+    font-size:   12pt;
+    font-weight: bold;
+    color:       blue;
+    padding:     10px 0px 0px 0px;
+}
+</style>
+<h1>Previous Newsletters</h1>
+<p>
+Click on the newsletter to download the PDF file.
+</p><ol>
+download:(__NEWSLETTERPATH__/Vol2No1.pdf, <div class='date'>March 2017</div>Volume 2 - Number 1)
+download:(__NEWSLETTERPATH__/Vol1No6.pdf, <div class='date'>June 2007</div>Volume 1 - Number 6)
+download:(__NEWSLETTERPATH__/Vol1No5.pdf, <div class='date'>May 2007</div>Volume 1 - Number 5)
+download:(__NEWSLETTERPATH__/Vol1No4.pdf, <div class='date'>April 2007</div>Volume 1 - Number 4)
+download:(__NEWSLETTERPATH__/Vol1No3.pdf, <div class='date'>March 2007</div>Volume 1 - Number 3)
+download:(__NEWSLETTERPATH__/Vol1No2.pdf, <div class='date'>February 2007</div>Volume 1 - Number 2)
+download:(__NEWSLETTERPATH__/Vol1No1.pdf, <div class='date'>December 2006</div>Volume 1 - Number 1)
+</ol>
+""")
         return html
 
 # ==================================================================
