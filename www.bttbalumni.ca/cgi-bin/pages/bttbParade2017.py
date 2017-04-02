@@ -23,7 +23,7 @@ class bttbParade(bttbPage):
 
     def title(self):
         ''':return: The page title'''
-        return 'Sound of Music Festival Parade Alumni Band'
+        return '2017 Sound of Music Festival Parade Alumni Band'
 
     def content(self):
         ''':return: a string with the content for this web page.'''
@@ -42,7 +42,7 @@ class bttbParade(bttbPage):
         </p>
         <form name="paradeMusicForm" id="paradeMusicForm" action="javascript:submitForm(\'paradeMusicForm\', \'/cgi-bin/bttbParadeMusic.cgi\', null);">
         """ )
-        parts = self.alumni.getParadeInstrumentation('parade65')
+        parts = self.alumni.getParadeInstrumentation('parade2017')
         html += "<table><tr>"
         col = 0
         instrument_count = 0
