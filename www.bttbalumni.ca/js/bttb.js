@@ -248,6 +248,7 @@ function historyChange(newLocation, historyData)
 //
 function onSizeChange()
 {
+	/*  Old school manual sizing of the content pane
     var myWidth = 0, myHeight = 0;
     if( typeof( window.innerWidth ) == 'number' )
     {
@@ -270,6 +271,7 @@ function onSizeChange()
     var content = document.getElementById('content');
     content.style.width = (myWidth - _contentXPadding) + 'px';
     content.style.height = (myHeight - _contentYPadding) + 'px';
+	*/
 
 	// Force a redraw
 	content.className = content.className;
