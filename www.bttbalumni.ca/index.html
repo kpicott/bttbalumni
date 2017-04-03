@@ -23,6 +23,7 @@
 <link href="/css/bttbNav.css" rel="stylesheet" />
 <link href="/css/bttbPage.css" rel="stylesheet" />
 <link href="/css/bttbEffects.css" rel="stylesheet" />
+<link href="/css/bttbSocial.css" rel="stylesheet" />
 <link href="/css/font-awesome.min.css" rel="stylesheet" />
 
 </head>
@@ -90,16 +91,15 @@ to turn it back on.</p>
 <div class="page">
 
 <!-- --------------------------------------------------------------------- -->
-<!-- The menus list has two types of entry:                                -->
-<!--    [link, text] for main level links                                  -->
-<!--    [text, [children]] for dropdowns, [children] = [[link,text],...]   -->
-<!--                                                                       -->
-<!-- Prepend a question mark to the link for a disabled coming soon style  -->
+<!--  The top part is all of the content present in all pages              -->
 <!-- --------------------------------------------------------------------- -->
 <div class="site-top">
   <div class="header" id="header">
     <div class="header-container">
       <div class="header">
+		<!-- --------------------------------------------------------------------- -->
+		<!--  The header is in three sections - logo/title, social icons, login    -->
+		<!-- --------------------------------------------------------------------- -->
         <div class="header-title">
           <a href="#home"><img align="middle" src="/Images/SiteLogoSmall.png"></a>
   	      <div class="title tooltip">BTTB Alumni
@@ -112,7 +112,16 @@ to turn it back on.</p>
           <div id="welcome"><i class="fa fa-user">&nbsp;</i>Register</div>
         </div>
       </div>
+        <div class="header-social">
+			<a href="https://www.facebook.com/groups/2218469082" target="_social" class="fa-facebook social social-facebook"></a>
+			<!-- <a href="#" target="_social" class="fa-twitter social social-twitter"></a> -->
+			<!-- <a href="mailto:bttbalumni@gmail.com" target="_social" class="fa-google social social-google"></a> -->
+			<!-- <a href="#" target="_social" class="fa-youtube social social-youtube"></a> -->
+		</div>
     </div>
+	<!-- --------------------------------------------------------------------- -->
+	<!--  The navigation is built in Javascript on load                        -->
+	<!-- --------------------------------------------------------------------- -->
 	<div class="nav-container">
       <div class="nav">
       </div>
