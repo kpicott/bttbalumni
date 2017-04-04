@@ -749,11 +749,11 @@ def MailChair(subject='', text=''):
     MailChair('subject', 'Body of the mail')
     Send mail to the Chair email address from the website.
     """
-    mailContent = "From: web@bttbalumni.ca\r\nTo: info@bttbalumni.ca\r\nSubject: %s\r\n\r\n%s" % (subject.replace('&nbsp;', ' '), text.replace('&nbsp;', ' '))
+    mailContent = "From: web@bttbalumni.ca\r\nTo: web@bttbalumni.ca\r\nSubject: %s\r\n\r\n%s" % (subject.replace('&nbsp;', ' '), text.replace('&nbsp;', ' '))
     try:
         if os.environ['REMOTE_ADDR'] != '127.0.0.1':
             mailServer = smtplib.SMTP('bttbalumni.ca')
-            mailServer.sendmail('web@bttbalumni.ca', 'info@bttbalumni.ca', mailContent)
+            mailServer.sendmail('web@bttbalumni.ca', 'web@bttbalumni.ca', mailContent)
             mailServer.quit()
         else:
             print 'MAIL: ' + mailContent.replace('\n','<br>\n')
