@@ -72,142 +72,36 @@ function clustrMapError()
 //----------------------------------------------------------------------
 //
 // For processing form data then opening up a follow-up page.
-// Do not use dhtmlHistory on this page since a user will never want
-// to go back to this intermediate state, only back to their form input.
+//   form_url:  The form handler
+//   form_id:   The ID of the form on the page
+//   follow_up: The URL to go to after the form has been handled (home page if null)
 //
-function openForm(url,parameters,followUp)
+function submit_form(form_url,form_id,follow_up)
 {
-    var p = new BTTBUrl.BTTBURLParser(url, 'page2.cgi');
-    var hashUrl = p.assembledURL(true);
+    if( _debug) alert( "AJAX openForm " + form_id + " at " + form_url + ' to return to ' + follow_up );
 
-    _openingPage = true;
-    if( _debug) alert( "AJAX openForm:" + url + ' | ' + parameters + ' | ' + followUp );
-    $("#content").html( "Processing..." );
-
-    // Force the POST method on forms since the general case will not know
-    // how much data is being sent.
-    new Ajax.Request(url,
-      {
-        method: 'post',
-        postBody: parameters,
-        onComplete: function (req)
-        {
-            if( req.status === undefined
-            ||  req.status === 0
-            ||  (req.status >= 200 && req.status < 300) )
-            {
-                _openingPage = false;
-                if( followUp )
-                {
-                    $("#content").html( 'Form accepted. Forwarding to ' + followUp );
-                    if( _debug ) alert( 'Following up to ' + followUp + '\nResults : ' + req.responseText );
-                    openPage( followUp );
-                }
-                else
-                {
-                    if( _debug ) alert( 'Staying Here with: ' + req.responseText );
-                    // Default to the openPage() behaviour if there is no
-                    // followUp page specified.
-                    var response = req.responseText.split('|', 3);
-                    var title = response[0];
-                    var scriptList = response[1].split('#!#');
-                    $("#content").html( response[2] );
-                    if( title.length > 0 )
+	$.ajax( {
+		type	:	"POST",
+		url		:	form_url,
+		data	:	$(form_id).serialize(),
+		success	:	function(data)
 					{
-						$("title").html( title );
-					}
-                    if( scriptList.length > 0 )
+						if( _debug ) alert( 'Successful submit: ' + data );
+						var return_url = follow_up;
+						if( return_url === null )
+						{
+							return_url = '#home';
+						}
+						$("#content").html( 'Form accepted. Forwarding to ' + return_url );
+						if( _debug ) alert( 'Following up to ' + return_url );
+						open_page( return_url );
+					},
+		error	:	function(data)
 					{
-						loadScripts( scriptList );
+						if( _debug ) alert( 'Submit failed: ' + data );
+						alert( 'Form submission failed, please try again.' );
 					}
-                    document.location.hash = hashUrl[0];
-
-					var initializePanel = initializePanel || {};
-    				if( isFunction(initializePanel) ) initializePanel();
-                }
-            }
-            else
-            {
-                $("#content").html( '<div class="outlinedTitle">Forms Processing Error</div>'
-								  + req.responseText
-                				  + '<p>Please try again. If problem persists please notify the webmaster</p>' );
-                _openingPage = false;
-                if( _debug ) alert( 'Check errors please' );
-            }
-        },
-        onFailure: function (req)
-        {
-            $("#content").html( 'ERROR: ' + req.responseText );
-            _openingPage = false;
-            if( _debug ) alert( 'Check errors please' );
-        }
-    });
-}
-
-//----------------------------------------------------------------------
-//
-// Preprocess the form data into a parameter string suitable for passing
-// to AJAX requests.  Keeps the form submission process within the page.
-//
-function submitForm(form,url,followUp)
-{
-    var poststr = Form.serialize( form );
-    openForm(url, poststr, followUp);
-}
-
-//----------------------------------------------------------------------
-//
-// Function to dynamically add Javascript and CSS files. Required because
-// doing an AJAX load does not seem to execute them when they are embedded
-// within a loaded file.
-//
-function loadScripts(scripts)
-{
-    for( var i=0; i<scripts.length; i++ )
-    {
-        var content = scripts[i];
-
-        // Only load the script if it has not already been loaded.
-        if( $.inArray(content, _loadedScripts) >= 0 )
-		{
-            continue;
-		}
-		_loadedScripts.push( content );
-
-		// Raw script code
-		if( content.indexOf("JS:") != -1 )
-		{
-			if( _debug ) alert( 'Raw Javascript:\n' + content );
-            $('<script></script>').html( content.substring( content.indexOf("JS:") + 3 ) )
-				.appendTo( "head" );
-		}
-		// Raw CSS code
-		else if( content.indexOf("CSS:") != -1 )
-		{
-			if( _debug ) alert( 'Raw CSS:\n' + content );
-            $('<style></style>').html( content.substring( content.indexOf("CSS:") + 4 ) )
-				.appendTo( "head" );
-		}
-		// Reference to a Javascript file
-        else if( content.indexOf(".js") != -1 )
-        {
-            // Javascript files have to create a <script> tag
-			if( _debug ) alert( 'Javascript file:\n' + content );
-            $('<script></script>').attr("type", "text/javascript")
-					   .attr("src", content)
-					   .appendTo( "head" );
-        }
-		// Reference to a CSS file
-        else if( content.indexOf(".css") != -1 )
-        {
-            // CSS files have to create a <link> tag
-			if( _debug ) alert( 'CSS file:\n' + content );
-            $("<link></link>").attr("rel",  "stylesheet")
-					 .attr("type", "text/css")
-            		 .attr("href", content)
-					 .appendTo( "head" );
-        }
-    }
+	} );
 }
 
 //----------------------------------------------------------------------

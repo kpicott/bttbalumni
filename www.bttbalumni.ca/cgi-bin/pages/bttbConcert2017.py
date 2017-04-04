@@ -37,7 +37,7 @@ class bttbConcert(bttbPage):
         Click on the "SO FAR" text to reveal the names of those who have
         downloaded that particular part.
         </p>
-        <form name="concertMusicForm" id="concertMusicForm" action="javascript:submitForm(\'concertMusicForm\', \'/cgi-bin/bttbConcertMusic.cgi\', null);">
+        <form name="concertMusicForm" id="concertMusicForm" action="javascript:submit_form(\'/cgi-bin/bttbConcertMusic.cgi\', \'concertMusicForm\', null);">
         """ )
         parts = self.alumni.getConcertInstrumentation('concert_2017')
         html += "<table><tr>"

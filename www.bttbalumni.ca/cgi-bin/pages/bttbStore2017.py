@@ -48,6 +48,9 @@ def shirt_options(selector_name):
     for shirt_info in SHIRT_OPTIONS:
         html += '<option value="%s">%s</option>' % ( shirt_info, shirt_info )
     html += '</select>'
+    html += '''<br><a target="data" href="/Images70th/LadiesSizingChart.png"><b>W</b></a>
+            &nbsp;<-Sizing->&nbsp;<a target="data" href="/Images70th/MensSizingChart.png"><b>M</b></a>
+            '''
     return html
 
 #======================================================================

@@ -40,6 +40,20 @@ def default_checked(orig,if_no_value):
     return ''
 
 #----------------------------------------------------------------------
+def checkbox_code(element_id, element_name):
+    '''Return HTML implementing a standard checkbox with the given ID and name'''
+
+    name = element_name.replace( ' ', '&nbsp;' )
+    return """
+<td>
+  <input %s_CHECK type='checkbox' class='regular-checkbox' value='1' id='%s' name='%s'/>
+  <label for='%s'></label>
+</td>
+<td>
+  <div class='tag'>%s</div>
+</td>""" % (element_id,element_id,element_id,element_id,name)
+
+#----------------------------------------------------------------------
 class bttbRegister(bttbPage):
     '''Class that generates the page in which people can register for the 60th celebration'''
     def __init__(self):
@@ -54,7 +68,60 @@ class bttbRegister(bttbPage):
         ''':return: a string with the content for this web page.'''
         html = """<script type='text/javascript' src='/js/formValidation.js'></script>
                   <script type='text/javascript' src='/js/bttbRegister.js'></script>
-                  <link rel='stylesheet' href='/css/formValidation.css' />"""
+                  <link rel='stylesheet' href='/css/formValidation.css' />
+<style>
+label {
+    display: inline;
+}
+
+.regular-checkbox {
+    display: none;
+}
+
+.regular-checkbox + label {
+    background-color: #fafafa;
+    border: 1px solid #cacece;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
+    padding: 9px;
+    border-radius: 3px;
+    display: inline-block;
+    position: relative;
+}
+
+.regular-checkbox + label:active, .regular-checkbox:checked + label:active {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+}
+
+.regular-checkbox:checked + label {
+    background-color: #e9ecee;
+    border: 1px solid #adb8c0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+    color: #99a1a7;
+}
+
+.regular-checkbox:checked + label:after {
+    content:    '\\2714';
+    font-size:  14px;
+    position:   absolute;
+    top:        -3px;
+    left:       6px;
+    color:      #99a1a7;
+}
+
+
+.tag {
+    width:          250px;
+    position:       relative;
+    top:            0px;
+    display:        inline-block;
+    float:          right;
+}
+
+.button-holder {
+    float: left;
+}
+</style>
+"""
 
         try:
             member_id = int(self.param('id'))
@@ -72,156 +139,170 @@ class bttbRegister(bttbPage):
         html += "</b></p>"
 
         html += MapLinks(r"""
-<form method='POST' onsubmit='return validateRegistration();'
+<form method='POST' accept-charset='utf-8' onsubmit='return validateRegistration();'
       name="registerForm" id="registerForm" '
-      action="javascript:submitForm('registerForm', '/cgi-bin/bttbRegister.cgi', '/#thanks');">
-<table border='2'>
+      action="javascript:submit_form('/cgi-bin/bttbRegister.cgi', 'registerForm', '#thanks');">
+<table cellpadding='5' width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>BAND ALUMNI INFORMATION</font></th></tr>
 <tr><td>
-  <table>
+  <table width='750'>
   <tr>
-      <th align='right'>First Name:</th>
-    <td><input type='text' id='FirstName' onchange="validatePresent(this,'inf_firstName');" name='FirstName' value='FirstNameValue' size='32'></td>
-    <td id='inf_firstName'>Required</td>
+    <td width='350'><input type='text' placeholder='First Name' id='FirstName' onchange="validatePresent(this,'inf_firstName');" name='FirstName' value='FirstNameValue' size='32'/></td>
+    <td width='25' color='red' id='inf_firstName'>*</td>
+    <td width='350'><input type='text' placeholder='Current Last Name' id='CurrentLastName' onchange="validatePresent(this,'inf_lastName');" name='CurrentLastName' value='CurrentLastNameValue' size='32'/></td>
+    <td width='25' color='red' id='inf_lastName'>*</td>
   </tr>
   <tr>
-      <th align='right'>Current Last Name:</th>
-    <td><input type='text' id='CurrentLastName' onchange="validatePresent(this,'inf_lastName');" name='CurrentLastName' value='CurrentLastNameValue' size='32'></td>
-    <td id='inf_lastName'>Required</td>
+    <td colspan='3'><input type='text' placeholder='Last Name In Band (if different)' id='LastNameInBand' name='LastNameInBand' value='LastNameInBandValue' size='32'/></td>
+    <td></td>
   </tr>
   <tr>
-      <th valign='top' align='right'>Last Name While in Band:</th>
-      <td><input type='text' id='LastNameInBand' name='LastNameInBand' value='LastNameInBandValue' size='32'></td>
-    <td><i>(if different)</i></td>
+    <td><input type='password' placeholder='Create a Password' id='Password' name='Password' value='PasswordValue' size='32'/></td>
+    <td></td>
+    <td><i>(user ID will be 'FIRST_NAME CURRENT_LAST_NAME')</i></td>
+    <td></td>
   </tr>
   <tr>
-      <th valign='top' align='right'>Password for website login:</th>
-      <td><input type='password' id='Password' name='Password' value='PasswordValue' size='32'></td>
-    <td><i>(login will be 'FIRSTNAME LASTNAME')</i></td>
+    <td><input type='text' id='FirstYear' placeholder='Year Joined' onchange="validatePresent(this,'inf_firstYear');" name='FirstYear' value='FirstYearValue' size='4'/></td>
+    <td color='red' id='inf_firstYear'>*</td>
+    <td><input type='text' id='LastYear' placeholder='Year Left' onchange="validatePresent(this,'inf_lastYear');" name='LastYear' value='LastYearValue' size='4'/></td>
+    <td color='red' id='inf_lastYear'>*</td>
   </tr>
   <tr>
-      <th align='right'>First Year in Band:</th>
-    <td><input type='text' id='FirstYear' onchange="validatePresent(this,'inf_firstYear');" name='FirstYear' value='FirstYearValue' size='4'></td>
-    <td id='inf_firstYear'>Required</td>
-  </tr>
-  <tr>
-    <th align='right'>Last Year in Band</th>
-    <td><input type='text' id='LastYear' onchange="validatePresent(this,'inf_lastYear');" name='LastYear' value='LastYearValue' size='4'></td>
-    <td id='inf_lastYear'>Required</td>
-  </tr>
-  <tr>
-      <th valign='top' align='right'>Highest rank achieved:</th>
-      <td valign='top'><input type='text' id='HighestRank' name='HighestRank' value='HighestRankValue' size='32'></td>
+    <td><input type='text' placeholder='Highest Rank Achieved (Boys and Girls Band)' id='HighestRank' name='HighestRank' value='HighestRankValue' size='64'/></td>
+    <td></td>
     <td><i>(Boys and Girls Band only)</i></td>
-  </tr>
-  <tr>
-      <th valign='top' align='right'>Instrument(s) Played:</th>
-    <td colspan='2'><table><tr>
-        <td valign='top'><input I_Flute_CHECK type='checkbox' value='1' id='I_Flute' name='I_Flute'>Flute/Piccolo</input></td>
-        <td valign='top'><input I_Trumpet_CHECK type='checkbox' value='1' id='I_Trumpet' name='I_Trumpet'>Trumpet/Cornet</input></td>
-        <td valign='top'><input I_Clarinet_CHECK type='checkbox' value='1' id='I_Clarinet' name='I_Clarinet'>Clarinet/Bass Clarinet</input></td>
-    </tr><tr>
-        <td valign='top'><input I_French Horn_CHECK type='checkbox' value='1' id='I_French Horn' name='I_French Horn'>French Horn/Mellophone</input></td>
-        <td valign='top'><input I_Soprano Sax_CHECK type='checkbox' value='1' id='I_Soprano Sax' name='I_Soprano Sax'>Soprano Sax</input></td>
-        <td valign='top'><input I_Alto Sax_CHECK type='checkbox' value='1' id='I_Alto Sax' name='I_Alto Sax'>Alto Sax</input></td>
-    </tr><tr>
-        <td valign='top'><input I_Tenor Sax_CHECK type='checkbox' value='1' id='I_Tenor Sax' name='I_Tenor Sax'>Tenor Sax</input></td>
-        <td valign='top'><input I_Baritone Sax_CHECK type='checkbox' value='1' id='I_Baritone Sax' name='I_Baritone Sax'>Baritone Sax</input></td>
-        <td valign='top'><input I_Colour Guard_CHECK type='checkbox' value='1' id='I_Colour Guard' name='I_Colour Guard'>Colour Guard</input></td>
-    </tr><tr>
-        <td valign='top'><input I_Cymbals_CHECK type='checkbox' value='1' id='I_Cymbals' name='I_Cymbals'>Cymbals</input></td>
-        <td valign='top'><input I_Bells_CHECK type='checkbox' value='1' id='I_Bells' name='I_Bells'>Bells</input></td>
-        <td valign='top'><input I_Majorette_CHECK type='checkbox' value='1' id='I_Majorette' name='I_Majorette'>Majorette</input></td>
-    </tr><tr>
-        <td valign='top'><input I_Tuba_CHECK type='checkbox' value='1' id='I_Tuba' name='I_Tuba'>Tuba/Sousaphone</input></td>
-        <td valign='top'><input I_Trombone_CHECK type='checkbox' value='1' id='I_Trombone' name='I_Trombone'>Trombone/Valve Trombone</input></td>
-        <td valign='top'><input I_Euphonium_CHECK type='checkbox' value='1' id='I_Euphonium' name='I_Euphonium'>Euphonium/Baritone</input></td>
-    </tr><tr>
-        <td valign='top'><input I_Triples_CHECK type='checkbox' value='1' id='I_Triples' name='I_Triples'>Triple/Quad Drums</input></td>
-        <td valign='top'><input I_Percussion_CHECK type='checkbox' value='1' id='I_Percussion' name='I_Percussion'>Other Percussion</input></td>
-        <td valign='top'><input I_Bass_CHECK type='checkbox' value='1' id='I_Bass' name='I_Bass'>Bass Drum</input></td>
-    </tr><tr>
-        <td valign='top'><input I_Snare_CHECK type='checkbox' value='1' id='I_Snare' name='I_Snare'>Snare Drum</input></td>
-        <td valign='top' colspan='2'>Other? <input type='text' id='other_instrument' name='other_instrument' value='other_instrumentValue' size='32'/></td>
-    </tr></table></td>
-  </tr>
-
-  <tr><td colspan='3'>&nbsp;</td></tr>
-
-  <tr>
-    <th valign='top' align='right'>Other positions held:</th>
-    <td colspan='2'><table><tr>
-        <td><input P_Drum Major_CHECK type='checkbox' value='1' id='P_Drum Major' name='P_Drum Major'>Drum Major</input></td>
-        <td><input P_Section Leader_CHECK type='checkbox' value='1' id='P_Section Leader' name='P_Section Leader'>Section Leader</input></td>
-        <td><input P_Loading Crew_CHECK type='checkbox' value='1' id='P_Loading Crew' name='P_Loading Crew'>Loading Crew</input></td>
-    </tr><tr>
-        <td><input P_Band Executive_CHECK type='checkbox' value='1' id='P_Band Executive' name='P_Band Executive'>Band Executive</input>
-        <td><input P_Yearbook_CHECK type='checkbox' value='1' id='P_Yearbook' name='P_Yearbook'>Yearbook</input></td>
-        <td><input P_Salon Group_CHECK type='checkbox' value='1' id='P_Salon Group' name='P_Salon Group'>Salon Group</input></td>
-    </tr><tr>
-        <td><input P_Jazz Band_CHECK type='checkbox' value='1' id='P_Jazz Band' name='P_Jazz Band'>Jazz Band</input></td>
-        <td><input P_Dixieland Band_CHECK type='checkbox' value='1' id='P_Dixieland Band' name='P_Dixieland Band'>Dixieland Band</input></td>
-        <td><input P_Choir_CHECK type='checkbox' value='1' id='P_Choir' name='P_Choir'>Choir</input>
-    </tr><tr>
-        <td><input P_Dance Band_CHECK type='checkbox' value='1' id='P_Dance Band' name='P_Dance Band'>Dance Band</input></td>
-        <td colspan='2'>Other? <input type='text' id='OtherPosition' name='OtherPosition' value='OtherPositionValue' size='32'/></td>
-    </tr></table></td>
+    <td></td>
   </tr>
   </table>
 </td></tr>
-</table>
+""" )
 
+        instrument_map = [ [ 'I_Flute'         , 'Flute/Piccolo' ]
+                         , [ 'I_Trumpet'       , 'Trumpet/Cornet' ]
+                         , [ 'I_Clarinet'      , 'Bb/Eb/Bass Clarinet' ]
+                         , [ 'I_French Horn'   , 'French Horn/Mellophone' ]
+                         , [ 'I_Soprano Sax'   , 'Soprano Sax' ]
+                         , [ 'I_Alto Sax'      , 'Alto Sax' ]
+                         , [ 'I_Tenor Sax'     , 'Tenor Sax' ]
+                         , [ 'I_Baritone Sax'  , 'Baritone Sax' ]
+                         , [ 'I_Colour Guard'  , 'Colour Guard' ]
+                         , [ 'I_Cymbals'       , 'Cymbals' ]
+                         , [ 'I_Bells'         , 'Bells/Glockenspiel' ]
+                         , [ 'I_Majorette'     , 'Majorette' ]
+                         , [ 'I_Tuba'          , 'Tuba/Sousaphone' ]
+                         , [ 'I_Trombone'      , 'Trombone/Valve Trombone' ]
+                         , [ 'I_Euphonium'     , 'Euphonium/Baritone' ]
+                         , [ 'I_Triples'       , 'Triple/Quad/Quint Drums' ]
+                         , [ 'I_Percussion'    , 'Other Percussion' ]
+                         , [ 'I_Bass'          , 'Bass Drum' ]
+                         , [ 'I_Snare'         , 'Snare Drum' ]
+                         ]
+
+        instrument_checkboxes = []
+        for instrument_info in instrument_map:
+            instrument_checkboxes.append( checkbox_code( instrument_info[0], instrument_info[1] ) )
+
+        html += MapLinks( """
+<tr><th bgcolor='#dddddd'><font size='+2'>INSTRUMENT(S) PLAYED</font></th></tr>
+<tr><td>
+    <table>
+      <tr>%s%s%s</tr>
+      <tr>%s%s%s</tr>
+      <tr>%s%s%s</tr>
+      <tr>%s%s%s</tr>
+      <tr>%s%s%s</tr>
+      <tr>%s%s%s</tr>
+      <tr>
+          %s
+        <td></td> <td></td>
+        <td></td> <td></td>
+      </tr>
+      <tr>
+        <td colspan='6' valign='top'><input type='text' placeholder='Other Instrument?' id='other_instrument' name='other_instrument' value='other_instrumentValue' size='32'/></td>
+      </tr>
+    </table>
+</td></tr>
+""" % tuple(instrument_checkboxes) )
+
+        position_map = [ [ 'P_Drum Major',     'Drum Major'     ]
+                       , [ 'P_Section Leader', 'Section Leader' ]
+                       , [ 'P_Loading Crew',   'Loading Crew'   ]
+                       , [ 'P_Band Executive', 'Band Executive' ]
+                       , [ 'P_Yearbook',       'Yearbook'       ]
+                       , [ 'P_Salon Group',    'Salon Group'    ]
+                       , [ 'P_Jazz Band',      'Jazz Band'      ]
+                       , [ 'P_Dixieland Band', 'Dixieland Band' ]
+                       , [ 'P_Choir',          'Choir'          ]
+                       , [ 'P_Dance Band',     'Dance Band'     ]
+                       ]
+
+        position_checkboxes = []
+        for position_info in position_map:
+            position_checkboxes.append( checkbox_code( position_info[0], position_info[1] ) )
+
+        html += MapLinks( """
+<tr><th bgcolor='#dddddd'><font size='+2'>OTHER POSITIONS HELD</font></th></tr>
+<tr><td>
+    <table>
+    <tr>%s%s%s</tr>
+    <tr>%s%s%s</tr>
+    <tr>%s%s%s</tr>
+    <tr>
+        %s
+        <td></td> <td></td>
+        <td></td> <td></td>
+    </tr>
+    <tr>
+        <td colspan='6'><input type='text' placeholder='Any Others?' id='OtherPosition' name='OtherPosition' value='OtherPositionValue' size='32'/></td>
+    </tr>
+    </table>
+</td></tr>
+</table>
+""" % tuple(position_checkboxes) )
+
+        html += MapLinks( r"""
 <p>&nbsp;</p>
 
-<table border='2'>
+<table width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>CONTACT INFORMATION</font></th></tr>
 <tr><td>
-  <table>
+  <table width='780'>
   <tr>
-      <th align='right'>Street Address:</th>
-    <td><input type='text' id='Street1' name='Street1' value='Street1Value' size='32' \></td>
-    <th align='right'>Apt/Suite:</th>
-    <td><input type='text' id='Apt' name='Apt' value='AptValue' size='32' \></td>
+    <td width='50%'><input type='text' placeholder='Street Address' id='Street1' name='Street1' value='Street1Value' size='32' \></td>
+    <td width='50%'><input type='text' placeholder='Apt/Suite' id='Apt' name='Apt' value='AptValue' size='32' \></td>
   </tr>
   <tr>
-      <th align='right'>Street (cont'd):</th>
-    <td><input type='text' id='Street2' name='Street2' value='Street2Value' size='32' \></td>
-      <th align='right'>City:</th>
-    <td><input type='text' id='City' name='City' size='32' value='CityValue' \></td>
+    <td><input type='text' placeholder="Street (cont'd)" id='Street2' name='Street2' value='Street2Value' size='32' \></td>
+    <td><input type='text' placeholder='City' id='City' name='City' size='32' value='CityValue' \></td>
   </tr>
   <tr>
-      <th align='right'>Province/State:</th>
-    <td><input type='text' id='Province' name='Province' size='32' value='ProvinceValue' \></td>
-      <th align='right'>Country:</th>
-    <td><input type='text' id='Country' name='Country' size='32' value='CountryValue' \></td>
+    <td><input type='text' placeholder='Province/State' id='Province' name='Province' size='32' value='ProvinceValue' \></td>
+    <td><input type='text' placeholder='Country' id='Country' name='Country' size='32' value='CountryValue' \></td>
   </tr>
   <tr>
-      <th align='right'>Postal Code/Zip:</th>
-    <td><input type='text' id='PostalCode' name='PostalCode' value='PostalCodeValue' size='32'></td>
-      <th align='right'>Phone:</th>
-    <td><input type='text' id='Phone' name='Phone' value='PhoneValue' size='16'></td>
+    <td><input type='text' placeholder='PC/Zip' id='PostalCode' name='PostalCode' value='PostalCodeValue' size='32'></td>
+    <td><input type='text' placeholder='Phone' id='Phone' name='Phone' value='PhoneValue' size='16'></td>
   </tr>
   <tr>
-      <th align='right'>Email:</th>
-    <td><input type='text' id='Email' onchange="validateEmail(this,'inf_email',true);" name='Email' value='EmailValue' size='32'></td>
-      <td colspan='2' id='inf_email'>&nbsp;</td>
+    <td><input type='text' placeholder='Email' id='Email' onchange="validateEmail(this,'inf_email',true);" name='Email' value='EmailValue' size='32'></td>
+    <td id='inf_email'>&nbsp;</td>
   </tr>
-</table>
+  </table>
+
 <p id='disclaimer' align='center'><b>Please note that personal information
 will only be used for BTTB Alumni planning purposes.</b><br>
 <input KeepPrivate_CHECK type='checkbox' value='1' id='KeepPrivate' name='KeepPrivate'>&nbsp;Check here if you
-do not wish your email visible on the 'Profiles' page.</input>
+do not wish your information visible on the website.</input>
 </p>
 </td></tr></table>
 
 <p>&nbsp;</p>
 
-<table border='2'>
+<table width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'>SPECIAL MEMORY</font></th></tr>
 <tr><td>
-      Please share a special memory of your time in the band:
-    <br/>
-    <textarea rows='10' id='SpecialTime' name='SpecialTime' cols='86'>MemoryValue</textarea><input type='hidden' id='SpecialTimeId' name='SpecialTimeId' value='memory_id'
+    <textarea rows='10' placeholder='Please share a special memory of your time in the band' id='SpecialTime' name='SpecialTime' cols='86'>MemoryValue</textarea><input type='hidden' id='SpecialTimeId' name='SpecialTimeId' value='memory_id'>
 </td></tr></table>
 
 <p><input type='submit' value='Submit Profile' name='Submit'>

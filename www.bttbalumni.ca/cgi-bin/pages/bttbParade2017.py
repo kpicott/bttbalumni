@@ -40,7 +40,7 @@ class bttbParade(bttbPage):
         Click on the "SO FAR" text to reveal the names of those who have
         downloaded that particular part.
         </p>
-        <form name="paradeMusicForm" id="paradeMusicForm" action="javascript:submitForm(\'paradeMusicForm\', \'/cgi-bin/bttbParadeMusic.cgi\', null);">
+        <form name="paradeMusicForm" id="paradeMusicForm" action="javascript:submit_form(\'/cgi-bin/bttbParadeMusic.cgi\', \'paradeMusicForm\', null);">
         """ )
         parts = self.alumni.getParadeInstrumentation('parade2017')
         html += "<table><tr>"

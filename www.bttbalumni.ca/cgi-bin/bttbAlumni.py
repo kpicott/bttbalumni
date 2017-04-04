@@ -196,7 +196,7 @@ class bttbAlumni(object):
 
             if found_unapproved > 0:
                 html += '<form name="approveForm" id="approveForm" '
-                html += ' action="javascript:submitForm(\'approveForm\', \'/cgi-bin/bttbApprove.cgi\', \'/#profiles?committee=1\');">'
+                html += ' action="javascript:open_form(\'/cgi-bin/bttbApprove.cgi\', \'approveForm\', \'#profiles?committee=1\');">'
                 html += self.getCommitteeTitle( '%d %s %s' % (found_unapproved, Pluralize('Member',found_unapproved), 'Awaiting Confirmation'), sort_column )
                 for member in member_list:
                     if member and not member[items['approved']]:

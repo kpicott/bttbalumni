@@ -47,7 +47,7 @@ class bttbRegistration(bttbPage):
             <table border='0'><tr>
             <td width='200' align='center' valign='top'>
             <form name='changeForm' id='changeForm'
-                action="javascript:submitForm(\'changeForm\', \'/cgi-bin/bttbDownloadRegistration.cgi\', null)">
+                action="javascript:submit_form(\'/cgi-bin/bttbDownloadRegistration.cgi\', \'changeForm\', null)">
                 <input type='hidden' name='id' value='%d'>
                 <input type='submit' name='change' value='Change Spreadsheet'>
             </form>
@@ -56,7 +56,7 @@ class bttbRegistration(bttbPage):
             </td>
             <td width='200' align='center' valign='top'>
             <form name='readForm' id='readForm'
-                action="javascript:submitForm(\'readForm\', \'/cgi-bin/bttbDownloadRegistration.cgi\', null)">
+                action="javascript:submit_form(\'/cgi-bin/bttbDownloadRegistration.cgi\', \'readForm\', null)">
                 <input type='hidden' name='id' value='%d'>
                 <input type='submit' name='read' value='Read Only Copy'>
             </form>

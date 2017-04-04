@@ -79,8 +79,8 @@ class bttbMember:
         self.first = ''
         self.last = ''
         self.nee = ''
-        self.firstYear = '?'
-        self.lastYear = '?'
+        self.firstYear = ''
+        self.lastYear = ''
         self.email = ''
         self.emailVisible = True
         self.isFriend = False

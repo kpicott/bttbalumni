@@ -89,7 +89,7 @@ Don't want to sign up but still want to get news by email?
 Enter your name and email address below to be added to the mailing list:<br/>
 <form method='POST' onsubmit='return validateRegistration();'
       name="contactForm" id="contactForm"
-      action="javascript:submitForm('contactForm', '/cgi-bin/bttbContact.cgi', '/#thanksContact');">
+      action="javascript:submit_form('/cgi-bin/bttbContact.cgi', 'contactForm', '/#thanksContact');">
 <table border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>BAND ALUMNI CONTACT</font></th></tr>
 <tr><td>
