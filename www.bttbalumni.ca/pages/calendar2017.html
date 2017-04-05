@@ -1,25 +1,93 @@
 <title>70th Reunion Calendar of Events</title>
-<div class='title'>70th Reunion Calendar of Events</div>
-<table>
-	<tr>
-		<td>Saturday April 15, 2017</td>
-		<td>Early-Bird Deadline</td>
-	</tr>
-	<tr>
-		<td>Thursday June 15, 2017</td>
-		<td>Marching Music Practice</td>
-	</tr>
-	<tr>
-		<td>Friday June 16, 2017</td>
-		<td>Golf Tournament<br>Registration</td>
-	</tr>
-	<tr>
-		<td>Saturday June 17, 2017</td>
-		<td>Parade<br>Museum Display<br>Social Event</td>
-	</tr>
-	<tr>
-		<td>Sunday June 18, 2017</td>
-		<td>Concert in the park with the BTTB</td>
-	</tr>
-</table>
+<link rel='stylesheet' href='/css/bttbDates.css'>
+<style>
+.clearfix::after
+{
+    content:	"";
+    clear:		both;
+    display:	table;
+}
+.calendar-row
+{
+	width:		100%;
+	padding:	10px 0;
+	height:		135px;
+}
+.calendar-date
+{
+	float:	left;
+	height:	115px;
+	width:	25%;
+}
+.calendar-info
+{
+	margin:		auto 10px;
+	padding:	5px 5px;
+	width:		75%;
+	height:		115px;
+	float:		left;
+}
+</style>
 
+<h1>70th Reunion Calendar of Events</h1>
+
+<div class='clear-fix calendar-row'>
+	<time datetime="2017-04-15" class="calendar-date date-as-calendar position-em size1_75x">
+		<span class="weekday">Saturday</span>
+		<span class="day">15</span>
+		<span class="month">April</span>
+		<span class="year">2017</span>
+	</time>
+	<div class='calendar-info box_shadow'>
+		Early-Bird Deadline
+	</div>
+</div>
+
+<div class='clear-fix calendar-row'>
+	<time datetime="2017-06-15" class="calendar-date date-as-calendar position-em size1_75x">
+		<span class="weekday">Thursday</span>
+		<span class="day">15</span>
+		<span class="month">June</span>
+		<span class="year">2017</span>
+	</time>
+	<div class='calendar-info box_shadow'>
+		Marching Music Practice
+	</div>
+</div>
+
+<div class='clear-fix calendar-row'>
+	<time datetime="2017-06-16" class="calendar-date date-as-calendar position-em size1_75x">
+		<span class="weekday">Friday</span>
+		<span class="day">16</span>
+		<span class="month">June</span>
+		<span class="year">2017</span>
+	</time>
+	<div class='calendar-info box_shadow'>
+		link:(#golf2017,Golf Tournament)
+		<br>Registration
+	</div>
+</div>
+
+<div class='clear-fix calendar-row'>
+	<time datetime="2017-06-17" class="calendar-date date-as-calendar position-em size1_75x">
+		<span class="weekday">Saturday</span>
+		<span class="day">17</span>
+		<span class="month">June</span>
+		<span class="year">2017</span>
+	</time>
+	<div class='calendar-info box_shadow'>
+		link:(#store2017,Parade<br>Museum Display<br>Social Event)
+	</div>
+</div>
+
+<div class='clear-fix calendar-row'>
+	<time datetime="2017-06-18" class="calendar-date date-as-calendar position-em size1_75x">
+		<span class="weekday">Sunday</span>
+		<span class="day">18</span>
+		<span class="month">June</span>
+		<span class="year">2017</span>
+	</time>
+	<div class='calendar-info box_shadow'>
+		Concert in the park with the BTTB
+	</div>
+</div>
