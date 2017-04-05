@@ -162,7 +162,9 @@ function onSizeChange()
         myWidth = document.body.clientWidth;
         myHeight = document.body.clientHeight;
     }
+	*/
     var content = document.getElementById('content');
+	/*
     content.style.width = (myWidth - _contentXPadding) + 'px';
     content.style.height = (myHeight - _contentYPadding) + 'px';
 	*/

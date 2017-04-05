@@ -188,7 +188,6 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         </p>
         </NOSCRIPT>
         """ )
-        html += EmbeddedJS(  'browserWarning.js' )
         html += EmbeddedCSS( 'bttbHome.css' )
 
         # Add in the active countdowns

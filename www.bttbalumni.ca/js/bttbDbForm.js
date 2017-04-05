@@ -19,10 +19,10 @@ function output_type_changed()
 var queries = {
 		'all'           : 'SELECT * FROM alumni',
 		'committee'     : 'SELECT * FROM alumni WHERE onCommittee = 1',
-		// 'parade'       : $('#queryText').html( 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 1) AND alumni.id NOT IN (SELECT alumni_id FROM parade);' );
-		// 'friday'       : $('#queryText').html( 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 4) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 4);' );
-		// 'saturday'     : $('#queryText').html( 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 5) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 5);' );
-		// 'drumline'     : $('#queryText').html( 'SELECT alumni.first,alumni.nee,alumni.last,alumni.email,alumni.firstYear,alumni.lastYear, alumni.instruments FROM parade INNER JOIN alumni ON alumni.id = parade.alumni_id WHERE instruments LIKE \'%ercussion%\' OR instruments LIKE \'%Snare%\' OR instruments LIKE \'%Cymbals%\';' );
+		// 'parade'       : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 1) AND alumni.id NOT IN (SELECT alumni_id FROM parade)',
+		// 'friday'       : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 4) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 4)',
+		// 'saturday'     : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 5) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 5)',
+		// 'drumline'     : 'SELECT alumni.first,alumni.nee,alumni.last,alumni.email,alumni.firstYear,alumni.lastYear, alumni.instruments FROM parade INNER JOIN alumni ON alumni.id = parade.alumni_id WHERE instruments LIKE \'%ercussion%\' OR instruments LIKE \'%Snare%\' OR instruments LIKE \'%Cymbals%\'',
 		'contactMissing': 'SELECT contact.first,contact.nee,contact.last,contact.firstYear,contact.lastYear,contact.email,contact.phone\n' +
 						  '  FROM contact\n' +
 						  ' WHERE contact.id NOT IN\n' +
@@ -49,7 +49,7 @@ function query_select(which_query)
 	var query_value = queries[which_query];
 	if( query_value !== null )
 	{
-		$('#queryText').html( query_value );
+		$('#queryText').val( query_value );
 	}
 }
 

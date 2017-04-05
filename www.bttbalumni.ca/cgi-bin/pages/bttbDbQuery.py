@@ -52,8 +52,8 @@ class bttbDbQuery(bttbPage):
         """
         for value,tag,info in queries:
             html += "<tr>"
-            html += "    <td align='right'><button class='shadow_button'"
-            html += "        onclick='query_select(\"%s\")'>%s</button>" % (tag, value)
+            html += "    <td align='right'><input type='button' class='shadow_button'"
+            html += "        onclick='query_select(\"%s\")' value='%s'/>" % (tag, value)
             html += "    </td>"
             html += "    <td>" + info + "</td>"
             html += "</tr>"
@@ -63,7 +63,7 @@ class bttbDbQuery(bttbPage):
         </td></tr></table>
         </p>
         <form target='data' id='dbQueryForm' action="/cgi-bin/bttbDbQuery.cgi">
-        <textarea name='queryText' id='queryText' rows='10' cols='80'></textarea><br>
+        <textarea name='queryText' id='queryText' rows='10' cols='80' placeholder='Query will appear here...'></textarea><br>
         <button type='submit' class='shadow_button'>Run Query</button>
         </form>
         """

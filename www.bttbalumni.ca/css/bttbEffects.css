@@ -94,6 +94,7 @@ a:active.grey_blur
     position:		relative;
     display:		inline-block;
     border-bottom:	1px dotted black;
+    z-index:		100;
 }
 
 .tooltip .tooltiptext
@@ -107,10 +108,10 @@ a:active.grey_blur
     border-radius:		6px;
     padding:			5px 0;
     position:			absolute;
-    z-index:			20;
     top:				150%;
     left:				50%;
     margin-left:		-60px;
+    z-index:			100;
 }
 
 .tooltip .tooltiptext::after
