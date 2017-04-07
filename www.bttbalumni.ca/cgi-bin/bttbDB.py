@@ -776,77 +776,54 @@ class bttbDB( bttbData ):
         return True
 
     #----------------------------------------------------------------------
-    def GetParadeInstrumentation(self, parade_table):
+    def get_parade_registration_2017(self):
         """
-        Get the tuple of parade instrumentation information for all parts
-        (instrumentName, instrument_id, hasDownload, signedUpNames)
-
-        The parade table is passed in so that this can be shared among
-        any and all parade signups. ("parade" for the 60th, "parade65" for
-        the 65th, etc.)
+        Return a list of tuples comprising the people who have signed up
+        for the parade so far the parts they have signed up for
+            [(alumni_name,instrument_name)]
         """
-        instrumentation = []
         try:
             self.connect()
-            alumni_columns = {}
-            alumni_columns = self.get_full_member_keys()
-            self.execute( "SELECT instrument,id,hasParadeMusic FROM instruments WHERE instruments.isInParade = 1;" )
-            parts = self.__cursor.fetchall()
-            for instrument,instrument_id,download in parts:
-                self.execute( """
-                    SELECT parade.needs_instrument,alumni.*
-                    FROM alumni INNER JOIN %s
-                    WHERE alumni.id = parade.alumni_id
-                        AND parade.instrument_id = %d
-                    ORDER BY alumni.last
-                    """ % (parade_table, instrument_id) )
-                players = self.__cursor.fetchall()
-                who = []
-                for member_tuple in players:
-                    member = bttbMember()
-                    member.loadFromTuple( alumni_columns, member_tuple[1:] )
-                    if int(member_tuple[0]):
-                        who.append( '%s <sup>*</sup>' % member.fullName() )
-                    else:
-                        who.append( member.fullName() )
-                instrumentation.append( (instrument, instrument_id, download, ', '.join(who)) )
+            self.execute( """
+                SELECT
+                alumni.first,alumni.nee,alumni.last,instruments.id,2017_parade.needs_instrument
+                FROM alumni INNER JOIN instruments,2017_parade
+                WHERE alumni.id=2017_parade.alumni_id
+                    AND instruments.id=2017_parade.instrument_id
+                ORDER by alumni.last""" )
+            playing = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
             Error(self.__stage, ex)
-        return instrumentation
+
+        return playing
 
     #----------------------------------------------------------------------
-    def GetMemberParadePart(self, alumni_id):
+    def get_member_parade_part_2017(self, alumni_id):
         """
         Return the tuple of instrument information relevant to this
         member's participation in the parade.
-        (instrumentName, hasDownload)
+        (instrument_id, needs_instrument)
         """
-        parts = {}
+        needs_instrument = None
         try:
             self.connect()
-            #alumni_columns = {}
-            #alumni_columns = self.get_full_member_keys()
             self.execute( """
-                SELECT instrument_id
-                FROM parade
+                SELECT instrument_id,needs_instrument
+                FROM 2017_parade
                 WHERE alumni_id = %d
                 """ % alumni_id )
-            has_part = self.__cursor.fetchone()
-            if has_part and (len(has_part) > 0):
-                self.execute( """
-                    SELECT instrument,hasParadeMusic
-                    FROM instruments
-                    WHERE id = %d
-                    """ % has_part[0] )
-                parts = self.__cursor.fetchone()
+            parts = self.__cursor.fetchone()
+            if parts and (len(parts) > 0):
+                return parts
             self.close()
         except Exception, ex:
             Error(self.__stage, ex)
-        return parts
+
+        return None
 
     #----------------------------------------------------------------------
-    def SetParadePart(self,alumni_id,instrument_id,needs_instrument):
+    def set_member_parade_part_2017(self,alumni_id,instrument_id,needs_instrument):
         """
         Set the parade part to be played by the given alumnus.
         """

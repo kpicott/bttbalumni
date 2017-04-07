@@ -728,7 +728,7 @@ def MemberAccessRequired(title):
     "LOGIN" or "REGISTER" buttons at the top of the page to gain access.
     </p>
     <p>&nbsp;</p>
-    <div class="box_shadow">
+    <div class="box_shadow" style="padding: 10px;">
     <h1>NOTE:</h1>
     <p>
     Login requires registration. After you have registered use
