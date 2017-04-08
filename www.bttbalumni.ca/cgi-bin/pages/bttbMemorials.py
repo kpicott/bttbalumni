@@ -26,6 +26,7 @@ class bttbMemorials(bttbPageFile):
             ("Roy", "Hall", 1947, 1950, "Percussion"),
             ("Larry", "Oake", 1947, 1953, "Flute"),
             ("Roger", "Hammill", 1954, 1961, "Trombone"),
+            ("Dave", "Allaster", 1959, 1972, "Trumpet"),
             ("Rob", "Herdman", 1961, 1965, "Tuba"),
             ("Bob", "Champ", 1962, 1970, "Trumpet"),
             ("Charlie", "Parsons", 1962, 1997, "Equipment Manager, Truck Driver, Chaperone"),
@@ -34,6 +35,7 @@ class bttbMemorials(bttbPageFile):
             ("Anne", "(Gordon)&nbsp;Hall", 1964, 1970, "Colour Guard"),
             ("Louise", "Dagenais", 1965, 1971, "Majorette"),
             ("Pat", "(Millward)&nbsp;Plummer", 1965, 1975, "Majorette/Flute"),
+            ("Neal", "Sinclair", 1967, 1973, ""),
             ("Pete", "Conway", 1968, 1972, "Percussion"),
             ("Tim", "Watt", 1968, 1973, "Percussion"),
             ("Mary", "Ford", 1968, 1973, "Colour Guard"),
@@ -44,10 +46,14 @@ class bttbMemorials(bttbPageFile):
             ("Cindy", "Schmidt", 1972, 1976, "Colour Guard"),
             ("George", "Newell", 1972, 1978, "Booster/Chaperone"),
             ("Nancy", "(Neil)&nbsp;Kerr", 1976, 1981, "Saxophone"),
+            ("Glen", "De Foa", 1976, 1979, ""),
             ("Don", "Bennett", 1977, 1982, "French Horn"),
-            ("Antony", "Roberts", 1981, 1985, "Percussion"),
             ("Paul", "Hill", 1980, 1985, "Flute"),
-            ("Willem", "Murray", 1987, 1989, "Percussion")
+            ("Toni", "(Gaul)&nbsp;Clement", 1980, 1987, "Flute/Piccolo"),
+            ("Antony", "Roberts", 1981, 1985, "Percussion"),
+            ("Cathy", "(Carr)&nbsp;Paszt", 1982, 1987, "Saxophone"),
+            ("Willem", "Murray", 1987, 1989, "Percussion"),
+            ("Mac", "Elliot", 2012, 2013, "Percussion")
         ]
         html = MapLinks( """
         <style>

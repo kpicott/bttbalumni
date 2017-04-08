@@ -459,8 +459,20 @@ def TableList():
     Order is important because of foreign key dependencies in the DB.
     Delete in reverse order of return.
     """
-    return [ "contact", "instruments", "alumni", "pages", "60thevents", "memories", "parade", "parade65", "concert", "paid", "wallace", "attendance", "volunteers" ]
-#    return [ "alumni", "pages", "60thevents", "memories", "attendance", "volunteers" ]
+    return [ "60thevents"
+           , "2017_concert"
+           , "2017_parade"
+           , "2017_social"
+           , "alumni"
+           , "attendance"
+           , "contact"
+           , "instruments"
+           , "memories"
+           , "news"
+           , "pages"
+           , "paid"
+           , "volunteers"
+           , "wallace" ]
 
 #======================================================================
 def DbFormat(src):
@@ -728,7 +740,7 @@ def MemberAccessRequired(title):
     "LOGIN" or "REGISTER" buttons at the top of the page to gain access.
     </p>
     <p>&nbsp;</p>
-    <div class="box_shadow">
+    <div class="box_shadow" style="padding: 10px;">
     <h1>NOTE:</h1>
     <p>
     Login requires registration. After you have registered use

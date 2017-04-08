@@ -59,7 +59,7 @@ class bttbMemories(bttbPage):
             end_year = int(self.param('end_year'))
         html += MapLinks( """
         <table width='100%%'><tr>
-        <td>Showing memories between&nbsp;
+        <td><form action="">Showing memories between&nbsp;
         <input type='text' onchange='years_changed()' size='4' id='start_year' value='%d'>
         &nbsp;and&nbsp;
         <input type='text' onchange='years_changed()' size='4' id='end_year' value='%d'></td>

@@ -776,97 +776,90 @@ class bttbDB( bttbData ):
         return True
 
     #----------------------------------------------------------------------
-    def GetParadeInstrumentation(self, parade_table):
+    def get_parade_registration_2017(self):
         """
-        Get the tuple of parade instrumentation information for all parts
-        (instrumentName, instrument_id, hasDownload, signedUpNames)
-
-        The parade table is passed in so that this can be shared among
-        any and all parade signups. ("parade" for the 60th, "parade65" for
-        the 65th, etc.)
+        Return a list of tuples comprising the people who have signed up
+        for the parade so far the parts they have signed up for
+            [(alumni_name,instrument_name)]
         """
-        instrumentation = []
         try:
             self.connect()
-            alumni_columns = {}
-            alumni_columns = self.get_full_member_keys()
-            self.execute( "SELECT instrument,id,hasParadeMusic FROM instruments WHERE instruments.isInParade = 1;" )
-            parts = self.__cursor.fetchall()
-            for instrument,instrument_id,download in parts:
-                self.execute( """
-                    SELECT parade.needs_instrument,alumni.*
-                    FROM alumni INNER JOIN %s
-                    WHERE alumni.id = parade.alumni_id
-                        AND parade.instrument_id = %d
-                    ORDER BY alumni.last
-                    """ % (parade_table, instrument_id) )
-                players = self.__cursor.fetchall()
-                who = []
-                for member_tuple in players:
-                    member = bttbMember()
-                    member.loadFromTuple( alumni_columns, member_tuple[1:] )
-                    if int(member_tuple[0]):
-                        who.append( '%s <sup>*</sup>' % member.fullName() )
-                    else:
-                        who.append( member.fullName() )
-                instrumentation.append( (instrument, instrument_id, download, ', '.join(who)) )
+            self.execute( """
+                SELECT
+                alumni.first,alumni.nee,alumni.last,instruments.id,2017_parade.needs_instrument
+                FROM alumni INNER JOIN instruments,2017_parade
+                WHERE alumni.id=2017_parade.alumni_id
+                    AND instruments.id=2017_parade.instrument_id
+                ORDER by alumni.last""" )
+            playing = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
             Error(self.__stage, ex)
-        return instrumentation
+
+        return playing
 
     #----------------------------------------------------------------------
-    def GetMemberParadePart(self, alumni_id):
+    def get_parade_part_2017(self, alumni_id):
         """
         Return the tuple of instrument information relevant to this
         member's participation in the parade.
-        (instrumentName, hasDownload)
+        (instrument_id, needs_instrument)
         """
-        parts = {}
         try:
             self.connect()
-            #alumni_columns = {}
-            #alumni_columns = self.get_full_member_keys()
             self.execute( """
-                SELECT instrument_id
-                FROM parade
+                SELECT instrument_id,needs_instrument
+                FROM 2017_parade
                 WHERE alumni_id = %d
                 """ % alumni_id )
-            has_part = self.__cursor.fetchone()
-            if has_part and (len(has_part) > 0):
-                self.execute( """
-                    SELECT instrument,hasParadeMusic
-                    FROM instruments
-                    WHERE id = %d
-                    """ % has_part[0] )
-                parts = self.__cursor.fetchone()
+            parts = self.__cursor.fetchone()
+            if parts and (len(parts) > 0):
+                return parts
             self.close()
         except Exception, ex:
             Error(self.__stage, ex)
-        return parts
+
+        return None
 
     #----------------------------------------------------------------------
-    def SetParadePart(self,alumni_id,instrument_id,needs_instrument):
+    def set_parade_part_2017(self,alumni_id,instrument_id,needs_instrument):
         """
         Set the parade part to be played by the given alumnus.
         """
         try:
             self.connect()
-            select_cmd = "SELECT instrument_id FROM parade WHERE parade.alumni_id = %d" % alumni_id
+            select_cmd = "SELECT instrument_id FROM 2017_parade WHERE 2017_parade.alumni_id = %d" % alumni_id
             self.execute( select_cmd )
             has_part = self.__cursor.fetchone()
             if has_part:
                 set_cmd = """
-                UPDATE parade SET instrument_id=%d, needs_instrument=%d
+                UPDATE 2017_parade SET instrument_id=%d, needs_instrument=%d
                 WHERE alumni_id = %d;
                 """ % (instrument_id, needs_instrument, alumni_id)
             else:
                 set_cmd = """
-                INSERT INTO parade (alumni_id, approved, needs_instrument, instrument_id)
-                VALUES (%d, 1, %d, %d);
+                INSERT INTO 2017_parade (alumni_id, needs_instrument, instrument_id)
+                VALUES (%d, %d, %d);
                 """ % (alumni_id, needs_instrument, instrument_id)
 
             self.execute( set_cmd )
+
+            # Need a COMMIT since we're using InnoDB
+            self.execute( 'COMMIT' )
+            self.close()
+        except Exception, ex:
+            Error(self.__stage, ex)
+        return True
+
+    #----------------------------------------------------------------------
+    def delete_parade_part_2017(self,alumni_id):
+        """
+        Remove the alumnus from the parade database.
+        """
+        try:
+            self.connect()
+            delete_cmd = "DELETE FROM 2017_parade WHERE alumni_id = %d" % alumni_id
+            self.execute( delete_cmd )
 
             # Need a COMMIT since we're using InnoDB
             self.execute( 'COMMIT' )

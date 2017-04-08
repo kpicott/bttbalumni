@@ -22,8 +22,6 @@ class bttbAlumni(object):
         self.member_list = []
         try:
             self.__db = bttbDB()
-            if __name__ == '__main__':
-                self.__db.TurnDebugOn()
             self.__db.Initialize()
         except Exception, ex:
             Error( 'Connecting to database', ex )
@@ -364,11 +362,18 @@ class bttbAlumni(object):
         return self.__db.GetConcertInstrumentation(concert_table)
 
     #----------------------------------------------------------------------
-    def getParadeInstrumentation(self, parade_table):
+    def get_parade_registration_2017(self):
         """
-        Return the list of current parade participants
+        Return the list of parade participants for the 2017 reunion
         """
-        return self.__db.GetParadeInstrumentation(parade_table)
+        return self.__db.get_parade_registration_2017()
+
+    #----------------------------------------------------------------------
+    def get_parade_part_2017(self, member_id):
+        """
+        Return the list of parade participants for the 2017 reunion
+        """
+        return self.__db.get_parade_part_2017(member_id)
 
     #----------------------------------------------------------------------
     def updateMember(self, member, memory, memory_id):
