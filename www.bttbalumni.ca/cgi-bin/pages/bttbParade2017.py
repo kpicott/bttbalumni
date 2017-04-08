@@ -107,20 +107,28 @@ def page_js():
                         {
                             if( data[0] === "0" )
                             {
-                                alert( 'Processed and quit' );
+                                $('#parade-status').attr( 'class', 'status-not' );
+                                $('#parade-status').html( 'Not Signed Up' );
+                                $('#parade-action').attr( 'value', 'Sign Up' );
+                                $('#position-query').html( '-- Select Marching Position --' );
                             }
                             else if( data[0] === "1" )
                             {
-                                alert( 'Processed and signed up' );
+                                $('#parade-status').attr( "class", "status-in" );
+                                $('#parade-status').html( "Signed Up" );
+                                $('#parade-action').attr( "value", "Change Instrument" );
+                                $('#position-query').html( '-- Not Going To March --' );
                             }
                             else
                             {
-                                alert( 'Failed to process : "' + data + '"');
+                                $('#parade-status').attr( "class", "status-err" );
+                                $('#parade-status').html( "ERR: Try Again" );
                             }
                         },
             error   :   function(data)
                         {
-                            alert( 'Failed with ' + data );
+                            $('#parade-status').attr( "class", "status-err" );
+                            $('#parade-status').html( "ERR: Try Again" );
                         }
         } );
     }
@@ -199,15 +207,15 @@ def page_css():
     margin-top: 20px;
 }
 
-/* Parade status is a standalone box in the main area */
-.parade-status
+/* parade-info is a standalone box in the main area */
+.parade-info
 {
     width:      500px;
     margin:     20px;
     padding:    10px;
 }
 
-.parade-status p
+.parade-info p
 {
     margin:   5px;
 }
@@ -304,18 +312,20 @@ class bttbParade2017(bttbPage):
         instrument_selected = 0
         signup_status = 'Not Signed Up'
         submit_string = 'Sign Up Now'
+        signup_class = 'status-not'
 
         # If the member is signed up then change status strings to indicate that
         signed_up = self.alumni.get_parade_part_2017( self.requestor.id )
         if signed_up is not None:
             signup_status = 'SIGNED UP'
             submit_string = 'Edit My Info'
+            signup_class = 'status-in'
             instrument_selected, needs_instrument = signed_up
 
         # Build the instrument selector from the list of available instruments,
         # using slot 0 to indicate no selection
         instrument_selector = '<select class="dropdown" name="instrument" id="instrument">'
-        instrument_selector += '<option id="position_query" value="0">-- Select Marching Position --</option>'
+        instrument_selector += '<option id="position-query" value="0">-- Select Marching Position --</option>'
         for part in WOODWINDS + BRASS + PERCUSSION + OTHERS:
             select = ''
             try:
@@ -350,22 +360,22 @@ have signed up for that particular part.
 </p>
 
 </div>
-<div class='parade-status box_shadow'>
+<div class='parade-info box_shadow'>
 <form name='parade_form' id='parade_form' action='javascript:submit_to_parade();'>
 <input type='hidden' name='id' value='%d'>
 <p>
-Your Parade Status : <span class='count'>%s</span><br>
+Your Parade Status : <span id='parade-status' class='%s'>%s</span><br>
 </p><p>
 Instrument Choice : %s<br>
 </p><p>
 Need Instrument? : <input type='checkbox' name='needs_instrument' id='needs_instrument' value='%d'><br>
 </p><p>
-<input class='shadow_button' type='submit' name='submit' value='%s'><br>
+<input id='parade-action' class='shadow_button' type='submit' name='submit' value='%s'><br>
 </form>
 </div>
 
 </div>
-""" % (self.requestor.id, signup_status, instrument_selector, needs_instrument, submit_string) )
+""" % (self.requestor.id, signup_class, signup_status, instrument_selector, needs_instrument, submit_string) )
 
         html += MapLinks( """
 <div class='music'>
