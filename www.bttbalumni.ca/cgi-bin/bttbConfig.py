@@ -459,8 +459,20 @@ def TableList():
     Order is important because of foreign key dependencies in the DB.
     Delete in reverse order of return.
     """
-    return [ "contact", "instruments", "alumni", "pages", "60thevents", "memories", "parade", "parade65", "concert", "paid", "wallace", "attendance", "volunteers" ]
-#    return [ "alumni", "pages", "60thevents", "memories", "attendance", "volunteers" ]
+    return [ "60thevents"
+           , "2017_concert"
+           , "2017_parade"
+           , "2017_social"
+           , "alumni"
+           , "attendance"
+           , "contact"
+           , "instruments"
+           , "memories"
+           , "news"
+           , "pages"
+           , "paid"
+           , "volunteers"
+           , "wallace" ]
 
 #======================================================================
 def DbFormat(src):

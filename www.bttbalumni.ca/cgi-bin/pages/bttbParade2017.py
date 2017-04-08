@@ -87,6 +87,140 @@ OTHERS = [ [None, 'Twirler',                     40]
          ]
 
 #----------------------------------------------------------------------
+def page_js():
+    ''':return: A string with the Javascript specific to this page'''
+    return """<script>
+    //
+    // Method called when the form to set an instrument is submitted.
+    // Use the POST method to avoid exposing any information in the submission.
+    // Updates the button and status information based on the returned value.
+    //
+    function submit_to_parade()
+    {
+        var form_url = '/cgi-bin/bttbParade2017.cgi';
+        var return_value = 0;
+        $.ajax( {
+            type    :   "POST",
+            url     :   form_url,
+            data    :   $('#parade_form').serialize(),
+            success :   function(data)
+                        {
+                            if( data[0] === "0" )
+                            {
+                                alert( 'Processed and quit' );
+                            }
+                            else if( data[0] === "1" )
+                            {
+                                alert( 'Processed and signed up' );
+                            }
+                            else
+                            {
+                                alert( 'Failed to process : "' + data + '"');
+                            }
+                        },
+            error   :   function(data)
+                        {
+                            alert( 'Failed with ' + data );
+                        }
+        } );
+    }
+</script>"""
+
+#----------------------------------------------------------------------
+def page_css():
+    ''':return: A string with the CSS specific to this page'''
+    return """<style>
+/* Three status types used for the current parade status */
+.status-not /* Not in the parade - red */
+{
+    font-size:   16pt;
+    font-weight: bold;
+    color:       #AF4C50;
+}
+.status-in /* In the parade - green */
+{
+    font-size:   16pt;
+    font-weight: bold;
+    color:       #4CAF50;
+}
+.status-err /* Processing error - italic red */
+{
+    font-size:   16pt;
+    font-weight: bold;
+    font-style:  italic;
+    color:       #AF4C50;
+}
+
+/* Format for the current instrumentation count */
+.count
+{
+    font-size:   16pt;
+    font-weight: bold;
+    color:       #AF4C50;
+}
+
+/* The music block contains the table with the download links */
+.music
+{
+    clear:      both;
+    display:    block;
+    margin-top: 20px;
+}
+
+.music table
+{
+    border-collapse:  collapse;
+    border:           1px solid #d2d2d2;
+    margin-below:     20px;
+}
+
+.music th, td
+{
+    text-align:     left;
+    padding:        4px;
+    border-right:   2px solid #d2d2d2;
+    width:          33%%;
+}
+
+.music th
+{
+    background-color: #AF4C50;
+    color:            white;
+}
+
+/* Main block is the info to the left */
+.main-text
+{
+    width:  600px;
+    margin: 20px;
+}
+.main-text p
+{
+    margin-top: 20px;
+}
+
+/* Parade status is a standalone box in the main area */
+.parade-status
+{
+    width:      500px;
+    margin:     20px;
+    padding:    10px;
+}
+
+.parade-status p
+{
+    margin:   5px;
+}
+
+/* main-image floats to the right in the main area */
+.main-image
+{
+    float:         right;
+    margin-bottom: 20px;
+}
+</style>"""
+
+#----------------------------------------------------------------------
 def instrument_name_from_id(instrument_id):
     '''
     :param instrument_id: The ID in the database of the instrument to find
@@ -117,7 +251,7 @@ class bttbParade2017(bttbPage):
             if len(nee_name) > 0:
                 full_name += " (%s)" % nee_name
             full_name += " %s" % last_name
-            self.instrumentation[instrument_id] = self.instrumentation.get(instrument_id, []) + [full_name,needs_instrument]
+            self.instrumentation[instrument_id] = self.instrumentation.get(instrument_id, []) + [[full_name,needs_instrument]]
 
     #----------------------------------------------------------------------
     def download_column(self, instrument_info):
@@ -131,10 +265,14 @@ class bttbParade2017(bttbPage):
         if name is None:
             return "<td></td>"
 
+        tooltip = ''
         if instrument_info[2] in self.instrumentation:
-            count = len(self.instrumentation[instrument_info[2]])/2
+            for player_name,_ in self.instrumentation[instrument_info[2]]:
+                tooltip += '%s\n' % player_name
+                count += 1
+            tooltip = tooltip.replace( "'", "&quot;" )
 
-        return "<td><a target='music' href='/Images70th/ParadeMusic/%s.pdf'>%s</a><span class='count'>&nbsp;(%d)</span></td>" % (link, name.replace(' ','&nbsp;'), count)
+        return "<td><a title='%s' target='music' href='/Images70th/ParadeMusic/%s.pdf'>%s</a><span class='count'>&nbsp;(%d)</span></td>" % (tooltip, link, name.replace(' ','&nbsp;'), count)
 
     #----------------------------------------------------------------------
     def count_column(self, part_info):
@@ -168,7 +306,7 @@ class bttbParade2017(bttbPage):
         submit_string = 'Sign Up Now'
 
         # If the member is signed up then change status strings to indicate that
-        signed_up = self.alumni.get_member_parade_part_2017( self.requestor.id )
+        signed_up = self.alumni.get_parade_part_2017( self.requestor.id )
         if signed_up is not None:
             signup_status = 'SIGNED UP'
             submit_string = 'Edit My Info'
@@ -176,8 +314,8 @@ class bttbParade2017(bttbPage):
 
         # Build the instrument selector from the list of available instruments,
         # using slot 0 to indicate no selection
-        instrument_selector = '<select class="dropdown" id="">'
-        instrument_selector += '<option value="0">-- Select Marching Position --</option>'
+        instrument_selector = '<select class="dropdown" name="instrument" id="instrument">'
+        instrument_selector += '<option id="position_query" value="0">-- Select Marching Position --</option>'
         for part in WOODWINDS + BRASS + PERCUSSION + OTHERS:
             select = ''
             try:
@@ -186,72 +324,16 @@ class bttbParade2017(bttbPage):
                 if part[2] == instrument_selected:
                     select = ' selected'
                 instrument_selector += '<option value="%s"%s>%s</option>' % ( part[2], select, part[1] )
-            except Exception, ex:
+            except Exception:
                 pass
         instrument_selector += '</select>'
 
-        html = MapLinks( """
-<style>
-.count
-{
-    font-size:   16pt;
-    font-weight: bold;
-    color:       #AF4C50;
-}
+        html = page_css() + page_js()
 
-.music
-{
-    clear:      both;
-    display:    block;
-    margin-top: 20px;
-}
-
-.music table
-{
-    border-collapse:  collapse;
-    border:           1px solid #d2d2d2;
-}
-
-.music th, td
-{
-    text-align:     left;
-    padding:        4px;
-    border-right:   2px solid #d2d2d2;
-    width:          33%%;
-}
-
-.music th
-{
-    background-color: #AF4C50;
-    color:            white;
-}
-
-.main-text
-{
-    width:  600px;
-    margin: 20px;
-}
-.main-text p
-{
-    margin-top: 20px;
-}
-
-.parade-status
-{
-    width:      500px;
-    margin:     20px;
-    padding:    10px;
-}
-
-.parade-status p
-{
-    margin:   5px;
-}
-
-</style>
+        html += MapLinks( """
 <div>
 
-<div style="float: right; margin-bottom: 20px;"><img src="/Images70th/Parade.jpg"></div>
+<div class="main-image"><img src="/Images70th/Parade.jpg"></div>
 
 <div class="main-text">
 
@@ -269,7 +351,7 @@ have signed up for that particular part.
 
 </div>
 <div class='parade-status box_shadow'>
-<form name='parade_form' id='parade_form' action='javascript:submit_form("/cgi-bin/bttbParade2017Signup.cgi",null);'>
+<form name='parade_form' id='parade_form' action='javascript:submit_to_parade();'>
 <input type='hidden' name='id' value='%d'>
 <p>
 Your Parade Status : <span class='count'>%s</span><br>
@@ -278,7 +360,7 @@ Instrument Choice : %s<br>
 </p><p>
 Need Instrument? : <input type='checkbox' name='needs_instrument' id='needs_instrument' value='%d'><br>
 </p><p>
-<input type='submit' name='submit' value='%s'><br>
+<input class='shadow_button' type='submit' name='submit' value='%s'><br>
 </form>
 </div>
 

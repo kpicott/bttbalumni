@@ -799,13 +799,12 @@ class bttbDB( bttbData ):
         return playing
 
     #----------------------------------------------------------------------
-    def get_member_parade_part_2017(self, alumni_id):
+    def get_parade_part_2017(self, alumni_id):
         """
         Return the tuple of instrument information relevant to this
         member's participation in the parade.
         (instrument_id, needs_instrument)
         """
-        needs_instrument = None
         try:
             self.connect()
             self.execute( """
@@ -823,27 +822,44 @@ class bttbDB( bttbData ):
         return None
 
     #----------------------------------------------------------------------
-    def set_member_parade_part_2017(self,alumni_id,instrument_id,needs_instrument):
+    def set_parade_part_2017(self,alumni_id,instrument_id,needs_instrument):
         """
         Set the parade part to be played by the given alumnus.
         """
         try:
             self.connect()
-            select_cmd = "SELECT instrument_id FROM parade WHERE parade.alumni_id = %d" % alumni_id
+            select_cmd = "SELECT instrument_id FROM 2017_parade WHERE 2017_parade.alumni_id = %d" % alumni_id
             self.execute( select_cmd )
             has_part = self.__cursor.fetchone()
             if has_part:
                 set_cmd = """
-                UPDATE parade SET instrument_id=%d, needs_instrument=%d
+                UPDATE 2017_parade SET instrument_id=%d, needs_instrument=%d
                 WHERE alumni_id = %d;
                 """ % (instrument_id, needs_instrument, alumni_id)
             else:
                 set_cmd = """
-                INSERT INTO parade (alumni_id, approved, needs_instrument, instrument_id)
-                VALUES (%d, 1, %d, %d);
+                INSERT INTO 2017_parade (alumni_id, needs_instrument, instrument_id)
+                VALUES (%d, %d, %d);
                 """ % (alumni_id, needs_instrument, instrument_id)
 
             self.execute( set_cmd )
+
+            # Need a COMMIT since we're using InnoDB
+            self.execute( 'COMMIT' )
+            self.close()
+        except Exception, ex:
+            Error(self.__stage, ex)
+        return True
+
+    #----------------------------------------------------------------------
+    def delete_parade_part_2017(self,alumni_id):
+        """
+        Remove the alumnus from the parade database.
+        """
+        try:
+            self.connect()
+            delete_cmd = "DELETE FROM 2017_parade WHERE alumni_id = %d" % alumni_id
+            self.execute( delete_cmd )
 
             # Need a COMMIT since we're using InnoDB
             self.execute( 'COMMIT' )

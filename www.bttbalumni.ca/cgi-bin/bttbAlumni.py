@@ -369,11 +369,11 @@ class bttbAlumni(object):
         return self.__db.get_parade_registration_2017()
 
     #----------------------------------------------------------------------
-    def get_member_parade_part_2017(self, member_id):
+    def get_parade_part_2017(self, member_id):
         """
         Return the list of parade participants for the 2017 reunion
         """
-        return self.__db.get_member_parade_part_2017(member_id)
+        return self.__db.get_parade_part_2017(member_id)
 
     #----------------------------------------------------------------------
     def updateMember(self, member, memory, memory_id):

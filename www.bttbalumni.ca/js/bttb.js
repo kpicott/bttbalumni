@@ -87,14 +87,16 @@ function submit_form(form_url,form_id,follow_up)
 		success	:	function(data)
 					{
 						if( _debug ) alert( 'Successful submit: ' + data );
-						var return_url = follow_up;
-						if( return_url === null )
+						if( follow_up === null )
 						{
-							return_url = '#home';
+							$("#content").html( data );
 						}
-						$("#content").html( 'Form accepted. Forwarding to ' + return_url );
-						if( _debug ) alert( 'Following up to ' + return_url );
-						open_page( return_url );
+						else
+						{
+							$("#content").html( 'Form accepted. Forwarding to ' + follow_up );
+							if( _debug ) alert( 'Following up to ' + follow_up );
+							open_page( return_url );
+						}
 					},
 		error	:	function(data)
 					{
