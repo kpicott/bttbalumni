@@ -95,7 +95,7 @@ function submit_form(form_url,form_id,follow_up)
 						{
 							$("#content").html( 'Form accepted. Forwarding to ' + follow_up );
 							if( _debug ) alert( 'Following up to ' + follow_up );
-							open_page( return_url );
+							open_page( follow_up );
 						}
 					},
 		error	:	function(data)
