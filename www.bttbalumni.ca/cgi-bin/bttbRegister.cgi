@@ -41,7 +41,6 @@ class BTTBRegister(bttbCGI):
                 member.setId( unique_id )
         except Exception, ex:
             Error( 'Registration processing error', ex )
-            print ex
 
         member.setEditTime( changed_at )
 

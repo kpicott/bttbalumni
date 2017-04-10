@@ -24,12 +24,12 @@ class bttbProfiles(bttbPage):
             try:
                 alumni = bttbAlumni()
                 if self.requestor and self.requestor.onCommittee:
-                    return alumni.getCommitteeSummary( self.param('sort') )
+                    return alumni.get_alumni_summary_for_committee( self.param('sort') )
                 else:
-                    return alumni.getSummary( self.param('sort'), self.requestor )
+                    return alumni.get_alumni_summary( self.param('sort'), self.requestor )
             except Exception:
                 if self.requestor and self.requestor.onCommittee:
-                    return alumni.getCommitteeSummary( 'firstYear' )
+                    return alumni.get_alumni_summary_for_committee( 'firstYear' )
                 else:
                     return alumni.getSummary( 'firstYear', self.requestor )
         except Exception, ex:

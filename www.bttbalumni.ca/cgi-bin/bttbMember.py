@@ -2,74 +2,110 @@
 """
 BTTB member profile information.
 """
-import re
-import os.path
 from datetime import datetime
-from xml.dom import minidom
-from bttbConfig import *
+from bttbConfig import PhoneFormat
 
 __all__ = ['SensibleName', 'bttbMember']
 
 #
-def _sortByNee(x,y):
-    xNee = x.nee
-    yNee = y.nee
-    if xNee: xNee = xNee.lower()
-    if yNee: yNee = yNee.lower()
-    return cmp(xNee, yNee)
-def _sortByFirstName(x,y):    return cmp(x.first.lower(), y.first.lower())
-def _sortByLastName(x,y):    return cmp(x.last.lower(), y.last.lower())
-def _sortByFirstYear(x,y):    return cmp(x.firstYear, y.firstYear)
-def _sortByLastYear(x,y):    return cmp(x.lastYear, y.lastYear)
-def _sortByEmail(x,y):
-    xemail = x.email
-    yemail = y.email
-    if( not x.emailVisible ): xemail = '---'
-    if( not y.emailVisible ): yemail = '---'
-    return cmp(xemail.lower(), yemail.lower())
-def _sortByJoinDate(x,y):
-    xJoin = x.joinTime
-    yJoin = y.joinTime
-    if( not x.joinTime ): xJoin = datetime.datetime(2000,1,1)
-    if( not y.joinTime ): yJoin = datetime.datetime(2000,1,1)
-    return cmp(xJoin, yJoin)
-def _sortByInstrument(x,y):    return cmp(','.join(x.instruments).lower(), ','.join(y.instruments).lower())
+#----------------------------------------------------------------------
+def sort_by_nee(lhs,rhs):
+    '''Utility for sorting by maiden name'''
+    lhs_nee = lhs.nee
+    rhs_nee = rhs.nee
+    if lhs_nee:
+        lhs_nee = lhs_nee.lower()
+    if rhs_nee:
+        rhs_nee = rhs_nee.lower()
+    return cmp(lhs_nee, rhs_nee)
 
-def _sortMethod(sortColumn):
-    """
-    Return a pointer to the 'sortColumn'th sort method
-    """
-    if( sortColumn == 1 ):
-        return _sortByFirstName
-    elif( sortColumn == 2 ):
-        return _sortByNee
-    elif( sortColumn == 3 ):
-        return _sortByLastName
-    elif( sortColumn == 4 ):
-        return _sortByFirstYear
-    elif( sortColumn == 5 ):
-        return _sortByLastYear
-    elif( sortColumn == 6 ):
-        return _sortByEmail
-    elif( sortColumn == 7 ):
-        return _sortByInstrument
-    else:
-        # Default to sorting by last name
-        return _sortByLastName
+#----------------------------------------------------------------------
+def sort_by_first_name(lhs,rhs):
+    '''Utility for sorting by first name'''
+    return cmp(lhs.first.lower(), rhs.first.lower())
 
+#----------------------------------------------------------------------
+def sort_by_last_name(lhs,rhs):
+    '''Utility for sorting by last name'''
+    return cmp(lhs.last.lower(), rhs.last.lower())
+
+#----------------------------------------------------------------------
+def sort_by_first_year(lhs,rhs):
+    '''Utility for sorting by year joined'''
+    return cmp(lhs.firstYear, rhs.firstYear)
+
+#----------------------------------------------------------------------
+def sort_by_last_year(lhs,rhs):
+    '''Utility for sorting by year quit'''
+    return cmp(lhs.lastYear, rhs.lastYear)
+
+#----------------------------------------------------------------------
+def sort_by_email(lhs,rhs):
+    '''Utility for sorting by email'''
+    lhs_email = lhs.email
+    rhs_email = rhs.email
+    if not lhs.emailVisible:
+        lhs_email = '---'
+    if not rhs.emailVisible:
+        rhs_email = '---'
+    return cmp(lhs_email.lower(), rhs_email.lower())
+
+#----------------------------------------------------------------------
+def sort_by_join_date(lhs,rhs):
+    '''Utility for sorting by alumni association join date'''
+    lhs_join = lhs.joinTime
+    rhs_join = rhs.joinTime
+    if not lhs.joinTime:
+        lhs_join = datetime(2000,1,1)
+    if not rhs.joinTime:
+        rhs_join = datetime(2000,1,1)
+    return cmp(lhs_join, rhs_join)
+
+#----------------------------------------------------------------------
+def sort_by_instrument(lhs,rhs):
+    '''Utility for sorting by instrument'''
+    return cmp(','.join(lhs.instruments).lower(), ','.join(rhs.instruments).lower())
+
+#----------------------------------------------------------------------
+def sort_method(sort_column):
+    """
+    Return a pointer to the 'sort_column'th sort method
+    """
+    # Default to sorting by last name
+    method_to_use = sort_by_last_name
+    if sort_column == 1:
+        method_to_use = sort_by_first_name
+    elif sort_column == 2:
+        method_to_use = sort_by_nee
+    elif sort_column == 3:
+        method_to_use = sort_by_last_name
+    elif sort_column == 4:
+        method_to_use = sort_by_first_year
+    elif sort_column == 5:
+        method_to_use = sort_by_last_year
+    elif sort_column == 6:
+        method_to_use = sort_by_email
+    elif sort_column == 7:
+        method_to_use = sort_by_instrument
+    return method_to_use
+
+#----------------------------------------------------------------------
 def SensibleName(first,nee,last):
     """
     Return a string with the full name, formatted sensibly
     """
-    fullName = ''
-    if( nee and len(nee) > 0 ):
-        fullName = ('%s&nbsp;(%s)&nbsp;%s') % (first,nee,last)
+    full_name = ''
+    if nee and (len(nee) > 0):
+        full_name = ('%s&nbsp;(%s)&nbsp;%s') % (first,nee,last)
     else:
-        fullName = ('%s&nbsp;%s') % (first,last)
-    return fullName
+        full_name = ('%s&nbsp;%s') % (first,last)
+    return full_name
 
-class bttbMember:
+#----------------------------------------------------------------------
+class bttbMember(object):
+    '''Class to manage information on a single alumnus'''
     def __init__(self):
+        '''Set up a blank record for population'''
         self.data = {}
         self.approved = False
         self.onCommittee = False
@@ -99,12 +135,14 @@ class bttbMember:
         self.memory = ''
         self.id = 9999999
 
+    #----------------------------------------------------------------------
     def setLastVisit(self, when):
         """
         Define the time the user was last logged in (page view time).
         """
         self.lastVisitTime = when
 
+    #----------------------------------------------------------------------
     def loadFromTuple(self, fieldNames, dataTuple):
         """
         Initialize the data fields from the given tuple and it's field names.
@@ -119,18 +157,20 @@ class bttbMember:
             else:
                 self.__dict__[field] = value
 
+    #----------------------------------------------------------------------
     def midpoint(self):
         """
         Return a datetime object representing the rough midpoint of the band
         member's tenure (for estimating events they submit without specific
         times)
         """
-        midYear = (int(self.firstYear) + int(self.lastYear)) / 2.0
-        if midYear == int(midYear):
-            return datetime(int(midYear), 6, 15)
+        middle_year = (int(self.firstYear) + int(self.lastYear)) / 2.0
+        if middle_year == int(middle_year):
+            return datetime(int(middle_year), 6, 15)
         else:
-            return datetime(int(midYear), 12, 31)
+            return datetime(int(middle_year), 12, 31)
 
+    #----------------------------------------------------------------------
     def setEditTime(self,when):
         """
         Set the member's edit time, creating the XML element if required
@@ -139,6 +179,7 @@ class bttbMember:
         if not self.joinTime:
             self.setJoinTime( when )
 
+    #----------------------------------------------------------------------
     def setJoinTime(self,when):
         """
         Set the member's joining time, creating the XML element if required
@@ -147,20 +188,24 @@ class bttbMember:
             return
         self.joinTime = when
 
+    #----------------------------------------------------------------------
     def setId(self,uniqueId):
         """
         Set the member's unique id.
         """
         self.id = uniqueId
 
+    #----------------------------------------------------------------------
     def setName(self,first,nee,last):
         """
         Set the member's name, creating the XML element if required
         """
         self.first = first
         self.last = last
-        if nee != last: self.nee = nee
+        if nee != last:
+            self.nee = nee
 
+    #----------------------------------------------------------------------
     def setYears(self,first,last):
         """
         Set the member's years, creating the XML element if required
@@ -168,12 +213,14 @@ class bttbMember:
         self.firstYear = first
         self.lastYear = last
 
+    #----------------------------------------------------------------------
     def resetInstruments(self):
         """
         Remove all instruments, in preparation for re-adding all
         """
         self.instruments = []
 
+    #----------------------------------------------------------------------
     def addInstrument(self,instrument):
         """
         Add an instrument to this member's list
@@ -181,6 +228,7 @@ class bttbMember:
         if instrument not in self.instruments:
             self.instruments.append( instrument )
 
+    #----------------------------------------------------------------------
     def addPosition(self,position):
         """
         Add a position to this member's list
@@ -188,18 +236,21 @@ class bttbMember:
         if position not in self.positions:
             self.positions.append( position )
 
+    #----------------------------------------------------------------------
     def setRank(self,rank):
         """
         Set the member's highest rank
         """
         self.rank = rank
 
+    #----------------------------------------------------------------------
     def setPassword(self,password):
         """
         Set the member's new password
         """
         self.password = password
 
+    #----------------------------------------------------------------------
     def setContact(self,street1,street2,apt,city,province,country,postalCode,phone,email):
         """
         Set the member's contact information, creating the XML element if required
@@ -211,78 +262,87 @@ class bttbMember:
         self.province = province
         self.country = country
         self.postalCode = postalCode.upper()
-        if self.postalCode == 'NO POSTAL': self.postalCode = ''
+        if self.postalCode == 'NO POSTAL':
+            self.postalCode = ''
         self.phone = PhoneFormat(phone)
-        if self.phone == 'No Phone': self.phone = ''
+        if self.phone == 'No Phone':
+            self.phone = ''
         self.email = email
 
+    #----------------------------------------------------------------------
     def setEmailVisible(self,isVisible):
         """
         Set the member's email visibility, creating the XML element if required
         """
         self.emailVisible = isVisible
 
+    #----------------------------------------------------------------------
     def setMemory(self,memory):
         """
         Set the member's fond memory, creating the XML element if required
         """
         self.memory = memory.strip()
 
+    #----------------------------------------------------------------------
     def fullName(self):
         """
         Return a string with the full name, formatted sensibly
         """
         return SensibleName( self.first, self.nee, self.last )
 
+    #----------------------------------------------------------------------
     def fullAddress(self):
         """
         Return a string with the full address, formatted sensibly
         """
-        fullAddress = []
+        full_address = []
         if self.street1 and len(self.street1) > 0:
             if self.apt and len(self.apt) > 0:
-                fullAddress.append( ''.join([self.street1, ', Unit ', self.apt]) )
+                full_address.append( ''.join([self.street1, ', Unit ', self.apt]) )
             else:
-                fullAddress.append( self.street1 )
+                full_address.append( self.street1 )
         if self.street2 and len(self.street2) > 0:
-            fullAddress.append( self.street2 )
+            full_address.append( self.street2 )
         if self.city and len(self.city) > 0:
             if self.province and len(self.province) > 0:
-                fullAddress.append( self.city )
+                full_address.append( self.city )
             else:
-                fullAddress.append( ''.join([self.city, ', ', self.province]))
+                full_address.append( ''.join([self.city, ', ', self.province]))
         if self.country and len(self.country) > 0:
-            fullAddress.append( self.country )
+            full_address.append( self.country )
         if self.postalCode and len(self.postalCode) > 0:
-            fullAddress.append( self.postalCode )
+            full_address.append( self.postalCode )
         if self.phone and len(self.phone) > 0:
-            fullAddress.append( self.phone )
-        return '<br>'.join( fullAddress )
+            full_address.append( self.phone )
+        return '<br>'.join( full_address )
 
+    #----------------------------------------------------------------------
     def printFullSummary(self):
         """
         Dump a full summary of the member input information as a block.
         """
-        def pfsRow(title,value):
+        def pfs_row(title,value):
+            '''Utility method to dump a single member row'''
             print '<tr><th valign="top">', title, '</th>'
             print '<th valign="top">&nbsp;:&nbsp;</th>'
             print '<td valign="top">', value, '</td></tr>'
 
         print '<table bgcolor="#ffbbbb" cellpadding="0">'
-        pfsRow( 'First Year', self.firstYear )
-        pfsRow( 'Last Year', self.lastYear )
-        pfsRow( 'Email', self.email )
-        pfsRow( 'Share Email?', self.emailVisible )
-        pfsRow( 'Instrument(s)', ', '.join(self.instruments) )
-        pfsRow( 'Position(s)', ', '.join(self.positions) )
-        pfsRow( 'Address', self.fullAddress() )
-        pfsRow( 'Memory', self.memory )
+        pfs_row( 'First Year', self.firstYear )
+        pfs_row( 'Last Year', self.lastYear )
+        pfs_row( 'Email', self.email )
+        pfs_row( 'Share Email?', self.emailVisible )
+        pfs_row( 'Instrument(s)', ', '.join(self.instruments) )
+        pfs_row( 'Position(s)', ', '.join(self.positions) )
+        pfs_row( 'Address', self.fullAddress() )
+        pfs_row( 'Memory', self.memory )
         if self.rank:
-            pfsRow( 'Boys and Girls Rank', self.rank )
-        pfsRow( 'Password', len(self.password)>0 and 'SET' or 'NOT SET' )
+            pfs_row( 'Boys and Girls Rank', self.rank )
+        pfs_row( 'Password', len(self.password)>0 and 'SET' or 'NOT SET' )
         print '</table>'
 
-    def getCommitteeSummaryRow(self,checkPrefix):
+    #----------------------------------------------------------------------
+    def get_committee_summary_row(self,checkPrefix):
         """
         Get string with full HTML details on this member as a row in a table.
         """
@@ -298,7 +358,7 @@ class bttbMember:
         html += '<td valign=\'top\'>%s</td>' % self.fullName()
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.firstYear
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.lastYear
-        if( self.email and self.emailVisible ):
+        if self.email and self.emailVisible:
             html += '<td valign=\'top\'><a class=\'email\' href=\'mailto:%s\'>%s</td>' % (self.email, self.email)
         else:
             html += '<td valign=\'top\' align=\'center\'>---</td>'
@@ -316,16 +376,18 @@ class bttbMember:
 
 import unittest
 class testMember(unittest.TestCase):
+    '''Test class'''
     def testDB(self):
+        '''Test method'''
         import bttbDB
-        db = bttbDB.bttbDB()
-        db.Initialize()
-        keys = db.GetPublicMemberKeys()
-        (memberList, items) = db.get_public_member_list(sorted_by='last', descending=False)
-        memberObj = bttbMember()
-        memberObj.loadFromTuple( items, memberList[0] )
-        memberObj.printFullSummary()
-        db.Finalize()
+        database = bttbDB.bttbDB()
+        database.Initialize()
+        #keys = db.GetPublicMemberKeys()
+        (member_list, items) = database.get_public_member_list(sorted_by='last', descending=False)
+        member_object = bttbMember()
+        member_object.loadFromTuple( items, member_list[0] )
+        member_object.printFullSummary()
+        database.Finalize()
 
 if __name__ == '__main__':
     unittest.main()

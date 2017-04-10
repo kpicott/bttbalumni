@@ -83,7 +83,7 @@ class bttbAlumni(object):
         return PageLink( '?sort=%s&committee=1#profiles' % new_column_link, '%s%s' % (column_name, sorted_by), 'Sort by ' + column_name, colour )
 
     #----------------------------------------------------------------------
-    def getSummary(self,sort_column,who_wants_it):
+    def get_alumni_summary(self,sort_column,who_wants_it):
         """
         Display a summary of the alumni so far in HTML format.
         Only show the fields relevant to other alumni (e.g. omit
@@ -159,13 +159,15 @@ class bttbAlumni(object):
                 html += '</ol>\n'
             return html
 
+    #----------------------------------------------------------------------
     def process_query(self, query):
         """
         Process a generic query with unknown result type.
         """
         return self.__db.process_query(query)
 
-    def getCommitteeSummary(self,sort_column):
+    #----------------------------------------------------------------------
+    def get_alumni_summary_for_committee(self,sort_column):
         """
         Display a summary of the alumni so far in HTML format.
         Only show the fields relevant to other alumni (e.g. omit
@@ -194,13 +196,13 @@ class bttbAlumni(object):
 
             if found_unapproved > 0:
                 html += '<form name="approveForm" id="approveForm" '
-                html += ' action="javascript:open_form(\'/cgi-bin/bttbApprove.cgi\', \'approveForm\', \'#profiles?committee=1\');">'
-                html += self.getCommitteeTitle( '%d %s %s' % (found_unapproved, Pluralize('Member',found_unapproved), 'Awaiting Confirmation'), sort_column )
+                html += ' action="javascript:submit_form(\'/cgi-bin/bttbApprove.cgi\', \'#approveForm\', \'?committee=1#profiles\');">'
+                html += self.get_committee_title( '%d %s %s' % (found_unapproved, Pluralize('Member',found_unapproved), 'Awaiting Confirmation'), sort_column )
                 for member in member_list:
                     if member and not member[items['approved']]:
                         member_obj = bttbMember()
                         member_obj.loadFromTuple( items, member )
-                        html += member_obj.getCommitteeSummaryRow('XXX')
+                        html += member_obj.get_committee_summary_row('XXX')
                 html += '</table>'
                 html += '<input type="submit" name="submit" value="Approve">'
                 html += '</form>'
@@ -228,7 +230,7 @@ class bttbAlumni(object):
             return html
 
     #----------------------------------------------------------------------
-    def getCommitteeTitle(self,title,sort_column):
+    def get_committee_title(self,title,sort_column):
         """
         Print out the title line of the table showing the profile
         information visible to the committee members.
@@ -306,7 +308,7 @@ class bttbAlumni(object):
         return (member_list, total_registration)
 
     #----------------------------------------------------------------------
-    def getCommitteeText(self):
+    def get_committee_text(self):
         """
         Display full text of all alumni in an Excel/Word-friendly format.
         That is, tab-separated text with a heading line.
@@ -426,7 +428,7 @@ class bttbAlumni(object):
 
 if __name__ == '__main__':
     ALUM = bttbAlumni()
-    print ALUM.getCommitteeSummary('last')
+    print ALUM.get_alumni_summary_for_committee('last')
     print ALUM.approve_member(3, True, True)
 
 # ==================================================================

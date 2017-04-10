@@ -1,20 +1,20 @@
-#!env python
+#!/usr/bin/env python
 """
 Simple script to dump the registration info in an Excel/Word-friendly
 format for Committee members to do what they want with.
 """
-from bttbAlumni import *
-from bttbConfig import *
+from bttbAlumni import bttbAlumni
+from bttbConfig import Error
 
 print "Content-Type:application/octet-stream"
 print "Content-Disposition:attachment; filename=bttbAlumniInfo.txt\n"
 
 try:
-	alumni = bttbAlumni()
+    alumni = bttbAlumni()
 except Exception,e:
-	Error( 'Could not find alumni data', e)
+    Error( 'Could not find alumni data', e)
 
-print alumni.getCommitteeText()
+print alumni.get_committee_text()
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

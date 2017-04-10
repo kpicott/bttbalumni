@@ -577,15 +577,14 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
     passed on.
     """
     (scheme, netloc, url, params, query, fragment) = urlparse(newUrl)
+    if query:
+        query = '?' + query
     if len(fragment) > 0:
-        if InTestMode():
-            newUrl = '#' + fragment
-        else:
-            newUrl = '/#' + fragment
+        newUrl = '/' + query + '#' + fragment
         if link is None:
-            link = fragment
+            link = newUrl
         if tooltip is None:
-            tooltip = fragment
+            tooltip = newUrl
     if link is None:
         link = newUrl
     if tooltip is None:
@@ -593,10 +592,7 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
     if len(colour) > 0:
         colour = "style='background:%s;'" % colour
     newUrl = re.sub("'", "\\'", newUrl)
-    if InTestMode():
-        href = "<a class='non-link' title='%s' %s onclick=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
-    else:
-        href = "<a class='non-link' title='%s' %s href=\"javascript:openPage('%s')\"" % (tooltip, colour, newUrl)
+    href = "<a class='non-link' title='%s' %s onclick=\"javascript:open_page('%s')\"" % (tooltip, colour, newUrl)
     href += ">%s</a>" % link
     return href
 
