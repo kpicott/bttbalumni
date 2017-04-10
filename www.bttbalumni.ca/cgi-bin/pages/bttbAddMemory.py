@@ -35,7 +35,8 @@ class bttbAddMemory(bttbPage):
         You can edit the text as you please, or select the checkbox
         beside the text to delete a memory.
         </p>
-        <form name="addMemoryForm" id="addMemoryForm" action="javascript:submit_form('/cgi-bin/bttbAddMemory.cgi', '#addMemoryForm', null);">
+        <form method='POST' name='addMemoryForm' id='addMemoryForm'
+              action="javascript:submit_form('/cgi-bin/bttbAddMemory.cgi', '#addMemoryForm', null);">
         <input type='hidden' name='id' value='%d'>
         """ % self.requestor.id )
         memoryList = self.alumni.get_memories( self.requestor.id )

@@ -260,6 +260,13 @@ class bttbAlumni(object):
         return self.__db.Archive()
 
     #----------------------------------------------------------------------
+    def get_unique_id(self):
+        """
+        Get back a unique ID for a new member
+        """
+        return self.__db.get_unique_id()
+
+    #----------------------------------------------------------------------
     def getMemberFromId(self, member_id):
         """
         Get back a bttbMember whose id matches the given one.
@@ -376,32 +383,32 @@ class bttbAlumni(object):
         return self.__db.get_parade_part_2017(member_id)
 
     #----------------------------------------------------------------------
-    def updateMember(self, member, memory, memory_id):
+    def update_member(self, member, memory, memory_id):
         """
         Add a new member into the database if it isn't there already,
         or replace it's data if it is already there.
         """
-        self.__db.UpdateMember( member, True )
-        self.__db.UpdateMemberMemory( member, memory, memory_id )
+        self.__db.update_member( member, True )
+        self.__db.update_member_memory( member, memory, memory_id )
         self.ArchiveData()
 
     #----------------------------------------------------------------------
-    def updateMemory(self, member, memory, memory_time, memory_id):
+    def update_memory(self, member, memory, memory_time, memory_id):
         """
         Update the memory in the table. If the memory doesn't exist
         then add a new one to the table.
         """
-        self.__db.UpdateMemory( member.id, memory, memory_time, memory_id )
+        self.__db.update_memory( member.id, memory, memory_time, memory_id )
 
     #----------------------------------------------------------------------
-    def removeMemory(self, memory_id):
+    def remove_memory(self, memory_id):
         """
         Remove the memory from the table.
         """
-        self.__db.RemoveMemory( memory_id )
+        self.__db.remove_memory( memory_id )
 
     #----------------------------------------------------------------------
-    def approveMember(self, member_id, is_friend, on_committee):
+    def approve_member(self, member_id, is_friend, on_committee):
         """
         Officially approve a new member. The "is_friend" and "on_committee"
         flags are only accessible to committee members so access them
@@ -413,14 +420,14 @@ class bttbAlumni(object):
             member.isFriend = is_friend
             member.onCommittee = on_committee
             member.editTime = datetime.now()
-            self.__db.UpdateMember( member, True )
+            self.__db.update_member( member, True )
         else:
             Error( 'Tried to approve non-existing member', '%d' % member_id )
 
 if __name__ == '__main__':
     ALUM = bttbAlumni()
     print ALUM.getCommitteeSummary('last')
-    print ALUM.approveMember(3, True, True)
+    print ALUM.approve_member(3, True, True)
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

@@ -5,93 +5,97 @@ marking the contact information as private and sending a confirmation email.
 """
 print 'Content-type: text/html\n'
 
-import os
-import os.path
 import cgi
 from datetime import datetime
 from bttbMember import bttbMember
 from bttbAlumni import bttbAlumni
-from bttbConfig import *
+from bttbConfig import Error, AsYYYY, MailChair
 
-def getParam(name,default):
+#----------------------------------------------------------------------
+def get_param(name,default):
     """
     Simple trick to get cgi params using default values
     """
     try:
-        value = params[name][0].strip()
-    except:
+        value = PARAMS[name][0].strip()
+    except Exception:
         value = default
     return value
 
-def getIntParam(name,default):
+#----------------------------------------------------------------------
+def get_int_param(name,default):
     """
     Simple trick to get numeric cgi params using default values
     """
     try:
-        value = int( params[name][0] )
-    except:
+        value = int( PARAMS[name][0] )
+    except Exception:
         value = default
     return value
 
-def Cap(name):
+#----------------------------------------------------------------------
+def capitalize_first(name):
     """
     Returns a capitalized string, but without changing inner characters
     (the "capitalize()" method messes up "McTavish" to "Mctavish"
     """
-    if len(name) < 2: return name.capitalize()
+    if len(name) < 2:
+        return name.capitalize()
     return name[0].upper() + name[1:]
 
-try:
-    params = cgi.parse()
-    alumni = bttbAlumni()
-    changedAt = datetime.now()
-    #
-    # If the id was negative then this is an edit:
-    #    Look for a previous edit to overwrite
-    #    Either insert or update at (negative-id).
-    #
-    # Otherwise it's a creation, and requires a new id
-    #
-    uniqueId = getIntParam('id', os.getpid())
-    if uniqueId <= 0:
-        member = alumni.getMemberFromId(-uniqueId)
-    else:
-        while alumni.getMemberFromId(uniqueId):
-            uniqueId = uniqueId + 1
-        member = bttbMember()
-        member.setJoinTime( datetime.now() )
-        member.setId( uniqueId )
-except Exception, e:
-    Error( 'Registration processing error', e )
-
-member.setEditTime( changedAt )
-
 #----------------------------------------------------------------------
+def process_contact():
+    '''Read the contact info and add or modify it in the database'''
+    try:
+        alumni = bttbAlumni()
+        changed_dat = datetime.now()
+        #
+        # If the id was negative then this is an edit:
+        #    Look for a previous edit to overwrite
+        #    Either insert or update at (negative-id).
+        #
+        # Otherwise it's a creation, and requires a new id
+        #
+        unique_id = get_int_param('id', alumni.get_unique_id())
+        if unique_id <= 0:
+            member = alumni.getMemberFromId(-unique_id)
+        else:
+            while alumni.getMemberFromId(unique_id):
+                unique_id = unique_id + 1
+            member = bttbMember()
+            member.setJoinTime( datetime.now() )
+            member.setId( unique_id )
+    except Exception, ex:
+        Error( 'Registration processing error', ex )
 
-firstName = Cap( getParam( 'FirstName', '' ) )
-lastName = Cap( getParam( 'CurrentLastName', '' ) )
-nee = Cap( getParam( 'LastNameInBand', '' ) )
-member.setName( firstName, nee, lastName )
+    member.setEditTime( changed_dat )
 
-#----------------------------------------------------------------------
+    #----------------------------------------------------------------------
 
-firstYear = AsYYYY( getParam( 'FirstYear', '' ) )
-lastYear = AsYYYY( getParam( 'LastYear', '' ) )
-member.setYears( firstYear, lastYear )
+    first_name = capitalize_first( get_param( 'FirstName', '' ) )
+    last_name = capitalize_first( get_param( 'CurrentLastName', '' ) )
+    nee = capitalize_first( get_param( 'LastNameInBand', '' ) )
+    member.setName( first_name, nee, last_name )
 
-#----------------------------------------------------------------------
+    #----------------------------------------------------------------------
 
-email = getParam( 'Email', '' )
-member.setContact( '', '', '', '', '', '', '', '', email )
-member.setEmailVisible( False )
+    first_year = AsYYYY( get_param( 'FirstYear', '' ) )
+    last_year = AsYYYY( get_param( 'LastYear', '' ) )
+    member.setYears( first_year, last_year )
 
-#----------------------------------------------------------------------
+    #----------------------------------------------------------------------
 
-alumni.updateMember( member, '', -1 )
+    email = get_param( 'Email', '' )
+    member.setContact( '', '', '', '', '', '', '', '', email )
+    member.setEmailVisible( False )
 
-#----------------------------------------------------------------------
+    #----------------------------------------------------------------------
 
-MailChair( 'New contact request: ' + member.fullName(), """
+    alumni.updateMember( member, '', -1 )
+
+    #----------------------------------------------------------------------
+
+    MailChair( 'New contact request: ' + member.fullName(), """
 Greetings from the Band Alumni Registration Template System Immediately
 Mailing Profile Signups Over Networks
 (BART SIMPSON).
@@ -99,15 +103,22 @@ Mailing Profile Signups Over Networks
 There was a new request to be added to the contact list for the alumni,
 but not register with the website.
 
-Name: """ + member.fullName() + """
-Years in Band: """ + member.firstYear + " - " + member.lastYear + """
-Email: """ + member.email + """
+    Name: """ + member.fullName() + """
+    Years in Band: """ + member.firstYear + " - " + member.lastYear + """
+    Email: """ + member.email + """
 
-The data has also been entered into the database but the email is kept private.
+The data has also been entered into the database but is kept private.
 
 ---
 Robo-Mail
-""" )
+    """ )
+
+try:
+    PARAMS = cgi.parse()
+    process_contact()
+    print "OK"
+except Exception, ex:
+    Error( 'Could not process contact', ex )
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

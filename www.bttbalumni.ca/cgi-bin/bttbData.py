@@ -53,7 +53,7 @@ class bttbData:
     def debug_print(self, msg):
         '''Print the message only if the debugging mode is on'''
         if self.__debug:
-            print msg
+            print '<p>%s</p>' % msg
 
     #----------------------------------------------------------------------
     def Archive(self):
@@ -153,21 +153,21 @@ class bttbData:
         return []
 
     #----------------------------------------------------------------------
-    def UpdateMember(self, member, replaceIfExists):
+    def update_member(self, member, replaceIfExists):
         """
         Add a new member, or replace the existing member's information.
         """
         return False
 
     #----------------------------------------------------------------------
-    def UpdateMemberVolunteering(self, member, events):
+    def update_member_volunteering(self, member, events):
         """
         Replace a member's volunteer status
         """
         return False
 
     #----------------------------------------------------------------------
-    def UpdateMemberMemory(self, member, memory, memory_id):
+    def update_member_memory(self, member, memory, memory_id):
         """
         Replace a member's memory. Only valid until memory lane addition gives
         a more powerful memory editing capability.
@@ -175,7 +175,7 @@ class bttbData:
         return False
 
     #----------------------------------------------------------------------
-    def UpdateMemory( self, member, memory, memoryTime, memory_id ):
+    def update_memory( self, member, memory, memoryTime, memory_id ):
         """
         Update the memory in the table. If the memory doesn't exist
         then add a new one to the table.

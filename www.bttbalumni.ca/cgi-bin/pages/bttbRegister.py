@@ -141,7 +141,7 @@ label {
         html += MapLinks(r"""
 <form method='POST' accept-charset='utf-8' onsubmit='return validateRegistration();'
       name="registerForm" id="registerForm" '
-      action="javascript:submit_form('/cgi-bin/bttbRegister.cgi', 'registerForm', '#thanks');">
+      action="javascript:submit_form('/cgi-bin/bttbRegister.cgi', '#registerForm', '#thanks');">
 <table cellpadding='5' width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>BAND ALUMNI INFORMATION</font></th></tr>
 <tr><td>
@@ -293,7 +293,7 @@ label {
 <p id='disclaimer' align='center'><b>Please note that personal information
 will only be used for BTTB Alumni planning purposes.</b><br>
 <input KeepPrivate_CHECK type='checkbox' value='1' id='KeepPrivate' name='KeepPrivate'>&nbsp;Check here if you
-do not wish your information visible on the website.</input>
+do not wish your information to be visible on the website.</input>
 </p>
 </td></tr></table>
 

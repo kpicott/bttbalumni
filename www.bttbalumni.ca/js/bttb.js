@@ -76,20 +76,26 @@ function clustrMapError()
 //   form_id:   The ID of the form on the page
 //   follow_up: The URL to go to after the form has been handled (home page if null)
 //
+// Form processing must return the string "OK" if there is a follow_up, otherwise the
+// return value from the processing will be printed and the follow_up will not be invoked
+//
 function submit_form(form_url,form_id,follow_up)
 {
+	var form = $(form_id);
     if( _debug) alert( "AJAX openForm " + form_id + " at " + form_url + ' to return to ' + follow_up );
+    if( _debug) alert( "Form data is : " + form.serializeArray() );
 
+	$("#content").html( "Processing " + form.attr('method') + " request..." );
 	$.ajax( {
-		type	:	"POST",
+		type	:	form.attr('method'),
 		url		:	form_url,
-		data	:	$(form_id).serialize(),
-		success	:	function(data)
+		data	:	form.serializeArray(),
+		success	:	function(return_data)
 					{
-						if( _debug ) alert( 'Successful submit: ' + data );
-						if( follow_up === null )
+						if( _debug ) alert( 'Successful submit: ' + return_data );
+						if( (follow_up === null) || (return_data.substr(0,2) !== "OK") )
 						{
-							$("#content").html( data );
+							$("#content").html( return_data );
 						}
 						else
 						{
@@ -98,9 +104,9 @@ function submit_form(form_url,form_id,follow_up)
 							open_page( follow_up );
 						}
 					},
-		error	:	function(data)
+		error	:	function(return_data)
 					{
-						if( _debug ) alert( 'Submit failed: ' + data );
+						if( _debug ) alert( 'Submit failed: ' + return_data );
 						alert( 'Form submission failed, please try again.' );
 					}
 	} );

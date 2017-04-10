@@ -331,6 +331,32 @@ class bttbDB( bttbData ):
         return (member_list, column_items)
 
     #----------------------------------------------------------------------
+    def get_unique_id(self):
+        """
+        Get an available unique ID from the member database
+        """
+        member = None
+        try:
+            column_items = {}
+            column_items = self.get_full_member_keys()
+            self.connect()
+            self.execute( """
+            SELECT u.id + 1 AS FirstAvailableId
+                FROM alumni u
+                LEFT JOIN alumni u1 ON u1.id = u.id + 1
+                WHERE u1.id IS NULL
+                ORDER BY u.id
+                LIMIT 0, 1 
+            """)
+            unique_id = self.__cursor.fetchone()
+            self.close()
+            return unique_id[0]
+        except Exception, ex:
+            Error(self.__stage, ex)
+
+        return os.getpid()
+
+    #----------------------------------------------------------------------
     def GetMember(self, alumni_id):
         """
         Get the full table row for the alumni with the specified id.
@@ -385,7 +411,7 @@ class bttbDB( bttbData ):
         return attendance
 
     #----------------------------------------------------------------------
-    def UpdateMember(self, member, replaceIfExists):
+    def update_member(self, member, replaceIfExists):
         """
         Add a new member, or replace the existing member's information.
         """
@@ -443,7 +469,7 @@ class bttbDB( bttbData ):
         return True
 
     #----------------------------------------------------------------------
-    def UpdateMemberMemory(self, member, memory, memory_id):
+    def update_member_memory(self, member, memory, memory_id):
         """
         Replace a member's memory. Only valid until memory lane addition gives
         a more powerful memory editing capability.
@@ -478,7 +504,7 @@ class bttbDB( bttbData ):
         return True
 
     #----------------------------------------------------------------------
-    def UpdateMemory( self, memberId, memory, memory_time, memory_id ):
+    def update_memory( self, memberId, memory, memory_time, memory_id ):
         """
         Update the memory in the table. If the memory doesn't exist
         then add a new one to the table.
@@ -531,7 +557,6 @@ class bttbDB( bttbData ):
         """
         Insert a single alumni into the alumni table, if it isn't already there
         """
-        self.turn_debug_on()
         try:
             self.stage( 'ADD MEMBER DATA' )
             first_year = int(member.firstYear) and int(member.firstYear) or 2006
@@ -977,8 +1002,8 @@ def test_db():
         print database.get_memories(0)
         my_membership = database.GetMember(0)
         my_membership.memory = 'I have no recollection at all'
-        database.UpdateMember(my_membership, True)
-        database.UpdateMemberMemory(my_membership, my_membership.memory)
+        database.update_member(my_membership, True)
+        database.update_member_memory(my_membership, my_membership.memory)
         print database.GetMember(0).printFullSummary()
         print '=========== BOB J ============='
         bob = bttbMember()
@@ -1007,9 +1032,9 @@ def test_db():
         bob.phone = '905-333-3333'
         bob.memory = 'Bob tries hard not to remember those days. Bob also refers to himself in the third person.  Bob Bob Bob.'
         bob.id = 99999
-        database.UpdateMember(bob, True)
+        database.update_member(bob, True)
         database.update_attendance_2017(bob, ['Golf', 'Social', 'Homecoming', 'Brunch', 'Parade', 'Concert'])
-        database.UpdateMemberMemory(bob, bob.memory)
+        database.update_member_memory(bob, bob.memory)
         database.stage( 'BOB update complete' )
         database.GetMember(0).printFullSummary()
         database.stage( 'Debug complete' )

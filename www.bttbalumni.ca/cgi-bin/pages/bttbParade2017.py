@@ -361,7 +361,7 @@ have signed up for that particular part.
 
 </div>
 <div class='parade-info box_shadow'>
-<form name='parade_form' id='parade_form' action='javascript:submit_to_parade();'>
+<form method='POST' name='parade_form' id='parade_form' action='javascript:submit_to_parade();'>
 <input type='hidden' name='id' value='%d'>
 <p>
 Your Parade Status : <span id='parade-status' class='%s'>%s</span><br>
