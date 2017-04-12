@@ -66,19 +66,26 @@ class bttbRegister(bttbPage):
 
     def content(self):
         ''':return: a string with the content for this web page.'''
-        html = """<script type='text/javascript' src='/js/formValidation.js'></script>
-                  <script type='text/javascript' src='/js/bttbRegister.js'></script>
-                  <link rel='stylesheet' href='/css/formValidation.css' />
+        html = """<script type='text/javascript' src='/js/bttbRegister.js'></script>
 <style>
-label {
+label
+{
     display: inline;
 }
 
-.regular-checkbox {
+.required
+{
+    color:          red;
+    font-weight:    bold;
+}
+
+.regular-checkbox
+{
     display: none;
 }
 
-.regular-checkbox + label {
+.regular-checkbox + label
+{
     background-color: #fafafa;
     border: 1px solid #cacece;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05);
@@ -88,18 +95,21 @@ label {
     position: relative;
 }
 
-.regular-checkbox + label:active, .regular-checkbox:checked + label:active {
+.regular-checkbox + label:active, .regular-checkbox:checked + label:active
+{
     box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
 }
 
-.regular-checkbox:checked + label {
+.regular-checkbox:checked + label
+{
     background-color: #e9ecee;
     border: 1px solid #adb8c0;
     box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
     color: #99a1a7;
 }
 
-.regular-checkbox:checked + label:after {
+.regular-checkbox:checked + label:after
+{
     content:    '\\2714';
     font-size:  14px;
     position:   absolute;
@@ -109,7 +119,8 @@ label {
 }
 
 
-.tag {
+.tag
+{
     width:          250px;
     position:       relative;
     top:            0px;
@@ -117,7 +128,8 @@ label {
     float:          right;
 }
 
-.button-holder {
+.button-holder
+{
     float: left;
 }
 </style>
@@ -147,10 +159,10 @@ label {
 <tr><td>
   <table width='750'>
   <tr>
-    <td width='350'><input type='text' placeholder='First Name' id='FirstName' onchange="validatePresent(this,'inf_firstName');" name='FirstName' value='FirstNameValue' size='32'/></td>
-    <td width='25' color='red' id='inf_firstName'>*</td>
-    <td width='350'><input type='text' placeholder='Current Last Name' id='CurrentLastName' onchange="validatePresent(this,'inf_lastName');" name='CurrentLastName' value='CurrentLastNameValue' size='32'/></td>
-    <td width='25' color='red' id='inf_lastName'>*</td>
+    <td width='350'><input type='text' placeholder='First Name' id='FirstName' name='FirstName' value='FirstNameValue' size='32'/></td>
+    <td width='25'><span id='inf_FirstName' class='required'>*</span></td>
+    <td width='350'><input type='text' placeholder='Current Last Name' id='CurrentLastName' name='CurrentLastName' value='CurrentLastNameValue' size='32'/></td>
+    <td width='25'><span id='inf_LastName' class='required'>*</span></td>
   </tr>
   <tr>
     <td colspan='3'><input type='text' placeholder='Last Name In Band (if different)' id='LastNameInBand' name='LastNameInBand' value='LastNameInBandValue' size='32'/></td>
@@ -159,14 +171,14 @@ label {
   <tr>
     <td><input type='password' placeholder='Create a Password' id='Password' name='Password' value='PasswordValue' size='32'/></td>
     <td></td>
-    <td><i>(user ID will be 'FIRST_NAME CURRENT_LAST_NAME')</i></td>
+    <td><input type='text' placeholder='User ID (default is "First Last")' id='UserID' name='UserID' value='UserIDValue' size='32'/></td>
     <td></td>
   </tr>
   <tr>
-    <td><input type='text' id='FirstYear' placeholder='Year Joined' onchange="validatePresent(this,'inf_firstYear');" name='FirstYear' value='FirstYearValue' size='4'/></td>
-    <td color='red' id='inf_firstYear'>*</td>
-    <td><input type='text' id='LastYear' placeholder='Year Left' onchange="validatePresent(this,'inf_lastYear');" name='LastYear' value='LastYearValue' size='4'/></td>
-    <td color='red' id='inf_lastYear'>*</td>
+    <td><input type='text' id='FirstYear' placeholder='Year Joined' name='FirstYear' value='FirstYearValue' size='4'/></td>
+    <td width='25'><span id='inf_FirstYear' class='required'>*</span></td>
+    <td><input type='text' id='LastYear' placeholder='Year Left' name='LastYear' value='LastYearValue' size='4'/></td>
+    <td width='25'><span id='inf_LastYear' class='required'>*</span></td>
   </tr>
   <tr>
     <td><input type='text' placeholder='Highest Rank Achieved (Boys and Girls Band)' id='HighestRank' name='HighestRank' value='HighestRankValue' size='64'/></td>
@@ -285,8 +297,8 @@ label {
     <td><input type='text' placeholder='Phone' id='Phone' name='Phone' value='PhoneValue' size='16'></td>
   </tr>
   <tr>
-    <td><input type='text' placeholder='Email' id='Email' onchange="validateEmail(this,'inf_email',true);" name='Email' value='EmailValue' size='32'></td>
-    <td id='inf_email'>&nbsp;</td>
+    <td><input type='text' placeholder='Email' id='Email' name='Email' value='EmailValue' size='32'></td>
+    <td width='25'><span id='inf_Email' class='required'>*</span></td>
   </tr>
   </table>
 
@@ -322,6 +334,7 @@ do not wish your information to be visible on the website.</input>
             html = html.replace( 'LastNameInBandValue', default_text(member.nee,'') )
             html = html.replace( 'CurrentLastNameValue', default_text(member.last,'') )
             html = html.replace( 'PasswordValue', default_text(member.password,'') )
+            html = html.replace( 'UserIDValue', default_text(member.user_id,'') )
             html = html.replace( 'FirstYearValue', default_text('%s' % member.firstYear,'') )
             html = html.replace( 'LastYearValue', default_text('%s' % member.lastYear,'') )
             html = html.replace( 'Street1Value', default_text(member.street1,'') )

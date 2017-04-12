@@ -53,7 +53,9 @@ class bttbData:
     def debug_print(self, msg):
         '''Print the message only if the debugging mode is on'''
         if self.__debug:
-            print '<p>%s</p>' % msg
+            fd = open('SQL.txt', 'a')
+            fd.write( msg + "\n" );
+            fd.close()
 
     #----------------------------------------------------------------------
     def Archive(self):

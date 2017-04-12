@@ -48,7 +48,9 @@ class bttbDB( bttbData ):
         sql = sql.strip().rstrip()
         self.stage(sql)
         self.debug_print( 'Start "' + self.__stage + '"' )
-        return self.__cursor.execute(sql)
+        results = self.__cursor.execute(sql)
+
+        return results
 
     #----------------------------------------------------------------------
     def stage(self,stage_name):
@@ -335,10 +337,8 @@ class bttbDB( bttbData ):
         """
         Get an available unique ID from the member database
         """
-        member = None
+        unique_id = os.getpid()
         try:
-            column_items = {}
-            column_items = self.get_full_member_keys()
             self.connect()
             self.execute( """
             SELECT u.id + 1 AS FirstAvailableId
@@ -348,13 +348,14 @@ class bttbDB( bttbData ):
                 ORDER BY u.id
                 LIMIT 0, 1 
             """)
-            unique_id = self.__cursor.fetchone()
+            id_record = self.__cursor.fetchone()
+            if id_record and (len(id_record) > 0):
+                unique_id = id_record[0]
             self.close()
-            return unique_id[0]
         except Exception, ex:
             Error(self.__stage, ex)
 
-        return os.getpid()
+        return unique_id
 
     #----------------------------------------------------------------------
     def GetMember(self, alumni_id):
@@ -563,22 +564,32 @@ class bttbDB( bttbData ):
             last_year = int(member.lastYear) and int(member.lastYear) or 2006
             join_time = member.joinTime.strftime('%Y-%m-%d %H:%M:%S')
             edit_time = member.editTime.strftime('%Y-%m-%d %H:%M:%S')
+
+            # Default email to NULL if it has no content, so that it can be
+            # allowed as a unique value.
+            email = member.email.strip()
+            if email is not None and len(email) == 0:
+                email = 'NULL'
+            else:
+                email = "'%s'" % email
+
             instruments = ', '.join(member.instruments)
             positions = ', '.join(member.positions)
             insert_cmd = """
-            INSERT INTO alumni (first, nee, last, firstYear, lastYear, email, emailVisible,
+            INSERT INTO alumni (first, nee, last, user_id, firstYear, lastYear, email, emailVisible,
             isFriend, street1, street2, apt, city, province, country, postalCode, phone, id,
             joinTime, editTime, instruments, positions, approved, onCommittee, rank, password)
             VALUES
-            ('%s', '%s', '%s', %d, %d, '%s', %d,
+            ('%s', '%s', '%s', '%s', %d, %d, %s, %d,
              %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d,
              '%s', '%s', '%s', '%s', %d, %d, '%s', '%s' );
             """ % (DbFormat(member.first),              \
                    DbFormat(member.nee),                \
                    DbFormat(member.last),               \
+                   DbFormat(member.user_id),            \
                    first_year,                          \
                    last_year,                           \
-                   DbFormat(member.email),              \
+                   email,                               \
                    member.emailVisible,                 \
                    member.isFriend,                     \
                    DbFormat(member.street1),            \
@@ -623,37 +634,38 @@ class bttbDB( bttbData ):
             positions = ', '.join(member.positions)
             self.stage( 'UPDATE COMPLETE' )
             insert_cmd = """
-            UPDATE alumni SET first='%s', nee='%s', last='%s', firstYear=%d, lastYear=%d,
+            UPDATE alumni SET first='%s', nee='%s', last='%s', user_id='%s' firstYear=%d, lastYear=%d,
             email='%s', emailVisible=%d, isFriend=%d,
             street1='%s', street2='%s', apt='%s', city='%s',
             province='%s', country='%s', postalCode='%s', phone='%s', joinTime='%s',
             editTime='%s', instruments='%s', positions='%s',
             approved=%d, onCommittee=%d, rank='%s', password='%s'
             WHERE id = %d;
-            """ % (DbFormat(member.first),                 \
-                   DbFormat(member.nee),                 \
-                   DbFormat(member.last),                 \
-                   first_year,                             \
-                   last_year,                             \
-                   DbFormat(member.email),                 \
+            """ % (DbFormat(member.first),              \
+                   DbFormat(member.nee),                \
+                   DbFormat(member.last),               \
+                   DbFormat(member.user_id),            \
+                   first_year,                          \
+                   last_year,                           \
+                   DbFormat(member.email),              \
                    member.emailVisible,                 \
                    member.isFriend,                     \
-                   DbFormat(member.street1),             \
-                   DbFormat(member.street2),             \
-                   DbFormat(member.apt),                 \
-                   DbFormat(member.city),                 \
-                   DbFormat(member.province),             \
-                   DbFormat(member.country),             \
+                   DbFormat(member.street1),            \
+                   DbFormat(member.street2),            \
+                   DbFormat(member.apt),                \
+                   DbFormat(member.city),               \
+                   DbFormat(member.province),           \
+                   DbFormat(member.country),            \
                    DbFormat(member.postalCode),         \
                    DbFormat(PhoneFormat(member.phone)), \
-                   join_time,                             \
-                   edit_time,                             \
-                   DbFormat(instruments),                 \
+                   join_time,                           \
+                   edit_time,                           \
+                   DbFormat(instruments),               \
                    DbFormat(positions),                 \
                    member.approved,                     \
-                   member.onCommittee,                     \
-                   DbFormat(member.rank),                \
-                   DbFormat(member.password),            \
+                   member.onCommittee,                  \
+                   DbFormat(member.rank),               \
+                   DbFormat(member.password),           \
                    member.id )
             self.execute( insert_cmd )
             self.stage( 'UPDATE COMPLETE' )
@@ -685,8 +697,8 @@ class bttbDB( bttbData ):
         """
         member = None
         try:
-            # Put the name in canonical form (no spaces, quotes, lower case
-            # only)
+            # Put the name in canonical form (no spaces, quotes, lower case only)
+            raw_name = name
             name = re.sub("^'", "", name)
             name = re.sub("'$", "", name)
             name = re.sub('^"', '', name)
@@ -697,108 +709,21 @@ class bttbDB( bttbData ):
             column_items = {}
             column_items = self.get_full_member_keys()
             self.connect()
-            self.execute( "SELECT * FROM alumni WHERE REPLACE(CONCAT(alumni.first,alumni.last),' ','') LIKE '%s';" % (name) )
-            member_info = self.__cursor.fetchall()
+            self.execute( """
+                SELECT *
+                FROM alumni
+                WHERE REPLACE(CONCAT(alumni.first,alumni.last),' ','') LIKE '%s'
+                        OR email LIKE '%s'
+                        OR user_id LIKE '%s'
+            """ % (name, raw_name, name) )
+            member_info = self.__cursor.fetchone()
             self.close()
-            for member_tuple in member_info:
+            if member_info and len(member_info) > 0:
                 member = bttbMember()
-                member.loadFromTuple( column_items, member_tuple )
+                member.loadFromTuple( column_items, member_info )
         except Exception, ex:
             Error(self.__stage, ex)
         return member
-
-    #----------------------------------------------------------------------
-    def GetConcertInstrumentation(self):
-        """
-        Get the tuple of concert instrumentation information for all parts
-        (instrumentName, instrument_id, signedUpNames)
-        """
-        instrumentation = []
-        try:
-            self.connect()
-            alumni_columns = {}
-            alumni_columns = self.get_full_member_keys()
-            self.execute( "SELECT instrument,id FROM instruments WHERE instruments.isInConcert = 1;" )
-            parts = self.__cursor.fetchall()
-            for instrument,instrument_id in parts:
-                self.execute( """
-                    SELECT alumni.*
-                    FROM alumni INNER JOIN concert
-                    WHERE alumni.id = concert.alumni_id
-                        AND concert.instrument_id = %d
-                    ORDER BY alumni.last
-                    """ % instrument_id )
-                players = self.__cursor.fetchall()
-                who = []
-                for member_tuple in players:
-                    member = bttbMember()
-                    member.loadFromTuple( alumni_columns, member_tuple )
-                    who.append( member.fullName() )
-                instrumentation.append( (instrument, member.id, ', '.join(who)) )
-            self.close()
-        except Exception, ex:
-            Error(self.__stage, ex)
-        return instrumentation
-
-    #----------------------------------------------------------------------
-    def GetMemberConcertPart(self, alumni_id):
-        """
-        Return the tuple of instrument information relevant to this
-        member's participation in the concert.
-        (instrumentName)
-        """
-        parts = {}
-        try:
-            self.connect()
-            #alumni_columns = {}
-            #alumni_columns = self.get_full_member_keys()
-            self.execute( """
-                SELECT instrument_id
-                FROM concert
-                WHERE alumni_id = %d
-                """ % alumni_id )
-            has_part = self.__cursor.fetchone()
-            if has_part and (len(has_part) > 0):
-                self.execute( """
-                    SELECT instrument,hasConcertMusic
-                    FROM instruments
-                    WHERE id = %d
-                    """ % has_part[0] )
-                parts = self.__cursor.fetchone()
-            self.close()
-        except Exception, ex:
-            Error(self.__stage, ex)
-        return parts
-
-    #----------------------------------------------------------------------
-    def SetConcertPart(self,alumni_id,instrument_id):
-        """
-        Set the concert part to be played by the given alumnus.
-        """
-        try:
-            self.connect()
-            select_cmd = "SELECT instrument_id FROM concert WHERE concert.alumni_id = %d" % alumni_id
-            self.execute( select_cmd )
-            has_part = self.__cursor.fetchone()
-            if has_part:
-                set_cmd = """
-                UPDATE concert SET instrument_id=%d
-                WHERE alumni_id = %d;
-                """ % (instrument_id, alumni_id)
-            else:
-                set_cmd = """
-                INSERT INTO concert (alumni_id, instrument_id)
-                VALUES (%d, %d);
-                """ % (alumni_id, instrument_id)
-
-            self.execute( set_cmd )
-
-            # Need a COMMIT since we're using InnoDB
-            self.execute( 'COMMIT' )
-            self.close()
-        except Exception, ex:
-            Error(self.__stage, ex)
-        return True
 
     #----------------------------------------------------------------------
     def get_parade_registration_2017(self):

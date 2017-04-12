@@ -1,35 +1,35 @@
-#!env python
+#!/usr/bin/env python
 #
 # Confirm login information for a user and return a response:
-#  Input:	user=USERNAME
-#			password=PASSWORD
-#  Output:  "0"										(if user not valid)
-#			"id|onCommittee?|first|fullName"	(if user valid)
+#  Input:    user=USERNAME
+#            password=PASSWORD
+#  Output:  "0"                                  (if user not valid)
+#            "id|onCommittee?|first|fullName"    (if user valid)
 #
 
 print 'Content-type: text/html\n'
 
 import cgi
-from bttbAlumni import *
+from bttbAlumni import bttbAlumni
 params = cgi.parse()
 first = ''
 last = ''
 password = ''
 member = None
 try:
-	for p in params:
-		if p == 'user':
-			name = params[p][0].strip().rstrip()
-		elif p == 'password':
-			password = params[p][0]
-	alumni = bttbAlumni()
-	member = alumni.getMemberFromLogin(name, password)
+    for p in params:
+        if p == 'user':
+            name = params[p][0].strip().rstrip()
+        elif p == 'password':
+            password = params[p][0]
+    alumni = bttbAlumni()
+    member = alumni.get_member_from_login(name, password)
 except:
-	pass
+    pass
 if member:
-	print '%d|%d|%s|%s' %(member.id, member.onCommittee, member.first, member.fullName() )
+    print '%d|%d|%s|%s' %(member.id, member.onCommittee, member.first, member.fullName() )
 else:
-	print 'fail'
+    print 'fail'
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

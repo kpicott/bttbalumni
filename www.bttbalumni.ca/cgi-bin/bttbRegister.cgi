@@ -30,10 +30,11 @@ class BTTBRegister(bttbCGI):
             #
             # Otherwise it's a creation, and requires a new id
             #
-            unique_id = self.get_int_param('id', alumni.get_unique_id())
+            unique_id = self.get_int_param('id', 1)
             if unique_id <= 0:
                 member = alumni.getMemberFromId(-unique_id)
             else:
+                unique_id = alumni.get_unique_id()
                 while alumni.getMemberFromId(unique_id):
                     unique_id = unique_id + 1
                 member = bttbMember()
@@ -50,6 +51,11 @@ class BTTBRegister(bttbCGI):
         last_name = self.capitalize_first( self.get_param( 'CurrentLastName', '' ) )
         nee = self.capitalize_first( self.get_param( 'LastNameInBand', '' ) )
         member.setName( first_name, nee, last_name )
+
+        #----------------------------------------------------------------------
+
+        user_id = self.get_param( 'UserID', '%s %s' % (first_name, last_name) )
+        member.set_user_id( user_id )
 
         #----------------------------------------------------------------------
 
@@ -124,18 +130,20 @@ class BTTBRegister(bttbCGI):
         #----------------------------------------------------------------------
 
         MailChair( 'New registration: ' + member.fullName(), """
-        Greetings from the Band Alumni Registration Template System Immediately
-        Mailing Profile Signups Over Networks
-        (BART SIMPSON).
+Greetings from the Band Alumni Registration Template System Immediately
+Mailing Profile Signups Over Networks
+(BART SIMPSON).
 
-        There was a new registration requiring your attention dude. Surf on over to
-        this link to review it:
+There was a new registration requiring your attention dude. Surf on over to
+this link to review it:
 
-        http://www.bttbalumni.ca/#profiles
+http://www.bttbalumni.ca/#profiles
 
-        ---
-        Robo-Mail
-        """ )
+%s 
+
+---
+Robo-Mail
+        """ % str(self.params) )
 
 #----------------------------------------------------------------------
 

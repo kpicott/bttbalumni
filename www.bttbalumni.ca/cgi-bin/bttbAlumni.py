@@ -31,6 +31,10 @@ class bttbAlumni(object):
         self.__db.Finalize()
 
     #----------------------------------------------------------------------
+    def turn_debug_on(self):
+        self.__db.turn_debug_on()
+
+    #----------------------------------------------------------------------
     def sort_inverse(self,sort_index):
         """
         Return the string representing the opposite sorting method (e.g.
@@ -114,6 +118,7 @@ class bttbAlumni(object):
             html += self.sort_link('&nbsp;(nee)', 'nee', sort_column)
             html += self.sort_link('&nbsp;Last', 'last', sort_column)
             html += '</th>'
+            html += '<th valign="center">%s</th>' % self.sort_link('User&nbsp;ID', 'user_id', sort_column)
             html += '<th valign="center">%s</th>' % self.sort_link('Start&nbsp;Year', 'firstYear', sort_column)
             html += '<th valign="center">%s</th>' % self.sort_link('End&nbsp;Year', 'lastYear', sort_column)
             html += '<th valign="center">%s</th>' % self.sort_link('Email', 'email', sort_column)
@@ -133,6 +138,7 @@ class bttbAlumni(object):
                             link = '?id=%d#register' % member[items['id']]
                             html += '<br>' + PageLink(link, 'Click to Edit', 'Edit your profile')
                         html += '</td>'
+                        html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['user_id']]
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['firstYear']]
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['lastYear']]
                         if member[items['email']] and member[items['emailVisible']]:
@@ -243,6 +249,7 @@ class bttbAlumni(object):
         html += '<th>Committee</th>'
         html += '<th>Friend<br>of the<br>Alumni</th>'
         html += '<th>%s %s %s</th>' % (self.sort_link_c('First', 'first', sort_column), self.sort_link_c('&nbsp;(nee)', 'nee', sort_column), self.sort_link_c('&nbsp;Last', 'last', sort_column))
+        html += '<th>%s</th>' % self.sort_link_c('User&nbsp;ID', 'user_id', sort_column)
         html += '<th>%s</th>' % self.sort_link_c('Start&nbsp;Year', 'firstYear', sort_column)
         html += '<th>%s</th>' % self.sort_link_c('End&nbsp;Year', 'lastYear', sort_column)
         html += '<th>%s</th>' % self.sort_link_c('Email', 'email', sort_column)
@@ -278,7 +285,7 @@ class bttbAlumni(object):
         return self.__db.GetMember(member_id)
 
     #----------------------------------------------------------------------
-    def getMemberFromLogin(self, name, password):
+    def get_member_from_login(self, name, password):
         """
         Get back a bttbMember whose login information matches the given one,
         or None if nobody matches.
@@ -364,13 +371,6 @@ class bttbAlumni(object):
         return self.__db.get_memories_added_after(earliest_time)
 
     #----------------------------------------------------------------------
-    def getConcertInstrumentation(self, concert_table):
-        """
-        Return the list of current concert participants
-        """
-        return self.__db.GetConcertInstrumentation(concert_table)
-
-    #----------------------------------------------------------------------
     def get_parade_registration_2017(self):
         """
         Return the list of parade participants for the 2017 reunion
@@ -388,11 +388,10 @@ class bttbAlumni(object):
     def update_member(self, member, memory, memory_id):
         """
         Add a new member into the database if it isn't there already,
-        or replace it's data if it is already there.
+        or replace its data if it is already there.
         """
         self.__db.update_member( member, True )
         self.__db.update_member_memory( member, memory, memory_id )
-        self.ArchiveData()
 
     #----------------------------------------------------------------------
     def update_memory(self, member, memory, memory_time, memory_id):

@@ -115,6 +115,7 @@ class bttbMember(object):
         self.first = ''
         self.last = ''
         self.nee = ''
+        self.user_id = ''
         self.firstYear = ''
         self.lastYear = ''
         self.email = ''
@@ -205,13 +206,23 @@ class bttbMember(object):
         if nee != last:
             self.nee = nee
 
+        if len(self.user_id) == 0:
+            self.user_id = "%s %s" % (first,last)
+
     #----------------------------------------------------------------------
     def setYears(self,first,last):
         """
-        Set the member's years, creating the XML element if required
+        Set the member's years
         """
         self.firstYear = first
         self.lastYear = last
+
+    #----------------------------------------------------------------------
+    def set_user_id(self,user_id):
+        """
+        Set the member's user_id
+        """
+        self.user_id = user_id
 
     #----------------------------------------------------------------------
     def resetInstruments(self):
@@ -328,6 +339,9 @@ class bttbMember(object):
             print '<td valign="top">', value, '</td></tr>'
 
         print '<table bgcolor="#ffbbbb" cellpadding="0">'
+        pfs_row( 'User ID', self.user_id )
+        pfs_row( 'Name', self.fullName() )
+        pfs_row( 'ID', self.id )
         pfs_row( 'First Year', self.firstYear )
         pfs_row( 'Last Year', self.lastYear )
         pfs_row( 'Email', self.email )
@@ -356,6 +370,7 @@ class bttbMember(object):
         html += '<input type="checkbox" value="1" name="F%s%d">' % (checkPrefix,self.id)
         html += '</td>'
         html += '<td valign=\'top\'>%s</td>' % self.fullName()
+        html += '<td valign=\'top\'>%s</td>' % self.user_id
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.firstYear
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.lastYear
         if self.email and self.emailVisible:
@@ -375,9 +390,9 @@ class bttbMember(object):
 # ==================================================================
 
 import unittest
-class testMember(unittest.TestCase):
+class TestMember(unittest.TestCase):
     '''Test class'''
-    def testDB(self):
+    def test_database(self):
         '''Test method'''
         import bttbDB
         database = bttbDB.bttbDB()
