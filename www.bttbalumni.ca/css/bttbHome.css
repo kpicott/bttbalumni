@@ -399,6 +399,16 @@ input[type=text], input[type=password]
 {
     margin: 0px auto;
 }
+
+/* ==================================================================
+	For the contact form fields
+*/
+.required
+{
+    color:          red;
+    font-weight:    bold;
+}
+
 /* ==================================================================
    Copyright (C) Kevin Peter Picott. All rights reserved. These coded
    instructions, statements and computer programs contain unpublished

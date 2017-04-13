@@ -751,17 +751,25 @@ def MemberAccessRequired(title):
 import smtplib
 
 #======================================================================
-def MailChair(subject='', text=''):
+def MailChair(subject='', text='', to='web@bttbalumni.ca'):
     """
     Usage:
-    MailChair('subject', 'Body of the mail')
-    Send mail to the Chair email address from the website.
+        MailChair('subject', 'Body of the mail')
+    Send mail to one of the email addresses from the website.
     """
-    mailContent = "From: web@bttbalumni.ca\r\nTo: web@bttbalumni.ca\r\nSubject: %s\r\n\r\n%s" % (subject.replace('&nbsp;', ' '), text.replace('&nbsp;', ' '))
+    subject = subject.replace( '&nbsp', ' ' )
+    text = text.replace( '&nbsp', ' ' )
+
+    mailContent = """From: The BTTB Alumni Website (web@bttbalumni.ca)
+To: %s
+Subject: %s
+
+%s""" % (to, subject, text)
+
     try:
         if os.environ['REMOTE_ADDR'] != '127.0.0.1':
             mailServer = smtplib.SMTP('bttbalumni.ca')
-            mailServer.sendmail('web@bttbalumni.ca', 'web@bttbalumni.ca', mailContent)
+            mailServer.sendmail('web@bttbalumni.ca', to, mailContent)
             mailServer.quit()
         else:
             print 'MAIL: ' + mailContent.replace('\n','<br>\n')

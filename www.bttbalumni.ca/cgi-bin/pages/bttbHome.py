@@ -5,8 +5,8 @@ URL page that says thanks for registering to new alumni
 import os
 from bttbAlumni import bttbAlumni
 from bttbMember import SensibleName
-from bttbPage import bttbPage
-from bttbConfig import MapLinks, RootPath, EmbeddedJS, EmbeddedCSS, Error, CommitteeMark
+from pages.bttbPage import bttbPage
+from bttbConfig import MapLinks, RootPath, EmbeddedCSS, Error, CommitteeMark
 from datetime import datetime,timedelta
 __all__ = ['bttbHome']
 
@@ -87,52 +87,33 @@ class bttbHome(bttbPage):
         return MapLinks("""
 Don't want to sign up but still want to get news by email?
 Enter your name and email address below to be added to the mailing list:<br/>
-<form method='POST' onsubmit='return validateRegistration();'
-      name="contactForm" id="contactForm"
-      action="javascript:submit_form('/cgi-bin/bttbContact.cgi', 'contactForm', '/#thanksContact');">
-<table border='2'>
+<form method='POST' onsubmit='return validateContact();'
+      name="contact_form" id="contact_form"
+      action="javascript:submit_form('/cgi-bin/bttbContact.cgi', '#contact_form', null);">
+<table width='100%%' border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>BAND ALUMNI CONTACT</font></th></tr>
 <tr><td>
-  <table>
+  <table width='100%%'>
   <tr>
-      <th align='right'>First Name:</th>
-    <td><input type='text' id='FirstName' onchange="validatePresent(this,'inf_firstName');" name='FirstName' value='' size='32'></td>
-    <td id='inf_firstName'>*</td>
+    <td><input type='text' id='first_name' placeholder='First Name' name='first_name' value='' size='32'></td>
+    <td><span id='inf_first_name' class='required'>*</td>
+    <td><input type='text' id='last_name' placeholder='Last Name' name='last_name' value='' size='32'></td>
+    <td><span id='inf_last_name' class='required'>*</td>
   </tr>
   <tr>
-      <th align='right'>Current Last Name:</th>
-    <td><input type='text' id='CurrentLastName' onchange="validatePresent(this,'inf_lastName');" name='CurrentLastName' value='' size='32'></td>
-    <td id='inf_lastName'>*</td>
-  </tr>
-  <tr>
-      <th valign='top' align='right'>Last Name While in Band:</th>
-      <td><input type='text' id='LastNameInBand' name='LastNameInBand' value='' size='32'></td>
-    <td><i>(if different)</i></td>
-  </tr>
-  <tr>
-      <th align='right'>First Year in Band:</th>
-    <td><input type='text' id='FirstYear' onchange="validatePresent(this,'inf_firstYear');" name='FirstYear' value='' size='4'></td>
-    <td id='inf_firstYear'>*</td>
-  </tr>
-  <tr>
-    <th align='right'>Last Year in Band</th>
-    <td><input type='text' id='LastYear' onchange="validatePresent(this,'inf_lastYear');" name='LastYear' value='' size='4'></td>
-    <td id='inf_lastYear'>*</td>
-  </tr>
-  <tr>
-      <th align='right'>Email:</th>
-    <td><input type='text' id='Email' onchange="validateEmail(this,'inf_email',true);" name='Email' value='' size='32'></td>
-    <td id='inf_email'>*</td>
+    <td><input type='text' id='email' placeholder='Email Address' name='email' value='' size='32'></td>
+    <td><span id='inf_email' class='required'>*</td>
+    <td colspan='2'>
+        <input type='submit' value='Add Me' name='Submit'>
+        <input type='reset' value='Reset' name='Reset'>
+    </td>
   </tr>
 </table>
-<p id='disclaimer' align='center'><b>Please note that this information will only be used for BTTB Alumni purposes.<br/>You may
-opt out at any time by sending an email indicating so to send:(info@bttbalumni.ca,the mailing list owner)</b>
+<p id='disclaimer' align='center'><b>Please note that this information will only be used for BTTB Alumni purposes.<br/>
+You may opt out at any time by sending an email indicating so to send:(info@bttbalumni.ca,the mailing list owner)</b>
 </p>
 </td></tr></table>
 
-<p><input type='submit' value='Add Me' name='Submit'>
-   <input type='reset' value='Reset' name='Reset'>
-</p>
 </form>""")
 
     #----------------------------------------------------------------------
@@ -177,18 +158,52 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         else:
             old_news_time = datetime.now() - timedelta(30)
             old_alumni_time = datetime.now() - timedelta(14)
-        html = MapLinks( """
-        <NOSCRIPT>
-        <p><b>
-        <font color='red'>Warning: This site relies heavily on JavaScript,
-        which you currently have disabled. Please enable it or use another
-        browser in order to enjoy the full experience.</font></b></p>
-        <p>
-        link:(/pages/javascript.html,To learn how to enable Javascript click here.)
-        </p>
-        </NOSCRIPT>
-        """ )
-        html += EmbeddedCSS( 'bttbHome.css' )
+
+        html = EmbeddedCSS( 'bttbHome.css' )
+
+        html += MapLinks( """
+<script>
+function validateContact()
+{
+    var first_name = $('#first_name').val();
+    var last_name = $('#last_name').val();
+    var email = $('#email').val().replace(/^\s+|\s+$/g, '');
+
+    var emptyString = /^\s*$/ ;
+    if( emptyString.test( first_name ) )
+    {
+        alert( 'First name required' );
+        return false;
+    }
+    if( emptyString.test( last_name ) )
+    {
+        alert( 'Last name required' );
+        return false;
+    }
+    if( emptyString.test( email ) )
+    {
+        alert( 'Email required' );
+        return false;
+    }
+    var email_regex = /^[^@]+@[^@.]+\.[^@]*\w\w$/  ;
+    if( !email_regex.test(email) )
+    {
+        alert( 'Not a valid email' );
+        return false;
+    }
+
+    return true;
+}
+</script>
+<NOSCRIPT>
+<p><b>
+<font color='red'>Warning: This site relies heavily on JavaScript,
+which you currently have disabled. Please enable it or use another
+browser in order to enjoy the full experience.</font></b></p>
+<p>
+link:(/pages/javascript.html,To learn how to enable Javascript click here.)
+</p>
+</NOSCRIPT> """ )
 
         # Add in the active countdowns
         try:
@@ -213,6 +228,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         else:
             old_article_count = self.get_old_news_count( "%s" % (old_news_time.strftime('%Y-%m-%d')) )
             show_old = False
+
         #===================================================================
         for when, title, article in news:
             html += "<div class='newsTitle'>"
@@ -225,6 +241,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
             html += "<div class='newsTitle'>"
             html += "%s<span class='newsDate'>%s</span></div>" % (title, when.strftime('%Y-%m-%d'))
             html += "<div class='newsArticle'>%s</div></div>" % article
+
         #===================================================================
         member_list = []
         (member_list, out_of) = self.alumni.getJoinedAfter( old_alumni_time )
@@ -273,13 +290,17 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         html += "</tr>\n"
         html += "</table>"
         html += "</td>"
+        html += "</tr>"
 
+        html += "<tr>"
         if not self.is_member():
-            html += "<td>"
+            html += "<td colspan='2'>"
             html += self.contact_content()
             html += "</td>"
+        html += "</tr>"
 
-        html += "</tr></table></div>"
+        html += "</table></div>"
+
         #===================================================================
         memory_list = self.alumni.get_memories_after(old_alumni_time)
         count = len(memory_list)
@@ -305,6 +326,7 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
             else:
                 html += "Sign in to see the member's memories"
             html += '</td></tr></table></div>'
+
         #===================================================================
         html += "<div class='newsTitle'>"
         if show_old:
@@ -318,19 +340,17 @@ opt out at any time by sending an email indicating so to send:(info@bttbalumni.c
         else:
             html += MapLinks("%d old articles not displayed, link:(?full=1#home,click here to see them)" % old_article_count)
         html += MapLinks( """
-        <div class='copyright'>Copyright 2006-2017 BTTB Alumni Association. All rights reserved.
-        <br>
-        Contact Us: Bob Webb - Organizing Committee Chair: send:(info@bttbalumni.ca),
-        Kevin Picott, Webmaster: send:(web@bttbalumni.ca)
+        <div class='copyright'>Copyright 2006-%d BTTB Alumni Association. All rights reserved.
+        <table>
+        <tr><td rowspan='3'>Contact Us:</td>
+            <td>Bob Webb - Organizing Committee Chair: send:(info@bttbalumni.ca)</td>
+        </tr><tr>
+            <td>Kevin Picott, Webmaster: send:(web@bttbalumni.ca)</td>
+        </tr><tr>
+            <td>Gordon Cameron and Paul Fitzgerald, Media: send:(media@bttbalumni.ca)</td>
+        </tr></table>
         </div>
-        """ )
-        #html += '<h1>Environment</h1>'
-        #for env in os.environ:
-        #    html += '<b>'
-        #    html += env
-        #    html += '</b>='
-        #    html += os.environ[env]
-        #    html += '<br>'
+        """ % datetime.now().year )
         return html
 
 # ==================================================================

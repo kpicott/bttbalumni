@@ -5,120 +5,69 @@ marking the contact information as private and sending a confirmation email.
 """
 print 'Content-type: text/html\n'
 
-import cgi
-from datetime import datetime
-from bttbMember import bttbMember
-from bttbAlumni import bttbAlumni
-from bttbConfig import Error, AsYYYY, MailChair
+from bttbConfig import Error, MailChair
+from bttbCGI import bttbCGI
 
-#----------------------------------------------------------------------
-def get_param(name,default):
-    """
-    Simple trick to get cgi params using default values
-    """
-    try:
-        value = PARAMS[name][0].strip()
-    except Exception:
-        value = default
-    return value
-
-#----------------------------------------------------------------------
-def get_int_param(name,default):
-    """
-    Simple trick to get numeric cgi params using default values
-    """
-    try:
-        value = int( PARAMS[name][0] )
-    except Exception:
-        value = default
-    return value
-
-#----------------------------------------------------------------------
-def capitalize_first(name):
-    """
-    Returns a capitalized string, but without changing inner characters
-    (the "capitalize()" method messes up "McTavish" to "Mctavish"
-    """
-    if len(name) < 2:
-        return name.capitalize()
-    return name[0].upper() + name[1:]
-
-#----------------------------------------------------------------------
-def process_contact():
-    '''Read the contact info and add or modify it in the database'''
-    try:
-        alumni = bttbAlumni()
-        changed_dat = datetime.now()
-        #
-        # If the id was negative then this is an edit:
-        #    Look for a previous edit to overwrite
-        #    Either insert or update at (negative-id).
-        #
-        # Otherwise it's a creation, and requires a new id
-        #
-        unique_id = get_int_param('id', alumni.get_unique_id())
-        if unique_id <= 0:
-            member = alumni.getMemberFromId(-unique_id)
-        else:
-            while alumni.getMemberFromId(unique_id):
-                unique_id = unique_id + 1
-            member = bttbMember()
-            member.setJoinTime( datetime.now() )
-            member.setId( unique_id )
-    except Exception, ex:
-        Error( 'Registration processing error', ex )
-
-    member.setEditTime( changed_dat )
+class BTTBContact(bttbCGI):
+    '''Class to handle parsing of the contact POST request'''
 
     #----------------------------------------------------------------------
+    def process_contact(self):
+        '''Read the contact info and send email to the info mailing address about it'''
+        self.read_cgi()
+        first_name = self.capitalize_first( self.get_param( 'first_name', '' ) )
+        last_name = self.capitalize_first( self.get_param( 'last_name', '' ) )
+        name = first_name + ' ' + last_name
+        email = self.get_param( 'email', '' )
 
-    first_name = capitalize_first( get_param( 'FirstName', '' ) )
-    last_name = capitalize_first( get_param( 'CurrentLastName', '' ) )
-    nee = capitalize_first( get_param( 'LastNameInBand', '' ) )
-    member.setName( first_name, nee, last_name )
+        #----------------------------------------------------------------------
 
-    #----------------------------------------------------------------------
+        MailChair( subject='New contact request: %s' % name,
+                   to='info@bttbalumni.ca',
+                   text="""
+Greetings from the BTTB Alumni website.
 
-    first_year = AsYYYY( get_param( 'FirstYear', '' ) )
-    last_year = AsYYYY( get_param( 'LastYear', '' ) )
-    member.setYears( first_year, last_year )
+There was a new request to be added to the alumni mailing list. They have not been
+added to the band database as they did not register with the website, this is strictly
+for the mailing list.
 
-    #----------------------------------------------------------------------
-
-    email = get_param( 'Email', '' )
-    member.setContact( '', '', '', '', '', '', '', '', email )
-    member.setEmailVisible( False )
-
-    #----------------------------------------------------------------------
-
-    alumni.updateMember( member, '', -1 )
-
-    #----------------------------------------------------------------------
-
-    MailChair( 'New contact request: ' + member.fullName(), """
-Greetings from the Band Alumni Registration Template System Immediately
-Mailing Profile Signups Over Networks
-(BART SIMPSON).
-
-There was a new request to be added to the contact list for the alumni,
-but not register with the website.
-
-    Name: """ + member.fullName() + """
-    Years in Band: """ + member.firstYear + " - " + member.lastYear + """
-    Email: """ + member.email + """
-
-The data has also been entered into the database but is kept private.
+    Name:  %s
+    Email: %s
 
 ---
 Robo-Mail
-    """ )
+    """ % ( name, email ) )
+
+        print """
+<title>Thanks from the BTTB Alumni</title>
+<h1>Thanks for keeping in touch</h1>
+<p>
+Your information will be verified and you will be then added to our contact
+list for updates on alumni activities.
+</p>
+<p>
+Please also check back to the website for news, trivia, memories, fun pictures,
+and other cool band stuff.
+</p>
+<p>
+Know anyone else from the band that might want to stay in touch? Help us build
+our network by spreading the word!
+</p>
+<p>
+<a href="mailto:myBandFriend?subject='BTTB Alumni'&body='The BTTB Alumni are going strong! I registered with them to stay in touch, you can too at http://www.bttbalumni.ca'">Click here to send the website to someone else!</a>
+</p>
+<p class='date'>
+See you soon!!! - your BTTB Alumni Committee
+</p>
+        """
+
+#----------------------------------------------------------------------
 
 try:
-    PARAMS = cgi.parse()
-    process_contact()
-    print "OK"
+    PROCESSOR = BTTBContact()
+    PROCESSOR.process_contact()
 except Exception, ex:
-    Error( 'Could not process contact', ex )
+    Error( 'Could not process contact request', ex )
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded
