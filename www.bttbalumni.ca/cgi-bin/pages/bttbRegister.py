@@ -6,7 +6,7 @@ import re
 import bttbMember
 from bttbAlumni import bttbAlumni
 from bttbConfig import ErrorMsg, MapLinks, InstrumentList, PositionList
-from bttbPage import bttbPage
+from pages.bttbPage import bttbPage
 
 __all__ = ['bttbRegister']
 
@@ -60,13 +60,17 @@ class bttbRegister(bttbPage):
         '''Set up the page'''
         bttbPage.__init__(self)
 
+    #----------------------------------------------------------------------
     def title(self):
         ''':return: The page title'''
         return 'BTTB Alumni Registration'
 
-    def content(self):
-        ''':return: a string with the content for this web page.'''
-        html = """<script type='text/javascript' src='/js/bttbRegister.js'></script>
+    #----------------------------------------------------------------------
+    @staticmethod
+    def style():
+        ''':return: The HTML code with the CSS that implements the page styles'''
+
+        return """<script type='text/javascript' src='/js/bttbRegister.js'></script>
 <style>
 label
 {
@@ -135,25 +139,15 @@ label
 </style>
 """
 
-        try:
-            member_id = int(self.param('id'))
-        except Exception:
-            # Set up a fake number
-            member_id = -1
-        if member_id < 0 and self.requestor:
-            member_id = self.requestor.id
+    #----------------------------------------------------------------------
+    @staticmethod
+    def vitals():
+        ''':return: The HTML code implementing the table section with personal information'''
 
-        html += "<p><b>"
-        if member_id >= 0:
-            html += "Thanks for helping to keep your information up to date!"
-        else:
-            html += "Thanks for taking the time to reconnect!"
-        html += "</b></p>"
-
-        html += MapLinks(r"""
+        return MapLinks(r"""
 <form method='POST' accept-charset='utf-8' onsubmit='return validateRegistration();'
       name="registerForm" id="registerForm" '
-      action="javascript:submit_form('/cgi-bin/bttbRegister.cgi', '#registerForm', '#thanks');">
+      action="javascript:submit_form('/cgi-bin/bttbRegister.cgi', '#registerForm', null);">
 <table cellpadding='5' width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'><font size='+2'>BAND ALUMNI INFORMATION</font></th></tr>
 <tr><td>
@@ -190,6 +184,11 @@ label
 </td></tr>
 """ )
 
+    #----------------------------------------------------------------------
+    @staticmethod
+    def instruments():
+        ''':return: HTML with the instrument section of the table.'''
+
         instrument_map = [ [ 'I_Flute'         , 'Flute/Piccolo' ]
                          , [ 'I_Trumpet'       , 'Trumpet/Cornet' ]
                          , [ 'I_Clarinet'      , 'Bb/Eb/Bass Clarinet' ]
@@ -215,7 +214,7 @@ label
         for instrument_info in instrument_map:
             instrument_checkboxes.append( checkbox_code( instrument_info[0], instrument_info[1] ) )
 
-        html += MapLinks( """
+        return MapLinks( """
 <tr><th bgcolor='#dddddd'><font size='+2'>INSTRUMENT(S) PLAYED</font></th></tr>
 <tr><td>
     <table>
@@ -237,6 +236,11 @@ label
 </td></tr>
 """ % tuple(instrument_checkboxes) )
 
+    #----------------------------------------------------------------------
+    @staticmethod
+    def positions():
+        ''':return: the HTML with the positions-held section of the table.'''
+
         position_map = [ [ 'P_Drum Major',     'Drum Major'     ]
                        , [ 'P_Section Leader', 'Section Leader' ]
                        , [ 'P_Loading Crew',   'Loading Crew'   ]
@@ -253,7 +257,7 @@ label
         for position_info in position_map:
             position_checkboxes.append( checkbox_code( position_info[0], position_info[1] ) )
 
-        html += MapLinks( """
+        return MapLinks( """
 <tr><th bgcolor='#dddddd'><font size='+2'>OTHER POSITIONS HELD</font></th></tr>
 <tr><td>
     <table>
@@ -273,7 +277,12 @@ label
 </table>
 """ % tuple(position_checkboxes) )
 
-        html += MapLinks( r"""
+    #----------------------------------------------------------------------
+    @staticmethod
+    def contact():
+        ''':return: HTML with the contact section of the table.'''
+
+        return MapLinks( r"""
 <p>&nbsp;</p>
 
 <table width='800' class='box_shadow' border='2'>
@@ -308,9 +317,14 @@ will only be used for BTTB Alumni planning purposes.</b><br>
 do not wish your information to be visible on the website.</input>
 </p>
 </td></tr></table>
+        """)
 
-<p>&nbsp;</p>
+    #----------------------------------------------------------------------
+    @staticmethod
+    def memory():
+        ''':return: HTML with the special-memory section of the table.'''
 
+        return MapLinks( """
 <table width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'>SPECIAL MEMORY</font></th></tr>
 <tr><td>
@@ -322,6 +336,35 @@ do not wish your information to be visible on the website.</input>
 </p>
 <br><div class='copyright'>Note: All entries may be reviewed and edited for content, spelling, or other reasons at the sole discretion of the editor.</div>
         """)
+
+    #----------------------------------------------------------------------
+    def content(self):
+        ''':return: a string with the content for this web page.'''
+
+        html = self.style()
+
+        try:
+            member_id = int(self.param('id'))
+        except Exception:
+            # Set up a fake number
+            member_id = -1
+        if member_id < 0 and self.requestor:
+            member_id = self.requestor.id
+
+        html += "<p><b>"
+        if member_id >= 0:
+            html += "Thanks for helping to keep your information up to date!"
+        else:
+            html += "Thanks for taking the time to reconnect!"
+        html += "</b></p>"
+
+        html += self.vitals()
+        html += self.instruments()
+        html += self.positions()
+        html += self.contact()
+        html += "<p>&nbsp;</p>"
+        html += self.memory()
+
         try:
             alumni = bttbAlumni()
             member = alumni.getMemberFromId(member_id)

@@ -11,10 +11,46 @@ from datetime import datetime
 from bttbMember import bttbMember
 from bttbAlumni import bttbAlumni
 from bttbCGI import bttbCGI
-from bttbConfig import Error, AsYYYY, MailChair
+from bttbConfig import Error, AsYYYY, MailChair, MapLinks
 
 class BTTBRegister(bttbCGI):
     '''Class to handle parsing of the registration POST request'''
+
+    #----------------------------------------------------------------------
+    @staticmethod
+    def print_thanks(member):
+        '''Print a thank you response for the new member'''
+        password_msg = "with a temporary password of <b>bttb</b> Please login soon to set your own password."
+        if len(member.password) > 0:
+            password_msg = "with the password you set"
+        print MapLinks( """
+<style>
+p
+{
+    margin:    0 0 10px 0;
+}
+</style>
+
+<h1>Thanks for registering</h1>
+<p>
+Your information will be verified and should appear shortly on the website.
+</p>
+<p>Your user ID will be <b>%s</b> %s.</p>
+<p>
+Check back regularly for news, trivia, fun pictures, and other cool band
+stuff.
+</p>
+<p>
+Know anyone else from the band that has not yet registered?  Help us stay in
+touch with everyone by spreading the word!
+</p>
+<p>
+<a href="mailto:myBandFriend?subject='BTTB Alumni'&body='The BTTB Alumni are going strong! I registered with them to stay in touch, you can too at http://www.bttbalumni.ca'">Click here to send this website to someone else!</a>
+</p>
+<p class='date'>
+See you soon!!! - your BTTB Alumni Committee
+</p>
+        """ % (member.user_id, password_msg) )
 
     #----------------------------------------------------------------------
     def process_registration(self):
@@ -145,12 +181,13 @@ http://www.bttbalumni.ca/#profiles
 Robo-Mail
         """ % str(self.params) )
 
+        self.print_thanks( member )
+
 #----------------------------------------------------------------------
 
 try:
     PROCESSOR = BTTBRegister()
     PROCESSOR.process_registration()
-    print "OK"
 except Exception, ex:
     Error( 'Could not process registration', ex )
 
