@@ -634,7 +634,7 @@ class bttbDB( bttbData ):
             positions = ', '.join(member.positions)
             self.stage( 'UPDATE COMPLETE' )
             insert_cmd = """
-            UPDATE alumni SET first='%s', nee='%s', last='%s', user_id='%s' firstYear=%d, lastYear=%d,
+            UPDATE alumni SET first='%s', nee='%s', last='%s', user_id='%s', firstYear=%d, lastYear=%d,
             email='%s', emailVisible=%d, isFriend=%d,
             street1='%s', street2='%s', apt='%s', city='%s',
             province='%s', country='%s', postalCode='%s', phone='%s', joinTime='%s',
