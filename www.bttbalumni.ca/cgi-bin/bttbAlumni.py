@@ -4,7 +4,7 @@ BTTB Alumni profile information.
 """
 #
 from datetime import datetime
-from bttbMember import bttbMember, SensibleName
+from bttbMember import bttbMember, html_name
 from bttbConfig import Error, Pluralize, PageLink, SortDictByValue, EmailLink, CommitteeMark
 from bttbDB import bttbDB
 
@@ -132,7 +132,7 @@ class bttbAlumni(object):
                         html += '<td valign=\'top\'>'
                         if member[items['onCommittee']]:
                             html += CommitteeMark()
-                        sensible_name = SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
+                        sensible_name = html_name( member[items['first']], member[items['nee']], member[items['last']] )
                         html += sensible_name
                         if who_wants_it and who_wants_it.id == member[items['id']]:
                             link = '?id=%d#register' % member[items['id']]
@@ -160,7 +160,7 @@ class bttbAlumni(object):
                 for member in member_list:
                     if member and not member[items['approved']]:
                         html += '<li>'
-                        html += SensibleName( member[items['first']], member[items['nee']], member[items['last']] )
+                        html += html_name( member[items['first']], member[items['nee']], member[items['last']] )
                         html += '</li>'
                 html += '</ol>\n'
             return html
@@ -228,7 +228,7 @@ class bttbAlumni(object):
                     column = column + 1
                     html += '<td>'
                     link = '?id=%d#register' % member[items['id']]
-                    html += PageLink(link, SensibleName( member[items['first']], member[items['nee']], member[items['last']] ))
+                    html += PageLink(link, html_name( member[items['first']], member[items['nee']], member[items['last']] ))
                     html += '</td>'
             except Exception, ex:
                 Error( 'Displaying registered alumni list', ex )

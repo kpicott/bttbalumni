@@ -83,7 +83,7 @@ try:
         if int(id) in changed:
             fontOn = '<div class="emphasis">'
             fontOff = '</div>'
-        print '<td>%s%s%s</td>' % (fontOn, SensibleName(first,nee,last), fontOff)
+        print '<td>%s%s%s</td>' % (fontOn, html_name(first,nee,last), fontOff)
     print '</tr></table>'
 
 except Exception, e:

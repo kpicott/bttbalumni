@@ -4,7 +4,7 @@ URL page that says thanks for registering to new alumni
 
 import os
 from bttbAlumni import bttbAlumni
-from bttbMember import SensibleName
+from bttbMember import html_name
 from pages.bttbPage import bttbPage
 from bttbConfig import MapLinks, RootPath, EmbeddedCSS, Error, CommitteeMark
 from datetime import datetime,timedelta
@@ -265,7 +265,7 @@ link:(/pages/javascript.html,To learn how to enable Javascript click here.)
                         html += "<th align='left'>"
                         if on_committee:
                             html += CommitteeMark()
-                        html += SensibleName(first,nee,last) + "</th>\n"
+                        html += html_name(first,nee,last) + "</th>\n"
                         html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"
                         html += "<td><i>(%d&nbsp;-&nbsp;%d)</i></td>\n" % (first_year, last_year)
                         html += "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>\n"

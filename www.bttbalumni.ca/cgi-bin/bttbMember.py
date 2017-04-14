@@ -5,7 +5,7 @@ BTTB member profile information.
 from datetime import datetime
 from bttbConfig import PhoneFormat
 
-__all__ = ['SensibleName', 'bttbMember']
+__all__ = ['html_name', 'bttbMember']
 
 #
 #----------------------------------------------------------------------
@@ -90,7 +90,7 @@ def sort_method(sort_column):
     return method_to_use
 
 #----------------------------------------------------------------------
-def SensibleName(first,nee,last):
+def html_name(first,nee,last):
     """
     Return a string with the full name, formatted sensibly
     """
@@ -299,7 +299,7 @@ class bttbMember(object):
         """
         Return a string with the full name, formatted sensibly
         """
-        return SensibleName( self.first, self.nee, self.last )
+        return html_name( self.first, self.nee, self.last ).replace( '&nbsp;', ' ' )
 
     #----------------------------------------------------------------------
     def fullAddress(self):

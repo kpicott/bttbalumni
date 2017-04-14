@@ -17,9 +17,25 @@ class BTTBRegister(bttbCGI):
     '''Class to handle parsing of the registration POST request'''
 
     #----------------------------------------------------------------------
-    @staticmethod
-    def print_thanks(member):
-        '''Print a thank you response for the new member'''
+    def thanks_register(self, member):
+        '''Print a thank you response for the new member and a reminder to approve'''
+
+        MailChair( 'New registration: ' + member.fullName(), """
+Greetings from the Band Alumni Registration Template System Immediately
+Mailing Profile Signups Over Networks
+(BART SIMPSON).
+
+There was a new registration requiring your attention dude. Surf on over to
+this link to review it:
+
+http://www.bttbalumni.ca/#profiles
+
+%s 
+
+---
+Robo-Mail
+        """ % str(self.params) )
+
         password_msg = "with a temporary password of <b>bttb</b> Please login soon to set your own password."
         if len(member.password) > 0:
             password_msg = "with the password you set"
@@ -37,8 +53,7 @@ Your information will be verified and should appear shortly on the website.
 </p>
 <p>Your user ID will be <b>%s</b> %s.</p>
 <p>
-Check back regularly for news, trivia, fun pictures, and other cool band
-stuff.
+Check back regularly for news, fun pictures, and other cool band stuff.
 </p>
 <p>
 Know anyone else from the band that has not yet registered?  Help us stay in
@@ -53,9 +68,33 @@ See you soon!!! - your BTTB Alumni Committee
         """ % (member.user_id, password_msg) )
 
     #----------------------------------------------------------------------
+    @staticmethod
+    def thanks_update(member):
+        '''Print a thank you response for the member updating their info'''
+
+        print MapLinks( """
+<style>
+p
+{
+    margin:    0 0 10px 0;
+}
+</style>
+
+<h1>Thanks for Updating</h1>
+<p>
+By keeping your information up to date you're helping us all stay connected!
+Check back regularly for news, fun pictures, and other cool band stuff.
+</p>
+<p>Reminder: your user ID is <b>%s</b>.</p>
+        """ % member.user_id )
+
+    #----------------------------------------------------------------------
     def process_registration(self):
         '''Read the registration info and add or modify it in the database'''
         self.read_cgi()
+
+        just_updating = False
+
         try:
             alumni = bttbAlumni()
             changed_at = datetime.now()
@@ -69,6 +108,7 @@ See you soon!!! - your BTTB Alumni Committee
             unique_id = self.get_int_param('id', 1)
             if unique_id <= 0:
                 member = alumni.getMemberFromId(-unique_id)
+                just_updating = True
             else:
                 unique_id = alumni.get_unique_id()
                 while alumni.getMemberFromId(unique_id):
@@ -165,23 +205,10 @@ See you soon!!! - your BTTB Alumni Committee
 
         #----------------------------------------------------------------------
 
-        MailChair( 'New registration: ' + member.fullName(), """
-Greetings from the Band Alumni Registration Template System Immediately
-Mailing Profile Signups Over Networks
-(BART SIMPSON).
-
-There was a new registration requiring your attention dude. Surf on over to
-this link to review it:
-
-http://www.bttbalumni.ca/#profiles
-
-%s 
-
----
-Robo-Mail
-        """ % str(self.params) )
-
-        self.print_thanks( member )
+        if just_updating:
+            self.thanks_update( member )
+        else:
+            self.thanks_register( member )
 
 #----------------------------------------------------------------------
 
