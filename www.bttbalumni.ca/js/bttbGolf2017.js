@@ -38,7 +38,7 @@ var instructions_id = "Special Instructions";
 var today, cutoff;
 today = new Date();
 cutoff = new Date();
-cutoff.setFullYear(2017, 3, 15);
+cutoff.setFullYear(2017, 3, 16);
 var apply_discounts = (cutoff > today);
 
 //----------------------------------------------------------------------

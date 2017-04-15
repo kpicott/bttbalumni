@@ -14,7 +14,7 @@ class bttbGolf2017(bttbPage):
         bttbPage.__init__(self)
 
         # Compute the early-bird discounts
-        golf_cutoff = datetime.datetime( 2017, 4, 15 )
+        golf_cutoff = datetime.datetime( 2017, 4, 16 )
         now = datetime.datetime.now()
         self.early = 'Early'
         if now > golf_cutoff:
