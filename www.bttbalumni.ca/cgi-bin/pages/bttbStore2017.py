@@ -11,7 +11,7 @@ __all__ = ['bttbStore2017']
 #
 # Compute the early-bird discounts
 #
-EARLYBIRD_CUTOFF = datetime.datetime( 2017, 4, 15 )
+EARLYBIRD_CUTOFF = datetime.datetime( 2017, 4, 16 )
 NOW = datetime.datetime.now()
 EARLY = 'Early'
 if NOW > EARLYBIRD_CUTOFF:
