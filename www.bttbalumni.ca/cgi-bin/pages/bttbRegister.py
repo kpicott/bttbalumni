@@ -251,6 +251,7 @@ label
                        , [ 'P_Dixieland Band', 'Dixieland Band' ]
                        , [ 'P_Choir',          'Choir'          ]
                        , [ 'P_Dance Band',     'Dance Band'     ]
+                       , [ 'P_Winter Guard',   'Winter Guard'   ]
                        ]
 
         position_checkboxes = []
@@ -266,7 +267,7 @@ label
     <tr>%s%s%s</tr>
     <tr>
         %s
-        <td></td> <td></td>
+        %s
         <td></td> <td></td>
     </tr>
     <tr>

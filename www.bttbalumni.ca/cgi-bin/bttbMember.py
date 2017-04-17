@@ -225,14 +225,14 @@ class bttbMember(object):
         self.user_id = user_id
 
     #----------------------------------------------------------------------
-    def resetInstruments(self):
+    def reset_instruments(self):
         """
         Remove all instruments, in preparation for re-adding all
         """
         self.instruments = []
 
     #----------------------------------------------------------------------
-    def addInstrument(self,instrument):
+    def add_instrument(self,instrument):
         """
         Add an instrument to this member's list
         """
@@ -240,7 +240,14 @@ class bttbMember(object):
             self.instruments.append( instrument )
 
     #----------------------------------------------------------------------
-    def addPosition(self,position):
+    def reset_positions(self):
+        """
+        Remove all positions, in preparation for re-adding all
+        """
+        self.positions = []
+
+    #----------------------------------------------------------------------
+    def add_position(self,position):
         """
         Add a position to this member's list
         """

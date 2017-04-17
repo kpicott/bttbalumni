@@ -182,6 +182,8 @@ class bttbAlumni(object):
         self.__db.GetPublicMemberKeys()
         descending = False
         sort_key = None
+        if sort_column is None:
+            sort_column = 'last'
         if sort_column.replace('_desc','') == sort_column:
             sort_key = sort_column
         else:
