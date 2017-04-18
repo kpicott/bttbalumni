@@ -91,7 +91,7 @@ class bttbSocial2017(bttbPage):
         self.alumni_60_70 = []
         self.alumni_80_90 = []
         self.alumni_2000 = []
-        alumni_registered = self.alumni.process_query( """
+        alumni_registered,_ = self.alumni.process_query( """
                 SELECT alumni.first,alumni.nee,alumni.last,alumni.firstYear,alumni.lastYear
                     FROM 2017_social INNER JOIN alumni
                     WHERE alumni.id=2017_social.alumni_id
@@ -114,7 +114,7 @@ class bttbSocial2017(bttbPage):
                 self.alumni_2000.append( name )
 
         # Get a count of those for whom their decade is unknown (or irrelevant, for guests)
-        others_registered = self.alumni.process_query( """
+        others_registered,_ = self.alumni.process_query( """
                 SELECT name
                     FROM 2017_social
                     WHERE id=NULL

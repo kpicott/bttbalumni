@@ -79,7 +79,7 @@ OTHERS = [ [None, 'Twirler',                     40]
          , [None, None,                          0]
          , [None, 'Majorette',                   20]
          , [None, None,                          0]
-         , [None, None,                          0]
+         , [None, 'Not Specified',               46]
          , [None, None,                          0]
          , [None, None,                          0]
          , [None, None,                          0]
@@ -296,7 +296,14 @@ class bttbParade2017(bttbPage):
         if part_info[2] in self.instrumentation:
             count = len(self.instrumentation[part_info[2]])/2
 
-        return "<td>%s<span class='count'>&nbsp;(%d)</span></td>" % (name.replace(' ','&nbsp;'), count)
+        tooltip = ''
+        if part_info[2] in self.instrumentation:
+            for player_name,_ in self.instrumentation[part_info[2]]:
+                tooltip += '%s\n' % player_name
+                count += 1
+            tooltip = tooltip.replace( "'", "&quot;" )
+
+        return "<td><a title='%s'>%s</a><span class='count'>&nbsp;(%d)</span></td>" % (tooltip, name.replace(' ','&nbsp;'), count)
 
     #----------------------------------------------------------------------
     def title(self):
