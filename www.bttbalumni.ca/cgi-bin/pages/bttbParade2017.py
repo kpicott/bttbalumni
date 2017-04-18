@@ -329,7 +329,7 @@ class bttbParade2017(bttbPage):
         for part in WOODWINDS + BRASS + PERCUSSION + OTHERS:
             select = ''
             try:
-                if part[0] is None:
+                if part[1] is None:
                     continue
                 if part[2] == instrument_selected:
                     select = ' selected'

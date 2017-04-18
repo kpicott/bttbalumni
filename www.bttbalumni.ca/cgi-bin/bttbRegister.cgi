@@ -169,28 +169,29 @@ Check back regularly for news, fun pictures, and other cool band stuff.
 
         #----------------------------------------------------------------------
 
-        member.resetInstruments()
+        member.reset_instruments()
         re_instrument_name = re.compile( 'I_(.*)' )
         for param in self.params:
             match = re_instrument_name.match( param )
             if match:
-                member.addInstrument( match.group(1) )
+                member.add_instrument( match.group(1) )
 
         other_instrument = self.capitalize_first( self.get_param( 'OtherInstrument', '' ) )
         if other_instrument:
-            member.addInstrument( other_instrument )
+            member.add_instrument( other_instrument )
 
         #----------------------------------------------------------------------
 
+        member.reset_positions()
         re_position_name = re.compile( 'P_(.*)' )
         for param in self.params:
             match = re_position_name.match( param )
             if match:
-                member.addPosition( match.group(1) )
+                member.add_position( match.group(1) )
 
         other_position = self.capitalize_first( self.get_param( 'OtherPosition', '' ) )
         if other_position:
-            member.addPosition( other_position )
+            member.add_position( other_position )
 
         #----------------------------------------------------------------------
 

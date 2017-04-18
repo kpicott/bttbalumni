@@ -17,13 +17,13 @@ class bttbData:
         '''Set up the data access information'''
         self.__debug = False
         self.__publicItems = {}
-        self.__publicKeys = ['first', 'nee', 'last', 'firstYear', 'lastYear', 'email', 'instruments', 'emailVisible', 'approved', 'onCommittee', 'id']
+        self.__publicKeys = ['first', 'nee', 'last', 'firstYear', 'lastYear', 'email', 'instruments', 'make_public', 'approved', 'onCommittee', 'id']
         idx = 0
         for key in self.__publicKeys:
             self.__publicItems[key] = idx
             idx = idx + 1
         self.__fullItems = {}
-        self.__fullKeys = ['first', 'nee', 'last', 'firstYear', 'lastYear', 'email', 'emailVisible', 'isFriend', 'street1', 'street2', 'apt', 'city', 'province', 'country', 'postalCode', 'phone', 'id', 'joinTime', 'editTime', 'instruments', 'positions', 'approved', 'onCommittee', 'rank', 'password']
+        self.__fullKeys = ['first', 'nee', 'last', 'firstYear', 'lastYear', 'email', 'make_public', 'isFriend', 'street1', 'street2', 'apt', 'city', 'province', 'country', 'postalCode', 'phone', 'id', 'joinTime', 'editTime', 'instruments', 'positions', 'approved', 'onCommittee', 'rank', 'password']
         idx = 0
         for key in self.__fullKeys:
             self.__fullItems[key] = idx

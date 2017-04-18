@@ -44,9 +44,9 @@ def sort_by_email(lhs,rhs):
     '''Utility for sorting by email'''
     lhs_email = lhs.email
     rhs_email = rhs.email
-    if not lhs.emailVisible:
+    if not lhs.make_public:
         lhs_email = '---'
-    if not rhs.emailVisible:
+    if not rhs.make_public:
         rhs_email = '---'
     return cmp(lhs_email.lower(), rhs_email.lower())
 
@@ -119,7 +119,7 @@ class bttbMember(object):
         self.firstYear = ''
         self.lastYear = ''
         self.email = ''
-        self.emailVisible = True
+        self.make_public = True
         self.isFriend = False
         self.instruments = []
         self.positions = []
@@ -225,14 +225,14 @@ class bttbMember(object):
         self.user_id = user_id
 
     #----------------------------------------------------------------------
-    def resetInstruments(self):
+    def reset_instruments(self):
         """
         Remove all instruments, in preparation for re-adding all
         """
         self.instruments = []
 
     #----------------------------------------------------------------------
-    def addInstrument(self,instrument):
+    def add_instrument(self,instrument):
         """
         Add an instrument to this member's list
         """
@@ -240,7 +240,14 @@ class bttbMember(object):
             self.instruments.append( instrument )
 
     #----------------------------------------------------------------------
-    def addPosition(self,position):
+    def reset_positions(self):
+        """
+        Remove all positions, in preparation for re-adding all
+        """
+        self.positions = []
+
+    #----------------------------------------------------------------------
+    def add_position(self,position):
         """
         Add a position to this member's list
         """
@@ -281,11 +288,11 @@ class bttbMember(object):
         self.email = email
 
     #----------------------------------------------------------------------
-    def setEmailVisible(self,isVisible):
+    def set_make_public(self,isVisible):
         """
         Set the member's email visibility, creating the XML element if required
         """
-        self.emailVisible = isVisible
+        self.make_public = isVisible
 
     #----------------------------------------------------------------------
     def setMemory(self,memory):
@@ -345,7 +352,7 @@ class bttbMember(object):
         pfs_row( 'First Year', self.firstYear )
         pfs_row( 'Last Year', self.lastYear )
         pfs_row( 'Email', self.email )
-        pfs_row( 'Share Email?', self.emailVisible )
+        pfs_row( 'Share Email?', self.make_public )
         pfs_row( 'Instrument(s)', ', '.join(self.instruments) )
         pfs_row( 'Position(s)', ', '.join(self.positions) )
         pfs_row( 'Address', self.fullAddress() )
@@ -373,7 +380,7 @@ class bttbMember(object):
         html += '<td valign=\'top\'>%s</td>' % self.user_id
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.firstYear
         html += '<td valign=\'top\' align=\'center\'>%s</td>' % self.lastYear
-        if self.email and self.emailVisible:
+        if self.email and self.make_public:
             html += '<td valign=\'top\'><a class=\'email\' href=\'mailto:%s\'>%s</td>' % (self.email, self.email)
         else:
             html += '<td valign=\'top\' align=\'center\'>---</td>'
@@ -383,7 +390,7 @@ class bttbMember(object):
         html += self.fullAddress()
         html += '</td>'
         html += '<td valign=\'top\'>%s</td>' % ', '.join(self.positions)
-        html += '<td valign=\'top\'>%s</td>' % (self.emailVisible and 'No' or 'Yes')
+        html += '<td valign=\'top\'>%s</td>' % (self.make_public and 'No' or 'Yes')
         html += '</tr>'
         return html
 

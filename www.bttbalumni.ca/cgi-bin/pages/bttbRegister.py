@@ -251,6 +251,7 @@ label
                        , [ 'P_Dixieland Band', 'Dixieland Band' ]
                        , [ 'P_Choir',          'Choir'          ]
                        , [ 'P_Dance Band',     'Dance Band'     ]
+                       , [ 'P_Winter Guard',   'Winter Guard'   ]
                        ]
 
         position_checkboxes = []
@@ -266,7 +267,7 @@ label
     <tr>%s%s%s</tr>
     <tr>
         %s
-        <td></td> <td></td>
+        %s
         <td></td> <td></td>
     </tr>
     <tr>
@@ -389,7 +390,7 @@ do not wish your information to be visible on the website.</input>
             html = html.replace( 'PostalCodeValue', default_text(member.postalCode,'') )
             html = html.replace( 'EmailValue', default_text(member.email,'') )
             html = html.replace( 'PhoneValue', default_text(member.phone,'') )
-            html = html.replace( 'KeepPrivate_CHECK', default_checked(not member.emailVisible,0) )
+            html = html.replace( 'KeepPrivate_CHECK', default_checked(not member.make_public,0) )
             html = html.replace( 'HighestRankValue', default_text(member.rank,'') )
             other_instruments = []
             full_instruments = InstrumentList()

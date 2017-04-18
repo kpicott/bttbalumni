@@ -576,7 +576,7 @@ class bttbDB( bttbData ):
             instruments = ', '.join(member.instruments)
             positions = ', '.join(member.positions)
             insert_cmd = """
-            INSERT INTO alumni (first, nee, last, user_id, firstYear, lastYear, email, emailVisible,
+            INSERT INTO alumni (first, nee, last, user_id, firstYear, lastYear, email, make_public,
             isFriend, street1, street2, apt, city, province, country, postalCode, phone, id,
             joinTime, editTime, instruments, positions, approved, onCommittee, rank, password)
             VALUES
@@ -590,7 +590,7 @@ class bttbDB( bttbData ):
                    first_year,                          \
                    last_year,                           \
                    email,                               \
-                   member.emailVisible,                 \
+                   member.make_public,                  \
                    member.isFriend,                     \
                    DbFormat(member.street1),            \
                    DbFormat(member.street2),            \
@@ -635,7 +635,7 @@ class bttbDB( bttbData ):
             self.stage( 'UPDATE COMPLETE' )
             insert_cmd = """
             UPDATE alumni SET first='%s', nee='%s', last='%s', user_id='%s', firstYear=%d, lastYear=%d,
-            email='%s', emailVisible=%d, isFriend=%d,
+            email='%s', make_public=%d, isFriend=%d,
             street1='%s', street2='%s', apt='%s', city='%s',
             province='%s', country='%s', postalCode='%s', phone='%s', joinTime='%s',
             editTime='%s', instruments='%s', positions='%s',
@@ -648,7 +648,7 @@ class bttbDB( bttbData ):
                    first_year,                          \
                    last_year,                           \
                    DbFormat(member.email),              \
-                   member.emailVisible,                 \
+                   member.make_public,                  \
                    member.isFriend,                     \
                    DbFormat(member.street1),            \
                    DbFormat(member.street2),            \
@@ -942,7 +942,7 @@ def test_db():
         bob.firstYear = '1980'
         bob.lastYear = '1984'
         bob.email = 'bob@onthis.com'
-        bob.emailVisible = True
+        bob.make_public = True
         bob.isFriend = False
         bob.instruments = ['Tuba', 'Flute', 'Colour Guard']
         bob.positions = ['Drum Major', 'Band Executive']

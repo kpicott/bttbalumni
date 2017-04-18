@@ -102,7 +102,7 @@ class ImportAlumniDB:
           firstYear      INT(10) UNSIGNED NOT NULL DEFAULT '2006',
           lastYear       INT(10) UNSIGNED NOT NULL DEFAULT '2006',
           email          VARCHAR(128)              DEFAULT NULL,
-          emailVisible   TINYINT(1)       NOT NULL DEFAULT '1',
+          make_public    TINYINT(1)       NOT NULL DEFAULT '1',
           isFriend       TINYINT(1)       NOT NULL DEFAULT '0',
           street1        VARCHAR(45)               DEFAULT NULL,
           street2        VARCHAR(45)               DEFAULT NULL,

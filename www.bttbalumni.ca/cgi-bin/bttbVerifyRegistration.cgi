@@ -62,7 +62,7 @@ class BTTBVerifyRegistration(bttbCGI):
                 self.warning( ['FirstName','CurrentLastName','LastNameInBand'], "A similar name is already registered." )
 
     #----------------------------------------------------------------------
-    def validate_email(self, email):
+    def validate_email(self, email, alumni_id):
         '''Validate the email field'''
         if len(email) > 0 and not RE_EMAIL.match(email):
             self.error( ['Email'], "Email is not valid" )
@@ -71,7 +71,8 @@ class BTTBVerifyRegistration(bttbCGI):
             SELECT email
                 FROM alumni
                 WHERE email like '%s'
-            ''' % email )
+                    AND id <> %d
+            ''' % (email, alumni_id) )
 
             if len(results) > 0:
                 self.error( ['Email'], "That email is already in use." )
@@ -98,7 +99,7 @@ class BTTBVerifyRegistration(bttbCGI):
             self.validate_names( first_name, last_name, nee, alumni_id )
 
             email = self.get_param( 'Email', '' ).rstrip()
-            self.validate_email( email )
+            self.validate_email( email, alumni_id )
 
             first_year = self.get_int_param( 'FirstYear', 0 )
             last_year = self.get_int_param( 'LastYear', 0 )

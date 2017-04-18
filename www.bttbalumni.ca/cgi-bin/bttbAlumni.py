@@ -141,7 +141,7 @@ class bttbAlumni(object):
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['user_id']]
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['firstYear']]
                         html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['lastYear']]
-                        if member[items['email']] and member[items['emailVisible']]:
+                        if member[items['email']] and member[items['make_public']]:
                             html += '<td valign=\'top\'>'
                             html += EmailLink( member[items['email']] )
                             html += '</td>'
@@ -182,6 +182,8 @@ class bttbAlumni(object):
         self.__db.GetPublicMemberKeys()
         descending = False
         sort_key = None
+        if sort_column is None:
+            sort_column = 'last'
         if sort_column.replace('_desc','') == sort_column:
             sort_key = sort_column
         else:
@@ -257,7 +259,7 @@ class bttbAlumni(object):
         html += '<th>%s</th>' % self.sort_link_c('Highest Rank', 'rank', sort_column)
         html += '<th>Address</th>'
         html += '<th>%s</th>' % self.sort_link_c('Positions', 'positions', sort_column)
-        html += '<th>%s</th>' % self.sort_link_c('Keep Private?', 'emailVisible', sort_column)
+        html += '<th>%s</th>' % self.sort_link_c('Make Public?', 'make_public', sort_column)
         html += '</tr>'
         return html
 
