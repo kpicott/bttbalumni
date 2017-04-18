@@ -114,7 +114,7 @@ class PopulateAlumniDB:
 		  ('firstYear',      'INT(10) UNSIGNED', 'NOT NULL', '2006', 'First year in the band'),
 		  ('lastYear',       'INT(10) UNSIGNED', 'NOT NULL', '2006', 'Last year in the band'),
 		  ('email',          'VARCHAR(128)',     '',         'NULL', 'Email address'),
-		  ('emailVisible',   'TINYINT(1)',       'NOT NULL', '1',    'Should email be visible to other alumni?'),
+		  ('make_public',    'TINYINT(1)',       'NOT NULL', '1',    'Should info be visible to other alumni?'),
 		  ('isFriend',       'TINYINT(1)',       'NOT NULL', '0',    'Is this a friend of the band, not an alumni?'),
 		  ('street1',        'VARCHAR(45)',      '',         'NULL', 'First line of address'),
 		  ('street2',        'VARCHAR(45)',      '',         'NULL', 'Second line of address'),
