@@ -20,6 +20,10 @@ class BTTBRegister(bttbCGI):
     def thanks_register(self, member):
         '''Print a thank you response for the new member and a reminder to approve'''
 
+        param_info = ''
+        for param_key,param_value in self.params.iteritems():
+            param_info += '%s : %s' % (param_key, str(param_value))
+
         MailChair( 'New registration: ' + member.fullName(), """
 Greetings from the Band Alumni Registration Template System Immediately
 Mailing Profile Signups Over Networks
@@ -34,7 +38,7 @@ http://www.bttbalumni.ca/#profiles
 
 ---
 Robo-Mail
-        """ % str(self.params) )
+        """ % param_info )
 
         password_msg = "with a temporary password of <b>bttb</b> Please login soon to set your own password."
         if len(member.password) > 0:
@@ -104,7 +108,7 @@ Check back regularly for news, fun pictures, and other cool band stuff.
             #
             # Otherwise it's a creation, and requires a new id
             #
-            if self.get_int_param('edit',0):
+            if self.get_int_param('edit',0) > 0:
                 unique_id = self.get_int_param('id', 1)
                 member = alumni.getMemberFromId(unique_id)
                 just_updating = True

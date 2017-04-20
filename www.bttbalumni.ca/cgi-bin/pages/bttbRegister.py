@@ -329,7 +329,7 @@ do not wish your information to be visible on the website.</input>
 <table width='800' class='box_shadow' border='2'>
 <tr><th bgcolor='#ffaaaa'>SPECIAL MEMORY</font></th></tr>
 <tr><td>
-    <textarea rows='10' placeholder='Please share a special memory of your time in the band' id='SpecialTime' name='SpecialTime' cols='86'>MemoryValue</textarea><input type='hidden' id='SpecialTimeId' name='SpecialTimeId' value='memory_id'>
+    <textarea rows='10' placeholder='Please share a special memory of your time in the band' id='SpecialTime' name='SpecialTime' cols='110'>MemoryValue</textarea><input type='hidden' id='SpecialTimeId' name='SpecialTimeId' value='memory_id'>
 </td></tr></table>
 
 <p><input type='submit' value='Submit Profile' name='Submit'>

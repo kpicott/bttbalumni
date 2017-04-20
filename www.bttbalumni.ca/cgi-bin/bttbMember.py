@@ -352,7 +352,7 @@ class bttbMember(object):
         pfs_row( 'First Year', self.firstYear )
         pfs_row( 'Last Year', self.lastYear )
         pfs_row( 'Email', self.email )
-        pfs_row( 'Share Email?', self.make_public )
+        pfs_row( 'Make Public?', self.make_public )
         pfs_row( 'Instrument(s)', ', '.join(self.instruments) )
         pfs_row( 'Position(s)', ', '.join(self.positions) )
         pfs_row( 'Address', self.fullAddress() )
