@@ -13,30 +13,33 @@ def page_css():
     ''':return: A string with the CSS specific to this page'''
     return """<style>
 
-/* The social block contains the table with the current registrations */
-.social
+/* The saturday-social block contains the table with the current registrations */
+.saturday-social
 {
     clear:      both;
     display:    block;
     margin-top: 20px;
+    width:      800px;
+    text-align: left;
 }
 
-.social table
+.saturday-social table
 {
     border-collapse:  collapse;
     border:           1px solid #d2d2d2;
     margin-below:     20px;
 }
 
-.social th, td
+.saturday-social th, td
 {
     text-align:     left;
     padding:        4px;
     border-right:   2px solid #d2d2d2;
     width:          33%%;
+    vertical-align: top;
 }
 
-.social th
+.saturday-social th
 {
     background-color: #AF4C50;
     color:            white;
@@ -53,15 +56,15 @@ def page_css():
     margin-top: 20px;
 }
 
-/* social-info is a standalone box in the main area */
-.social-info
+/* saturday-social-info is a standalone box in the main area */
+.saturday-social-info
 {
     width:      500px;
     margin:     20px;
     padding:    10px;
 }
 
-.social-info p
+.saturday-social-info p
 {
     margin:   5px;
 }
@@ -84,44 +87,50 @@ class bttbSocial2017(bttbPage):
         try:
             self.alumni = bttbAlumni()
         except Exception, ex:
-            Error( 'Could not find parade information', ex )
+            Error( 'Could not find alumni information', ex )
+        
+        try:
+            # Read in the current list of people going to the social event
+            self.alumni_40_50 = []
+            self.alumni_60_70 = []
+            self.alumni_80_90 = []
+            self.alumni_2000 = []
+            self.guest_count = 0
+            alumni_registered,_ = self.alumni.process_query( """
+                    SELECT alumni.first,alumni.nee,alumni.last,alumni.firstYear,alumni.lastYear
+                        FROM 2017_social INNER JOIN alumni
+                        WHERE alumni.id=2017_social.alumni_id
+                            AND alumni.make_public = '1'
+                        ORDER by alumni.last""" )
 
-        # Read in the current list of people going to the social event
-        self.alumni_40_50 = []
-        self.alumni_60_70 = []
-        self.alumni_80_90 = []
-        self.alumni_2000 = []
-        alumni_registered,_ = self.alumni.process_query( """
-                SELECT alumni.first,alumni.nee,alumni.last,alumni.firstYear,alumni.lastYear
-                    FROM 2017_social INNER JOIN alumni
-                    WHERE alumni.id=2017_social.alumni_id
-                        AND alumni.make_public = '1'
-                    ORDER by alumni.last""" )
-        # Sort them into their decades
-        for (first,nee,last,join_year,quit_year) in alumni_registered:
-            if len(nee) > 0:
-                name = '%s (%s) %s' % (first,nee,last)
-            else:
-                name = '%s %s' % (first,last)
-            mid = (join_year + quit_year) / 2
-            if mid < 1960:
-                self.alumni_40_50.append( name )
-            elif mid < 1980:
-                self.alumni_60_70.append( name )
-            elif mid < 2000:
-                self.alumni_80_90.append( name )
-            else:
-                self.alumni_2000.append( name )
+            # Sort them into their decades
+            for (first,nee,last,join_year,quit_year) in alumni_registered:
+                if len(nee) > 0:
+                    name = '%s (%s) %s' % (first,nee,last)
+                else:
+                    name = '%s %s' % (first,last)
+                mid = (join_year + quit_year) / 2
+                if mid < 1960:
+                    self.alumni_40_50.append( name )
+                elif mid < 1980:
+                    self.alumni_60_70.append( name )
+                elif mid < 2000:
+                    self.alumni_80_90.append( name )
+                else:
+                    self.alumni_2000.append( name )
 
-        # Get a count of those for whom their decade is unknown (or irrelevant, for guests)
-        others_registered,_ = self.alumni.process_query( """
-                SELECT name
-                    FROM 2017_social
-                    WHERE id=NULL
-                    ORDER by name""" )
-        self.guest_count = 0
-        if others_registered:
-            self.guest_count = len(others_registered)
+            # Get a count of those for whom their decade is unknown (or irrelevant, for guests)
+            others_registered,_ = self.alumni.process_query( """
+                    SELECT name
+                        FROM 2017_social
+                        WHERE alumni_id=NULL
+                            OR alumni_id=-1
+                        ORDER by name""" )
+            self.guest_count = 0
+            if others_registered:
+                self.guest_count = len(others_registered)
+        except Exception, ex:
+            Error( 'Could not find social information', ex )
 
     #----------------------------------------------------------------------
     def title(self):
@@ -142,7 +151,7 @@ class bttbSocial2017(bttbPage):
 <div class="main-text">
 
 <h1>Saturday Night Social Event</h1>
-<div class='social-info box_shadow'>
+<div class='saturday-social-info box_shadow'>
 <p>
 Join your fellow alumni at Central Arena for an evening of sharing memories and making new ones.
 </p>
@@ -178,7 +187,7 @@ This is an event not to be missed.
         alumni_2000 = '<br>'.join( self.alumni_2000 )
 
         html += MapLinks( """
-        <div class='social'>
+        <div class='saturday-social'>
         <p>
         See any familiar names to be in attendance from the various decades? If you see any that
         are missing maybe you should
@@ -199,7 +208,7 @@ This is an event not to be missed.
         </tr>
         </table>
         <p>
-        ...plus %d other guests ...
+        ...plus at least %d other guests ...
         </p>
         </div>
         """ % (alumni_40_50, alumni_60_70, alumni_80_90, alumni_2000, self.guest_count) )

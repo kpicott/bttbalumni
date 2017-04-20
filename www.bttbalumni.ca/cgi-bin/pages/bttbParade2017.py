@@ -293,9 +293,6 @@ class bttbParade2017(bttbPage):
         if name is None:
             return "<td></td>"
 
-        if part_info[2] in self.instrumentation:
-            count = len(self.instrumentation[part_info[2]])/2
-
         tooltip = ''
         if part_info[2] in self.instrumentation:
             for player_name,_ in self.instrumentation[part_info[2]]:

@@ -13,12 +13,12 @@ from the database.
 
 print 'Content-type: text/html\n'
 
-import re
-from datetime import datetime
-from bttbMember import bttbMember
+import sys
+sys.path.insert(0,'..')
+
 from bttbAlumni import bttbAlumni
 from bttbCGI import bttbCGI
-from bttbConfig import Error, AsYYYY, MailChair, MapLinks
+from bttbConfig import Error
 
 # Name of file being uploaded
 SPREADSHEET_FILE_NAME = 'BTTB 70th Reunion Attendance - Reunion.tsv'
@@ -34,34 +34,47 @@ class SpreadsheetToDB(bttbCGI):
         self.alumni = bttbAlumni()
 
     #----------------------------------------------------------------------
-    def set_in_parade(self, alumni_id, name):
+    def set_in_parade(self, alumni_id):
         '''
         Set the alumni member as being a parade participant. No instrument
         is defined in the spreadsheet so use "Unspecified" if they aren't
         already signed up.
         '''
-        # If already in the parade return
-        if alumni_id is not None:
-            query = 'SELECT * from 2017_parade WHERE alumni_id = %d' % alumni_id
-        else:
-            query = "SELECT * from 2017_parade WHERE name = '%s'" % name
+        if alumni_id is None:
+            return
 
-        results,description = self.alumni.process_query( query )
-        print '<table border="1"><tr><td>%s</td><td>%s</td><td>%s</td></tr></table>' % (query, str(results), str(description) )
+        query = 'SELECT * from 2017_parade WHERE alumni_id = %d' % alumni_id
+        insert = 'INSERT INTO 2017_parade (alumni_id, instrument_id) VALUES (%d, %d)' % (alumni_id, UNSPECIFIED_INSTRUMENT)
+
+        # If already in the parade return
+        results,_ = self.alumni.process_query( query )
+        if len(results) > 0:
+            return
+
+        # Add to the parade
+        results, _ = self.alumni.process_query( insert )
+        print '<p>%s<br><i>%s</i></p>' % (insert, str(results))
 
     #----------------------------------------------------------------------
     def set_in_social(self, alumni_id, name):
         '''
         Set the alumni member as being a social participant.
         '''
-        # If already registered return
         if alumni_id is not None:
             query = 'SELECT * from 2017_social WHERE alumni_id = %d' % alumni_id
+            insert = 'INSERT INTO 2017_social (alumni_id) VALUES (%d)' % alumni_id
         else:
             query = "SELECT * from 2017_social WHERE name = '%s'" % name
+            insert = "INSERT INTO 2017_social (alumni_id, name) VALUES (-1, '%s')" % name
 
-        results,description = self.alumni.process_query( query )
-        print '<table border="1"><tr><td>%s</td><td>%s</td><td>%s</td></tr></table>' % (query, str(results), str(description) )
+        # If already registered return
+        results,_ = self.alumni.process_query( query )
+        if len(results) > 0:
+            return
+
+        # Add to the social event
+        results,_ = self.alumni.process_query( insert )
+        print '<p>%s<br><i>%s</i></p>' % (insert, str(results))
 
     #----------------------------------------------------------------------
     def populate_database(self):
@@ -81,7 +94,7 @@ class SpreadsheetToDB(bttbCGI):
             fields = line.rstrip().split( '\t' )
             if name_idx < 0:
                 for i in range(0,len(fields)):
-                    if fields]i] == 'Name':
+                    if fields[i] == 'Name':
                         name_idx = i
                     elif fields[i] == 'ID':
                         id_idx = i
@@ -106,7 +119,7 @@ class SpreadsheetToDB(bttbCGI):
                 # Check 1 - signed up for parade
                 try:
                     if int(fields[parade_idx]) > 0:
-                        self.set_in_parade( alumni_id, name )
+                        self.set_in_parade( alumni_id )
                 except ValueError:
                     pass
 
@@ -120,22 +133,18 @@ class SpreadsheetToDB(bttbCGI):
                 # Check 3 - signed up for both, early or not
                 try:
                     if int(fields[all_inclusive_early_idx]) > 0:
-                        self.set_in_parade( alumni_id, name )
+                        self.set_in_parade( alumni_id )
                         self.set_in_social( alumni_id, name )
                 except ValueError:
                     pass
                 try:
                     if int(fields[all_inclusive_idx]) > 0:
-                        self.set_in_parade( alumni_id, name )
+                        self.set_in_parade( alumni_id )
                         self.set_in_social( alumni_id, name )
                 except ValueError:
                     pass
 
-        fsv_fd.close()
-
-        try:
-        except Exception, ex:
-            Error( 'Registration processing error', ex )
+        tsv_fd.close()
 
 #----------------------------------------------------------------------
 

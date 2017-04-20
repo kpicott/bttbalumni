@@ -2,7 +2,7 @@
 Page that lets a user add new news
 """
 
-from bttbPage import bttbPage
+from pages.bttbPage import bttbPage
 __all__ = ['bttbAddNews']
 
 class bttbAddNews(bttbPage):
