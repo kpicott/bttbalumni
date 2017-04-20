@@ -578,9 +578,9 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
     """
     (scheme, netloc, url, params, query, fragment) = urlparse(newUrl)
     if query:
-        query = '?' + query
+        query = '/?' + query
     if len(fragment) > 0:
-        newUrl = '/' + query + '#' + fragment
+        newUrl = query + '#' + fragment
         if link is None:
             link = newUrl
         if tooltip is None:

@@ -94,8 +94,7 @@ class BTTBVerifyRegistration(bttbCGI):
             first_name = self.capitalize_first( self.get_param( 'FirstName', '' ) ).rstrip()
             last_name = self.capitalize_first( self.get_param( 'CurrentLastName', '' ) ).rstrip()
             nee = self.capitalize_first( self.get_param( 'LastNameInBand', '' ) ).rstrip()
-            # Negative IDs indicate edits; flip to get the real ID
-            alumni_id = - self.get_int_param( 'id', 1 )
+            alumni_id = self.get_int_param( 'id', -1 )
             self.validate_names( first_name, last_name, nee, alumni_id )
 
             email = self.get_param( 'Email', '' ).rstrip()

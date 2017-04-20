@@ -366,6 +366,10 @@ do not wish your information to be visible on the website.</input>
         html += "<p>&nbsp;</p>"
         html += self.memory()
 
+        # If this is an edit then flag it so that the registration processing knows
+        if member_id >= 0:
+            html += "<input type='hidden' name='edit' value='1' />\n"
+
         try:
             alumni = bttbAlumni()
             member = alumni.getMemberFromId(member_id)
@@ -373,7 +377,7 @@ do not wish your information to be visible on the website.</input>
             # shared whether there is a member as template or not.
             if not member:
                 member = bttbMember.bttbMember()
-            html += "<input type='hidden' name='id' value='%d' />\n" % (-member_id)
+            html += "<input type='hidden' name='id' value='%d' />\n" % member_id
             html = html.replace( 'FirstNameValue', default_text(member.first,'') )
             html = html.replace( 'LastNameInBandValue', default_text(member.nee,'') )
             html = html.replace( 'CurrentLastNameValue', default_text(member.last,'') )
@@ -415,8 +419,9 @@ do not wish your information to be visible on the website.</input>
             memory_list = alumni.get_memories(member_id)
             old_memory = ''
             if len(memory_list) > 0:
-                _, _, _, _, memory_id = memory_list[0]
+                _, the_memory, _, _, memory_id = memory_list[0]
                 html = html.replace( 'memory_id', '%d' % memory_id )
+                old_memory = the_memory
             else:
                 html = html.replace( 'memory_id', '-1' )
             html = html.replace( 'MemoryValue', default_text(old_memory,'') )

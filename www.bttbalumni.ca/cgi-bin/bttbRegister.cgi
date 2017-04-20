@@ -99,15 +99,14 @@ Check back regularly for news, fun pictures, and other cool band stuff.
             alumni = bttbAlumni()
             changed_at = datetime.now()
             #
-            # If the id was negative then this is an edit:
-            #    Look for a previous edit to overwrite
-            #    Either insert or update at (negative-id).
+            # If the edit param appears then this was an edit of an existing
+            # profile.  Look for a previous edit to overwrite
             #
             # Otherwise it's a creation, and requires a new id
             #
-            unique_id = self.get_int_param('id', 1)
-            if unique_id <= 0:
-                member = alumni.getMemberFromId(-unique_id)
+            if self.get_int_param('edit',0):
+                unique_id = self.get_int_param('id', 1)
+                member = alumni.getMemberFromId(unique_id)
                 just_updating = True
             else:
                 unique_id = alumni.get_unique_id()
