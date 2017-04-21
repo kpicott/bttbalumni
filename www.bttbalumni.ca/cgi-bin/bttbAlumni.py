@@ -138,16 +138,16 @@ class bttbAlumni(object):
                             link = '?id=%d#register' % member[items['id']]
                             html += '<br>' + PageLink(link, 'Click to Edit', 'Edit your profile')
                         html += '</td>'
-                        html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['user_id']]
-                        html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['firstYear']]
-                        html += '<td valign=\'top\' align=\'center\'>%s</td>' % member[items['lastYear']]
-                        if member[items['email']] and member[items['make_public']]:
-                            html += '<td valign=\'top\'>'
+                        html += "<td valign='top' align='center'>%s</td>" % member[items['user_id']]
+                        html += "<td valign='top' align='center'>%s</td>" % member[items['firstYear']]
+                        html += "<td valign='top' align='center'>%s</td>" % member[items['lastYear']]
+                        if member[items['email']]:
+                            html += "<td valign='top'>"
                             html += EmailLink( member[items['email']] )
                             html += '</td>'
                         else:
-                            html += '<td valign=\'top\' align=\'center\'>---</td>'
-                        html += '<td valign=\'top\'>%s</td>' % member[items['instruments']]
+                            html += "<td valign='top' align='center'>---</td>"
+                        html += "<td valign='top'>%s</td>" % member[items['instruments']]
                         html += '</tr>'
                     elif member:
                         found_unapproved = found_unapproved + 1
