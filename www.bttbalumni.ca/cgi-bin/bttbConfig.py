@@ -481,7 +481,7 @@ def DbFormat(src):
     """
     if not src: return ''
     dst = src
-    dst = dst.replace("'", "''").replace('%25%20', ' ').replace('%20', ' ').replace('%21', '!').replace('%2C', ',').replace('%0A', '\n').replace('%25', '%').replace('%28', '(').replace('%29', ')').replace('%27', "''").replace('%22', '"').replace('%24', '$').replace('&nbsp;', ' ')
+    dst = dst.replace("'", "\\'").replace('%25%20', ' ').replace('%20', ' ').replace('%21', '!').replace('%2C', ',').replace('%0A', '\n').replace('%25', '%').replace('%28', '(').replace('%29', ')').replace('%27', "''").replace('%22', '"').replace('%24', '$').replace('&nbsp;', ' ')
     return dst
 
 #======================================================================
