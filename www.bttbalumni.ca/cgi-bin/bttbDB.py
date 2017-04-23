@@ -254,22 +254,22 @@ class bttbDB( bttbData ):
         if descending:
             sorted_by = sorted_by + ' DESC'
         member_list = []
+        column_items = {}
         try:
+            column_items = self.get_full_member_keys()
             self.connect()
-            self.stage( 'Constructing sort query' )
             if limit:
                 limit = " LIMIT %d" % limit
             elif self.is_debug_on():
-                limit = " LIMIT 3"
+                limit = " LIMIT 10"
             else:
                 limit = ""
-            query = " SELECT " + ', '.join(self.GetPublicMemberKeys()) + " FROM alumni ORDER BY " + sorted_by + limit
-            self.execute( query )
+            self.execute( "SELECT * FROM alumni WHERE make_public <> 0 ORDER BY " + sorted_by + limit )
             member_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
             Error(self.__stage, ex)
-        return (member_list, self.GetPublicMemberItems())
+        return (member_list, column_items)
 
     #----------------------------------------------------------------------
     def get_public_member_list_since(self, earliest_time):
@@ -284,7 +284,7 @@ class bttbDB( bttbData ):
             self.connect()
             self.stage( 'Constructing joinTime sort query' )
             query = """
-            SELECT %s FROM alumni WHERE joinTime > '%s' ORDER BY joinTime DESC
+            SELECT %s FROM alumni WHERE joinTime > '%s' AND make_public <> 0 ORDER BY joinTime DESC
             """ % (', '.join(self.GetPublicMemberKeys()), earliest_time.strftime('%Y-%m-%d'))
             self.execute( query )
             member_list = self.__cursor.fetchall()

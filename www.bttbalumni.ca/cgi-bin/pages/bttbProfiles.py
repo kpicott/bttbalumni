@@ -31,7 +31,7 @@ class bttbProfiles(bttbPage):
                 if self.requestor and self.requestor.onCommittee:
                     return alumni.get_alumni_summary_for_committee( 'firstYear' )
                 else:
-                    return alumni.getSummary( 'firstYear', self.requestor )
+                    return alumni.get_alumni_summary( 'firstYear', self.requestor )
         except Exception, ex:
             return ErrorMsg( 'Could not read member information', ex )
 
