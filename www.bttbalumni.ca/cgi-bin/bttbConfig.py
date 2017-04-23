@@ -42,6 +42,7 @@ __all__ = [ "ArchiveFormat",
             "Error",
             "ErrorMsg",
             "ErrorsInHtml",
+            "FacebookLink",
             "HomeHref",
             "ImagePath",
             "InstrumentList",
@@ -612,6 +613,14 @@ def DownloadLink(newUrl, text=None, partial=False, colour=''):
     if not partial:
         link += ">%s</a>" % text
     return link
+
+#======================================================================
+def FacebookLink():
+    """
+    Special link to the alumni Facebook group. It's always at the same
+    place so this will keep it consistent.
+    """
+    return "<a target='facebook' title='Alumni on Facebook' href='https://www.facebook.com/groups/2218469082/'>the alumni Facebook group</a>"
 
 #======================================================================
 def PhoneFormat(phone):

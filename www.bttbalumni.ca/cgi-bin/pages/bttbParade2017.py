@@ -362,6 +362,11 @@ a File Reader called Acrobat if you don't already have it).
 The number beside each instrument's name indicates how many people
 have signed up for that particular part.
 </p>
+<p>
+Drums and Sousaphones will be provided by the BTTB. All other instruments
+required can be rented inexpensively (no, seriously, they're dirt cheap) from
+Long and McQuade as arranged by alumnus Steve Butterworth of Yamaha, Canada.
+</p>
 
 </div>
 <div class='parade-info box_shadow'>
