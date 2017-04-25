@@ -119,6 +119,7 @@ else:
     CGIHREF = '/cgi-bin'
 
 RE_LINK = re.compile(r'link:\((.*?)\)', re.MULTILINE)
+RE_FACEBOOK = re.compile(r'facebook:\((.*?)\)', re.MULTILINE)
 RE_DOWNLOAD = re.compile(r'download:\((.*?)\)', re.MULTILINE)
 RE_MAIL = re.compile(r'send:\((.*?)\)', re.MULTILINE)
 RE_MENU_BUTTON = re.compile(r'button:\((.*?)\)', re.MULTILINE)
@@ -165,6 +166,10 @@ def MapLinks(original):
             url = link
             text = url
         resolved = RE_LINK.sub( PageLink(url, text), resolved, 1 )
+    # ----------------------------------------
+    matches = RE_FACEBOOK.findall( resolved )
+    for link in matches:
+        resolved = RE_FACEBOOK.sub( FacebookLink(), resolved, 1 )
     # ----------------------------------------
     matches = RE_DOWNLOAD.findall( resolved )
     for link in matches:

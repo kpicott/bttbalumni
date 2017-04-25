@@ -367,6 +367,10 @@ Drums and Sousaphones will be provided by the BTTB. All other instruments
 required can be rented inexpensively (no, seriously, they're dirt cheap) from
 Long and McQuade as arranged by alumnus Steve Butterworth of Yamaha, Canada.
 </p>
+<p>
+Listen to the download:(/Images70th/ParadeMusic/TheEricFordConcertMarch.mp3,Eric Ford Concert March)
+to hear one of the pieces you'll be playing!
+</p>
 
 </div>
 <div class='parade-info box_shadow'>
