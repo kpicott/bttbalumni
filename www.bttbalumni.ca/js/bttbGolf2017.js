@@ -18,6 +18,7 @@ var empty_cart_msg = "Your cart is currently empty - add items for purchase.";
 
 // Special codes used as identifiable onN options
 var golfer_name_code        = "Golfer Name";
+var spot_code               = "Golfer Spot";
 var lunch_name_code         = "Lunch Guest Name";
 var dinner_name_code        = "Dinner Guest Name";
 var hole_sponsor_name_code  = "Sponsor Name";
@@ -26,6 +27,7 @@ var hole_sponsor_email_code = "Sponsor Email";
 // Special ids to identify the different types of items. They're used for
 // printing the form so they should be descriptive.
 var golfer_id  = "Golf Tournament Entry";
+var spot_id   = "Golf Tournament Reservation";
 var lunch_id   = "Golf Tournament Lunch";
 var dinner_id  = "Golf Tournament Dinner";
 var sponsor_id = "Golf Tournament Hole Sponsorship";
@@ -66,6 +68,23 @@ function add_golfer()
 	golfer.tax_rate = 0;
 
 	cart_contents.push( golfer );
+	rebuild_golf_cart();
+}
+
+//----------------------------------------------------------------------
+//
+// Add a new golf spot reservation to the cart contents
+//
+function add_reserved_spot()
+{
+	var spot = {};
+	spot.amount = 20;
+	spot.item_name = spot_id;
+	spot.on0 = spot_code;
+	spot.os0 = "";
+	spot.tax_rate = 0;
+
+	cart_contents.push( spot );
 	rebuild_golf_cart();
 }
 

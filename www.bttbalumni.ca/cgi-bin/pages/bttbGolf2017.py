@@ -43,6 +43,18 @@ class bttbGolf2017(bttbPage):
 </div>
 
 <div class='golf_item box_shadow'>
+    <div class='golf_info'>Reserve a spot, $20<ul>
+        <li>Pay the remaining $180 any time</li>
+        <li>Includes dinner and a golf spot</li>
+        <li>Your spot is guaranteed</li>
+    </ul>
+    </div>
+    <div class='golf_image'></div>
+    <div class='golf_price'><img src='/Images70th/GolfReserveSpotPrice.png'></div>
+    <div class='golf_button_container'><button class='shadow_button' onclick='add_reserved_spot();'>Reserve Spot</button></div>
+</div>
+
+<div class='golf_item box_shadow'>
     <div class='golf_info'>All you can eat BBQ Lunch, $20<ul>
         <li>Hamburger, Hot Dog, Sausage, Salads</li>
         <li>BBQ opens at 11:30am</li>
