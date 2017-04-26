@@ -176,7 +176,8 @@ a:active.grey_blur
 */
 .non-link
 {
-    cursor: pointer;
+    cursor:				pointer;
+	text-decoration:	underline;
 }
 .non-link:hover
 {

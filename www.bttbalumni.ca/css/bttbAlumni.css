@@ -64,14 +64,16 @@ ul
 
 a:link.email
 {
-    font:         10.5pt/16pt Times New Roman;
-    font-style:   italic;
-    color:        #1155aa;
+    font:         		10.5pt/16pt Times New Roman;
+    font-style:   		italic;
+    color:        		#1155aa;
+	text-decoration:	underline;
 }
 a:link
 {
-    font-variant: small-caps;
-    color:        #1155aa;
+    font-variant: 		small-caps;
+	text-decoration:	underline;
+    color:        		#1155aa;
 }
 a:active
 {

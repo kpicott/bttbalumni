@@ -211,6 +211,27 @@ to the webmaster</a>.
 		<td>Privacy statement.</td>
 	</tr>
 	<tr>
+		<td>Automated "forgot my login"</td>
+		<td>
+		<p>Automate them as follows:
+		<ul>
+			<li>Main page shows a "Forgot User ID or Password" link with a field for name or email</li>
+			<li>If name or email found then:<ul>
+				<li>Create a temp entry in the database under "reset_requested"</li>
+				<li>Email them a link to a reset request page</li>
+				<li>That page confirms that a reset was requested and if so resets the password and tells them their User ID</li>
+				<li>If it wasn’t requested then display a message to that effect and show the "Forgot" page again</li>
+				<li>Clear the request bit</li>
+			</ul></li>
+			<li>Otherwise:<ul>
+				<li>Display message that no such name was found, ask if they want to email a manual request or register again</li>
+				<li>Email goes to me, otherwise go to the register page</li>
+			</ul></li>
+		</ul>
+		</td>
+		<td>Nothing</td>
+	</tr>
+	<tr>
 		<td>Newby Painting Orders</td>
 		<td>There are many John Newby prints still available from the last
 		reunion. We might be able to work out a deal with the Boosters to
