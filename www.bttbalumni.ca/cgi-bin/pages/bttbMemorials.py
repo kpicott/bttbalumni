@@ -35,7 +35,7 @@ class bttbMemorials(bttbPageFile):
             ("Anne", "(Gordon)&nbsp;Hall", 1964, 1970, "Colour Guard"),
             ("Louise", "Dagenais", 1965, 1971, "Majorette"),
             ("Pat", "(Millward)&nbsp;Plummer", 1965, 1975, "Majorette/Flute"),
-            ("Neal", "Sinclair", 1967, 1973, ""),
+            ("Neal", "Sinclair", 1967, 1973, "Drum Major"),
             ("Pete", "Conway", 1968, 1972, "Percussion"),
             ("Tim", "Watt", 1968, 1973, "Percussion"),
             ("Mary", "Ford", 1968, 1973, "Colour Guard"),
@@ -51,7 +51,8 @@ class bttbMemorials(bttbPageFile):
             ("Paul", "Hill", 1980, 1985, "Flute"),
             ("Toni", "(Gaul)&nbsp;Clement", 1980, 1987, "Flute/Piccolo"),
             ("Antony", "Roberts", 1981, 1985, "Percussion"),
-            ("Cathy", "(Carr)&nbsp;Paszt", 1982, 1987, "Saxophone"),
+            ("Cathy", "(Carr)&nbsp;Paszt", 1982, 1987, "Saxophone/Drum Major"),
+            ("Dr. Michael", "Sharpe", 1982, 1987, "Trumpet/Drum Major"),
             ("Willem", "Murray", 1987, 1989, "Percussion"),
             ("Mac", "Elliot", 2012, 2013, "Percussion")
         ]
