@@ -15,7 +15,7 @@ class PopulateAlumniDB:
         """
         self.__alumDir = DataPath()
         self.__db = bttbDB.bttbDB()
-        self.__db.Initialize('bttb')
+        self.__db.Initialize()
         self.__db.TurnDebugOn()
         self.__tableInfo = []
         self.__typeMap = {}

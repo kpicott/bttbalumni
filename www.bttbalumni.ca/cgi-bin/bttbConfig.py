@@ -52,6 +52,7 @@ __all__ = [ "ArchiveFormat",
             "MapLinks",
             "MemberAccessRequired",
             "MusicPath",
+            "MusicURL",
             "NewsletterPath",
             "PackageImagePath",
             "PageLink",
@@ -155,8 +156,8 @@ def MapLinks(original):
                        .replace('__JAVASCRIPTPATH__',   JavascriptPath())   \
                        .replace('__CELEBRATIONPATH__',  CelebrationPath())  \
                        .replace('__CELEBRATIONHREF__',  CelebrationHref())  \
-                       .replace('__CGIHREF__', CgiHref())                   \
-                       .replace('__ROOTPATH__', RootPath())
+                       .replace('__CGIHREF__',          CgiHref())          \
+                       .replace('__ROOTPATH__',         RootPath())
     # ----------------------------------------
     matches = RE_LINK.findall( resolved )
     for link in matches:
@@ -376,7 +377,12 @@ def InstrumentPath():
 
 #======================================================================
 def MusicPath():
-    """ Return the path to the music samples """
+    """ Return the path to the new music files """
+    return os.path.join( RootPath(), 'Music' )
+
+#======================================================================
+def MusicURL():
+    """ Return the path to the new music files """
     return HOMEHREF + '/Music'
 
 #======================================================================
@@ -386,7 +392,7 @@ def Reunion70thPath():
 
 #======================================================================
 def SheetMusicPath():
-    """ Return the path to the sheet music files """
+    """ Return the path to the old sheet music files """
     return HOMEHREF + '/SheetMusic'
 
 #======================================================================
@@ -465,15 +471,20 @@ def TableList():
     Order is important because of foreign key dependencies in the DB.
     Delete in reverse order of return.
     """
-    return [ "60thevents"
+    return [ "events"
+           , "instruments"
+           , "music"
            , "2017_concert"
            , "2017_parade"
            , "2017_social"
            , "alumni"
            , "attendance"
            , "contact"
-           , "instruments"
+           , "memorials"
            , "memories"
+           , "drum_majors"
+           , "executive_positions"
+           , "past_executive"
            , "news"
            , "pages"
            , "paid"
