@@ -806,17 +806,38 @@ class bttbDB( bttbData ):
         """
         Remove the alumnus from the parade database.
         """
-        try:
-            self.connect()
-            delete_cmd = "DELETE FROM 2017_parade WHERE alumni_id = %d" % alumni_id
-            self.execute( delete_cmd )
+        return self.process_query( "DELETE FROM 2017_parade WHERE alumni_id = %d" % alumni_id )
 
-            # Need a COMMIT since we're using InnoDB
-            self.execute( 'COMMIT' )
-            self.close()
-        except Exception, ex:
-            Error(self.__stage, ex)
-        return True
+    #----------------------------------------------------------------------
+    def get_instruments(self):
+        """
+        Return the list of tuples of (instrument name, instrument id)
+        currently present in the database.
+        """
+        return self.process_query( "SELECT instrument,id FROM instruments" )[0]
+
+    #----------------------------------------------------------------------
+    def get_songs(self):
+        """
+        Return the list of tuples of (song name, song id)
+        currently present in the database.
+        """
+        return self.process_query( "SELECT title,id FROM songs" )[0]
+
+    #----------------------------------------------------------------------
+    def get_sheet_music(self):
+        """
+        Return the list of tuples of (song id, instrument id, file)
+        currently present in the database.
+        """
+        return self.process_query( "SELECT song_id,instrument_id,file FROM sheet_music" )[0]
+
+    #----------------------------------------------------------------------
+    def get_playlist_for_event(self, event_id):
+        """
+        Return the list of song ids on the playlist for a given event
+        """
+        return self.process_query( "SELECT song_id FROM playlists WHERE event_id=%d" % event_id )[0]
 
     #----------------------------------------------------------------------
     def process_query(self, query):

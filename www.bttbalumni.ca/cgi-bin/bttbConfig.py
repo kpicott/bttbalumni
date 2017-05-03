@@ -782,8 +782,8 @@ def MailChair(subject='', text='', to='web@bttbalumni.ca'):
         MailChair('subject', 'Body of the mail')
     Send mail to one of the email addresses from the website.
     """
-    subject = subject.replace( '&nbsp', ' ' )
-    text = text.replace( '&nbsp', ' ' )
+    subject = subject.replace( '&nbsp;', ' ' )
+    text = text.replace( '&nbsp;', ' ' )
 
     mailContent = """From: The BTTB Alumni Website (web@bttbalumni.ca)
 To: %s

@@ -29,23 +29,23 @@ WOODWINDS = [ ['AltoSax1',      'Alto Sax 1',           1]
             , ['Oboe',          'Oboe',                 39]
             ]
 
-BRASS = [ ['Trumpet1',  'Trumpet 1',                16]
-        , ['Trumpet2',  'Trumpet 2',                17]
-        , ['Trumpet3',  'Trumpet 3',                18]
-        , [None,        None,                       0]
-        , ['FHorn1',    'French Horn/Mellophone 1', 8]
-        , ['FHorn2',    'French Horn/Mellophone 2', 9]
-        , ['FHorn3',    'French Horn/Mellophone 3', 35]
-        , ['FHorn4',    'French Horn/Mellophone 4', 36]
-        , [None,        None,                       0]
-        , ['Trombone1', 'Trombone 1',               13]
-        , ['Trombone2', 'Trombone 2',               14]
-        , ['Trombone3', 'Trombone 3',               15]
-        , ['Trombone4', 'Trombone 4',               42]
-        , [None,        None,                       0]
-        , ['Baritone',  'Baritone/Euphonium',       3]
-        , ['Tuba',      'Tuba/Sousaphone',          4]
-        , [None,        None,                       0]
+BRASS = [ ['Trumpet1',  'Trumpet 1',                      16]
+        , ['Trumpet2',  'Trumpet 2',                      17]
+        , ['Trumpet3',  'Trumpet 3',                      18]
+        , [None,        None,                              0]
+        , ['FHorn1',    'French Horn/Mellophone 1',        8]
+        , ['FHorn2',    'French Horn/Mellophone 2',        9]
+        , ['FHorn3',    'French Horn/Mellophone 3',       35]
+        , ['FHorn4',    'French Horn/Mellophone 4',       36]
+        , [None,        None,                              0]
+        , ['Trombone1', 'Trombone 1',                     13]
+        , ['Trombone2', 'Trombone 2',                     14]
+        , ['Trombone3', 'Trombone 3',                     15]
+        , ['Trombone4', 'Trombone 4',                     42]
+        , [None,        None,                              0]
+        , ['Baritone',  'Baritone/Euphonium Bass Clef',    3]
+        , ['Euphonium', 'Baritone/Euphonium Treble Clef', 27]
+        , ['Tuba',      'Tuba/Sousaphone',                 4]
         ]
 
 PERCUSSION = [ ['SnareDrum', 'Snare Drum',          24]
@@ -293,6 +293,11 @@ class bttbConcert2017(bttbPage):
         <h1>Reunion Concert 7:00 pm - Sunday June 18<sup>th</sup>, 2017</h1>
         """ )
 
+        music = BTTBMusic()
+        html += '<h2>Song Info</h2><p>%s</p>' % str(music.songs)
+        html += '<h2>Instrument Info</h2><p>%s</p>' % str(music.instruments)
+        html += '<h2>Sheet Music Info</h2><p>%s</p>' % str(music.sheet_music)
+
         html += MapLinks( """
 <p>
 Still to come - music download, instrument part signup, and rehearsal times. Watch for announcements on
@@ -306,7 +311,7 @@ link:(http://www.longandmcquade.com/pdf/lmbandrentbrochure0607-insideON-FINAL.pd
 is offering a rental program the alumni can take advantage of.
 </p>
 
-<h1>Tentaive Concert Lineup</h1>
+<h1>Tentative Concert Lineup</h1>
 <div class='indented'>
     <li>Eric Ford Concert March</li>
     <li><i>Drum line & Colour Guard enter.</i></li>
