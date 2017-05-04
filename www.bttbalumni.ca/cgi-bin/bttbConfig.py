@@ -89,7 +89,8 @@ def attend_list_2017():
     List of all events to attend at the 60th. Values are the ID of the event
     in the database.
     """
-    return { 'Golf':3, 'Social':4, 'Parade':1, 'Concert':2 }
+    #return { 'Golf':3, 'Social':4, 'Parade':1, 'Concert':2 }
+    return { 'Social':4, 'Parade':1, 'Concert':2 }
 
 #======================================================================
 rootSubst = None

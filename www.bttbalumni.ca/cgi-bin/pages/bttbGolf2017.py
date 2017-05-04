@@ -107,6 +107,13 @@ class bttbGolf2017(bttbPage):
 <h2>Your cart is currently empty - add items above.</h2>
 </div>
 """ % self.early )
+
+        html = '''<h1>Sorry, the Golf Tournament Has Been Canceled</h1>
+        <p>
+        But don't let that discourage you - there are plenty of golf courses around Burlington where
+        you can get a round in.
+        </p>
+        '''
         return html
 
 # ==================================================================

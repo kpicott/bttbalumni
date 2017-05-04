@@ -59,7 +59,7 @@ def title_html():
     return MapLinks( '''
 <div class='store-header'>
     send:(info@bttbalumni.ca,<div class='contact-link box_shadow'></div>)
-    link:(#golf2017,<div class='golf-link box_shadow'></div>)
+    send:(golf@bttbalumni.ca,<div class='golf-link box_shadow'></div>)
     <div class='store-title box_shadow'></div>
 </div>''' )
 
