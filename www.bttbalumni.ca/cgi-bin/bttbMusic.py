@@ -126,12 +126,16 @@ class BTTBMusic(object):
         self.instrument_lookup = {}
         self.song_lookup = {}
         self.sheet_music_lookup = {}
+        self.instruments = {}
+        self.songs = {}
         try:
             for (instrument_name,instrument_id) in self.db_instruments:
                 self.instrument_lookup[instrument_name] = instrument_id
+                self.instruments[instrument_id] = instrument_name
             #
             for (song_title,song_id) in self.db_songs:
                 self.song_lookup[song_title] = song_id
+                self.songs[song_id] = song_title
             #
             for (song_id, instrument_id, file_path) in self.db_sheet_music:
                 self.sheet_music_lookup[song_id] = self.sheet_music_lookup.get(song_id, {})
@@ -172,6 +176,22 @@ class BTTBMusic(object):
         '''
         self.database.process_query( """INSERT INTO sheet_music (song_id, instrument_id, file)
             VALUES (%d, %d, '%s');""" % (int(song_id), int(instrument_id), music_path) )
+
+    #----------------------------------------------------------------------
+    def get_playlist(self, event_id):
+        '''
+        :param event_id: ID of event in the "events" table of the database
+        :return: List of (song ID, song name) attached to the event
+        '''
+        playlist = []
+        query = 'SELECT song_id FROM playlists WHERE event_id = %d' % event_id
+        all_songs = []
+        for song_id in self.database.process_query( query )[0]:
+            all_songs.append( song_id[0] )
+        for (song_title,song_id) in self.db_songs:
+            if song_id in song_ids[0]:
+                playlist.append( [song_id, song_title] )
+        return playlist
 
     #----------------------------------------------------------------------
     def read_directories(self):
