@@ -7,7 +7,7 @@ lists of information for pages wanting to make downloads available.
 import re
 import os.path
 import bttbDB
-from bttbConfig import MusicPath, Error
+from bttbConfig import MusicPath, Error, MusicURL
 
 __all__ = ['BTTBMusic']
 
@@ -107,7 +107,11 @@ PART_EXPRESSIONS = [
 ,   ( re.compile(r'-.*Glock',               flags=re.IGNORECASE), 'Bells' )
 ,   ( re.compile(r'-.*Drum.*Set',           flags=re.IGNORECASE), 'Percussion' )
 ,   ( re.compile(r'-.*Timp',                flags=re.IGNORECASE), 'Timpani' )
+,   ( re.compile(r'-.*Quad',                flags=re.IGNORECASE), 'Quads/Quints' )
+,   ( re.compile(r'-.*Quint',               flags=re.IGNORECASE), 'Quads/Quints' )
+,   ( re.compile(r'-.*Triple',              flags=re.IGNORECASE), 'Quads/Quints' )
 ,   ( re.compile(r'-.*Drums',               flags=re.IGNORECASE), 'Percussion' )
+,   ( re.compile(r'-.*Percussion',          flags=re.IGNORECASE), 'Percussion' )
 ,   ( re.compile(r'-.*Conductor',           flags=re.IGNORECASE), 'Conductor' )
     ]
 
@@ -184,12 +188,11 @@ class BTTBMusic(object):
         :return: List of (song ID, song name) attached to the event
         '''
         playlist = []
-        query = 'SELECT song_id FROM playlists WHERE event_id = %d' % event_id
         all_songs = []
-        for song_id in self.database.process_query( query )[0]:
+        for song_id in self.database.get_playlist_for_event(event_id):
             all_songs.append( song_id[0] )
-        for (song_title,song_id) in self.db_songs:
-            if song_id in song_ids[0]:
+        for song_id,song_title in self.songs.iteritems():
+            if song_id in all_songs:
                 playlist.append( [song_id, song_title] )
         return playlist
 
@@ -234,7 +237,8 @@ class BTTBMusic(object):
                             self.unknown_song_paths.append( music_file )
                         else:
                             self.sheet_music[song_name] = self.sheet_music.get(song_name, {})
-                            self.sheet_music[song_name][part_found] = os.path.join( root, music_file )
+                            music_url = re.sub( MusicPath(), MusicURL(), os.path.join( root, music_file ) )
+                            self.sheet_music[song_name][part_found] = music_url
 
         except Exception, ex:
             Error( 'Failed to read music directories', ex )
