@@ -342,6 +342,14 @@ do not wish your information to be visible on the website.</input>
     def content(self):
         ''':return: a string with the content for this web page.'''
 
+        # HACK
+        return '''<h1>Temporarily Unavailable</h1>
+        <p>
+        We're sorry, we are experiencing technical difficulties and cannot
+        process your request. Please try again later. Thank you!
+        </p>
+        '''
+
         html = self.style()
 
         try:

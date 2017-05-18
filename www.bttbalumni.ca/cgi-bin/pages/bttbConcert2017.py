@@ -234,7 +234,8 @@ class bttbConcert2017(bttbPage):
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
-        self.members_only = True
+        # HACK
+        #self.members_only = True
         try:
             self.alumni = bttbAlumni()
         except Exception, ex:
