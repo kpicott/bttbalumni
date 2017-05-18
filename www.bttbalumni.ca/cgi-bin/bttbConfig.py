@@ -4,6 +4,7 @@ Placeholder for global configuration variables
 import re
 import os
 import os.path
+import traceback
 from urlparse import urlparse
 
 # Global testing mode
@@ -558,6 +559,7 @@ def Error(msg,info):
     """
     Print out an error in HTML format and exit
     """
+    #print traceback.extract_stack()
     print ErrorMsg(msg,info)
     exit
 

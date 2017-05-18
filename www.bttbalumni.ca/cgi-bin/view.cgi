@@ -116,33 +116,36 @@ class bttbContentPanel(object):
         Examine the web page data to see if the requestor can be found.
         Set self.requestor to the result, None if no requestor was found.
         '''
-        alumni = bttbAlumni()
-        self.requestor = None
-
-        cookie = Cookie.SimpleCookie()
         try:
-            cookie.load(os.getenv('HTTP_COOKIE'))
-        except (AttributeError, TypeError):
-            return
+            alumni = bttbAlumni()
+            self.requestor = None
 
-        # If the requester wasn't already present then look in the cookies
-        if cookie.has_key('User'):
-            self.requestor = alumni.getMemberFromId( int(cookie['User'].value) )
-
-        if self.requestor is not None:
-            self.requestor_id = self.requestor.id
+            cookie = Cookie.SimpleCookie()
             try:
-                # Look for the last visited time, so that only new stuff will be shown
-                if cookie.has_key('WWhenH'):
-                    try:
-                        last_visit = datetime.fromtimestamp( int(cookie['WWhenH'].value)/1000 )
-                        self.requestor.setLastVisit( last_visit )
-                    except Exception:
-                        # Invalid visit timing resets it
-                        self.requestor.setLastVisit( datetime.now() )
-            except Exception:
-                # If no cookies available guess at the last visit as a week ago.
-                self.requestor.setLastVisit( datetime.now() - timedelta(7) )
+                cookie.load(os.getenv('HTTP_COOKIE'))
+            except (AttributeError, TypeError):
+                return
+
+            # If the requester wasn't already present then look in the cookies
+            if cookie.has_key('User'):
+                self.requestor = alumni.getMemberFromId( int(cookie['User'].value) )
+
+            if self.requestor is not None:
+                self.requestor_id = self.requestor.id
+                try:
+                    # Look for the last visited time, so that only new stuff will be shown
+                    if cookie.has_key('WWhenH'):
+                        try:
+                            last_visit = datetime.fromtimestamp( int(cookie['WWhenH'].value)/1000 )
+                            self.requestor.setLastVisit( last_visit )
+                        except Exception:
+                            # Invalid visit timing resets it
+                            self.requestor.setLastVisit( datetime.now() )
+                except Exception:
+                    # If no cookies available guess at the last visit as a week ago.
+                    self.requestor.setLastVisit( datetime.now() - timedelta(7) )
+        except Exception, ex:
+            self.requestor = None
 
     #----------------------------------------------------------------------
     def log_history(self, prefix, page_ref):

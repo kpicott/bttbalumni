@@ -14,7 +14,7 @@ import MySQLdb
 import os
 import re
 import datetime
-from bttbConfig import Error, DataPath, ArchiveFormat, Backup, TableList, DbFormat, PhoneFormat, attend_list_2017
+from bttbConfig import Error, ErrorMsg, DataPath, ArchiveFormat, Backup, TableList, DbFormat, PhoneFormat, attend_list_2017
 from bttbData import bttbData
 from bttbEvent import bttbEvent
 from bttbMember import bttbMember
@@ -45,10 +45,13 @@ class bttbDB( bttbData ):
     #----------------------------------------------------------------------
     def execute(self,sql):
         '''Run an SQL command'''
-        sql = sql.strip().rstrip()
-        self.stage(sql)
-        self.debug_print( 'Start "' + self.__stage + '"' )
-        results = self.__cursor.execute(sql)
+        try:
+            sql = sql.strip().rstrip()
+            self.stage(sql)
+            self.debug_print( 'Start "' + self.__stage + '"' )
+            results = self.__cursor.execute(sql)
+        except Exception, ex:
+            self.debug_print( ErrorMsg("Failed to execute %s" % sql, ex) )
 
         return results
 
@@ -66,15 +69,18 @@ class bttbDB( bttbData ):
     #----------------------------------------------------------------------
     def close(self):
         '''Close the connection to the database'''
-        self.stage( 'complete' )
-        self.debug_print( 'Close DB connection level %d' % self.__connect_depth )
-        self.__connect_depth = self.__connect_depth - 1
-        if self.is_debug_on() and self.__connect_depth < 0:
-            Error('Too many DB closes', self.__stage)
-        if self.__connect_depth <= 0:
-            if self.__cursor:
-                self.__cursor.close()
-            self.__cursor = None
+        try:
+            self.stage( 'complete' )
+            self.debug_print( 'Close DB connection level %d' % self.__connect_depth )
+            self.__connect_depth = self.__connect_depth - 1
+            if self.is_debug_on() and self.__connect_depth < 0:
+                self.debug_print( ErrorMsg('Too many DB closes', self.__stage) )
+            if self.__connect_depth <= 0:
+                if self.__cursor:
+                    self.__cursor.close()
+                self.__cursor = None
+        except Exception:
+            pass
 
     #----------------------------------------------------------------------
     def Initialize(self, database_name='bttba_bttbalumni'):
@@ -88,7 +94,8 @@ class bttbDB( bttbData ):
         self.__connect_depth = self.__connect_depth + 1
         self.debug_print( 'Open DB connection level %d' % self.__connect_depth )
         if self.__cursor:
-            return
+            return True
+
         try:
             if os.getenv('USER') == 'Dad' or os.getenv('USER') == 'kpicott' or os.getenv('SERVER_NAME') == 'band.local':
                 self.__db = MySQLdb.connect( host='localhost', db='%s' % self.__db_name, user='Dad', passwd='mysql300Pins' )
@@ -100,7 +107,7 @@ class bttbDB( bttbData ):
 
             return True
         except Exception, ex:
-            Error( 'Failed to connect : %s' % str(ex), self.__stage )
+            self.debug_print( ErrorMsg( 'Failed to connect : %s' % str(ex), self.__stage ) )
         return False
 
     #----------------------------------------------------------------------
@@ -157,7 +164,7 @@ class bttbDB( bttbData ):
                 table_fd.close()
             self.close()
         except Exception, ex:
-            print Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
 
     #----------------------------------------------------------------------
     def GetEventAttendees(self, event):
@@ -179,7 +186,7 @@ class bttbDB( bttbData ):
             attend_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return attend_list
 
     #----------------------------------------------------------------------
@@ -222,7 +229,7 @@ class bttbDB( bttbData ):
             memory_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            print Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         # Convert the tuple to a list, for sorting
         return [memory for memory in memory_list]
 
@@ -241,7 +248,7 @@ class bttbDB( bttbData ):
             self.close()
             keys = self.get_table_column_names( '60thevents' )
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return [bttbEvent(keys,event) for event in event_list]
 
     #----------------------------------------------------------------------
@@ -268,7 +275,7 @@ class bttbDB( bttbData ):
             member_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return (member_list, column_items)
 
     #----------------------------------------------------------------------
@@ -292,7 +299,7 @@ class bttbDB( bttbData ):
             member_count = int(self.__cursor.fetchone()[0])
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return (member_list, self.GetPublicMemberItems(), member_count)
 
     #----------------------------------------------------------------------
@@ -329,7 +336,7 @@ class bttbDB( bttbData ):
             member_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return (member_list, column_items)
 
     #----------------------------------------------------------------------
@@ -353,7 +360,7 @@ class bttbDB( bttbData ):
                 unique_id = id_record[0]
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
 
         return unique_id
 
@@ -378,7 +385,7 @@ class bttbDB( bttbData ):
                 member = bttbMember()
                 member.loadFromTuple( column_items, member_info )
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return member
 
     #----------------------------------------------------------------------
@@ -433,7 +440,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -466,7 +473,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -501,7 +508,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -532,7 +539,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -550,7 +557,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -686,7 +693,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -722,7 +729,7 @@ class bttbDB( bttbData ):
                 member = bttbMember()
                 member.loadFromTuple( column_items, member_info )
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return member
 
     #----------------------------------------------------------------------
@@ -744,7 +751,7 @@ class bttbDB( bttbData ):
             playing = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
 
         return playing
 
@@ -767,7 +774,7 @@ class bttbDB( bttbData ):
                 return parts
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
 
         return None
 
@@ -798,7 +805,7 @@ class bttbDB( bttbData ):
             self.execute( 'COMMIT' )
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return True
 
     #----------------------------------------------------------------------
@@ -853,9 +860,10 @@ class bttbDB( bttbData ):
             description = self.__cursor.description
             # Need a COMMIT since we're using InnoDB
             self.execute( 'COMMIT' )
-            self.close()
         except Exception, ex:
-            print Error(self.__stage, ex)
+            results = {}
+            description = {}
+        self.close()
         return results,description
 
     #----------------------------------------------------------------------
@@ -875,7 +883,7 @@ class bttbDB( bttbData ):
             wallace_list = self.__cursor.fetchall()
             self.close()
         except Exception, ex:
-            Error(self.__stage, ex)
+            self.debug_print( ErrorMsg(self.__stage, ex) )
         return wallace_list
 
 #======================================================================
@@ -990,7 +998,7 @@ def test_db():
             try:
                 database.execute( "SELECT * FROM pages WHERE pages.name = '%s'" % page_name )
             except Exception, ex:
-                Error('SELECT page test', ex)
+                self.debug_print( ErrorMsg('SELECT page test', ex) )
             (_, count) = database.cursor().fetchone()
             print count
             if count:
@@ -1002,7 +1010,7 @@ def test_db():
             database.execute( 'COMMIT' )
             database.close()
         except Exception, ex:
-            Error('Page test', ex)
+            self.debug_print( ErrorMsg('Page test', ex) )
         database.Finalize()
 
 if __name__ == '__main__':

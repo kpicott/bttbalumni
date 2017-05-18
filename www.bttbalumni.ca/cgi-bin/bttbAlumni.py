@@ -24,7 +24,7 @@ class bttbAlumni(object):
             self.__db = bttbDB()
             self.__db.Initialize()
         except Exception, ex:
-            Error( 'Connecting to database', ex )
+            pass
 
     #----------------------------------------------------------------------
     def __del__(self):
@@ -33,6 +33,10 @@ class bttbAlumni(object):
     #----------------------------------------------------------------------
     def turn_debug_on(self):
         self.__db.turn_debug_on()
+
+    #----------------------------------------------------------------------
+    def debug_print(self, msg):
+        self.__db.debug_print(msg)
 
     #----------------------------------------------------------------------
     def sort_inverse(self,sort_index):
