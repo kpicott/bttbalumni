@@ -581,6 +581,10 @@ function print_cart()
     print_wnd.document.write( "<style>" );
     print_wnd.document.write( "* { font-family: Raleway; font-size: 12; }" );
     print_wnd.document.write( "</style>" );
+    print_wnd.document.write( "<script type='text/javascript' src='/js/jquery-3.2.0.min.js'></script>" );
+	print_wnd.document.write( '<script>$(document).ready(function() {\n' );
+	print_wnd.document.write( "alert( 'NOTE: You are not registered yet. You must print the generated form and mail it to the address indicated with your cheque in order to complete your registration!' );" );
+	print_wnd.document.write( '});</script>\n' );
     print_wnd.document.write( "</head>" );
     print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeader.jpg'/>\n" );
 
