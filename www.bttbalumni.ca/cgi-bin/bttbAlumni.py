@@ -391,6 +391,20 @@ class bttbAlumni(object):
         return self.__db.get_parade_part_2017(member_id)
 
     #----------------------------------------------------------------------
+    def get_concert_registration_2017(self):
+        """
+        Return the list of concert participants for the 2017 reunion
+        """
+        return self.__db.get_concert_registration_2017()
+
+    #----------------------------------------------------------------------
+    def get_concert_part_2017(self, member_id):
+        """
+        Return the list of concert participants for the 2017 reunion
+        """
+        return self.__db.get_concert_part_2017(member_id)
+
+    #----------------------------------------------------------------------
     def update_member(self, member, memory, memory_id):
         """
         Add a new member into the database if it isn't there already,

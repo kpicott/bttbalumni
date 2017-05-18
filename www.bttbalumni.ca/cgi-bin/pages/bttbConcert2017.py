@@ -4,87 +4,13 @@ Page that shows the alumni reunion concert information
 
 from bttbMember import bttbMember
 from bttbAlumni import bttbAlumni
-from bttbPage import bttbPage
-from bttbConfig import MapLinks, Error, FacebookLink
+from pages.bttbPage import bttbPage
+from bttbMusic import BTTBMusic
+from bttbConfig import MapLinks, Error
 __all__ = ['bttbConcert2017']
 
-# Members are [FileName, RealName, DatabaseID]
-
-WOODWINDS = [ ['AltoSax1',      'Alto Sax 1',           1]
-            , ['AltoSax2',      'Alto Sax 2',           2]
-            , ['TenorSax1',     'Tenor Sax',            12]
-            , ['BaritoneSax',   'Baritone Sax',         28]
-            , [None,            None]
-            , ['Clarinet1',     'Clarinet 1',           5]
-            , ['Clarinet2',     'Clarinet 2',           6]
-            , ['Clarinet3',     'Clarinet 3',           7]
-            , ['ClarinetEb',    'Clarinet in E&#9837;', 45]
-            , ['BassClarinet',  'Bass Clarinet',        33]
-            , [None,            None,                   0]
-            , ['Flute1',        'Flute 1',              10]
-            , ['Flute2',        'Flute 2',              34]
-            , ['Piccolo',       'Piccolo',              11]
-            , [None,            None,                   0]
-            , ['Bassoon',       'Bassoon',              38]
-            , ['Oboe',          'Oboe',                 39]
-            ]
-
-BRASS = [ ['Trumpet1',  'Trumpet 1',                      16]
-        , ['Trumpet2',  'Trumpet 2',                      17]
-        , ['Trumpet3',  'Trumpet 3',                      18]
-        , [None,        None,                              0]
-        , ['FHorn1',    'French Horn/Mellophone 1',        8]
-        , ['FHorn2',    'French Horn/Mellophone 2',        9]
-        , ['FHorn3',    'French Horn/Mellophone 3',       35]
-        , ['FHorn4',    'French Horn/Mellophone 4',       36]
-        , [None,        None,                              0]
-        , ['Trombone1', 'Trombone 1',                     13]
-        , ['Trombone2', 'Trombone 2',                     14]
-        , ['Trombone3', 'Trombone 3',                     15]
-        , ['Trombone4', 'Trombone 4',                     42]
-        , [None,        None,                              0]
-        , ['Baritone',  'Baritone/Euphonium Bass Clef',    3]
-        , ['Euphonium', 'Baritone/Euphonium Treble Clef', 27]
-        , ['Tuba',      'Tuba/Sousaphone',                 4]
-        ]
-
-PERCUSSION = [ ['SnareDrum', 'Snare Drum',          24]
-             , [None,        None,                  0]
-             , ['Bells',     'Bells/Glockenspiel',  26]
-             , [None,        None,                  0]
-             , ['Cymbals',   'Cymbals',             23]
-             , [None,        None,                  0]
-             , ['BassDrum',  'Bass Drum',           25]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             , [None,        None,                  0]
-             ]
-
-OTHERS = [ [None, 'Twirler',                     40]
-         , [None, None,                          0]
-         , [None, 'Colour Guard',                19]
-         , [None, None,                          0]
-         , [None, 'Majorette',                   20]
-         , [None, None,                          0]
-         , [None, 'Not Specified',               46]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         , [None, None,                          0]
-         ]
+# Hardcoded value from the events table
+CONCERT_EVENT_ID = 11
 
 #----------------------------------------------------------------------
 def page_js():
@@ -109,15 +35,15 @@ def page_js():
                             {
                                 $('#concert-status').attr( 'class', 'status-not' );
                                 $('#concert-status').html( 'Not Signed Up' );
-                                $('#concert-action').attr( 'value', 'Sign Up' );
-                                $('#position-query').html( '-- Select Marching Position --' );
+                                $('#concert-action').attr( 'value', 'Sign Up Now' );
+                                $('#position-query').html( '-- Select Concert Part --' );
                             }
                             else if( data[0] === "1" )
                             {
                                 $('#concert-status').attr( "class", "status-in" );
                                 $('#concert-status').html( "Signed Up" );
                                 $('#concert-action').attr( "value", "Change Instrument" );
-                                $('#position-query').html( '-- Not Going To March --' );
+                                $('#position-query').html( '-- Not Going To Play --' );
                             }
                             else
                             {
@@ -162,7 +88,7 @@ def page_css():
 /* Format for the current instrumentation count */
 .count
 {
-    font-size:   16pt;
+    font-size:   10pt;
     font-weight: bold;
     color:       #AF4C50;
 }
@@ -173,27 +99,6 @@ def page_css():
     clear:      both;
     display:    block;
     margin-top: 20px;
-}
-
-.music table
-{
-    border-collapse:  collapse;
-    border:           1px solid #d2d2d2;
-    margin-below:     20px;
-}
-
-.music th, td
-{
-    text-align:     left;
-    padding:        4px;
-    border-right:   2px solid #d2d2d2;
-    width:          33%%;
-}
-
-.music th
-{
-    background-color: #AF4C50;
-    color:            white;
 }
 
 /* Main block is the info to the left */
@@ -210,8 +115,8 @@ def page_css():
 /* concert-info is a standalone box in the main area */
 .concert-info
 {
-    width:      500px;
-    margin:     20px;
+    width:      100%;
+    margin:     20px auto;
     padding:    10px;
 }
 
@@ -226,6 +131,34 @@ def page_css():
     float:         right;
     margin-bottom: 20px;
 }
+
+th.rotate
+{
+  height: 140px;
+  white-space: nowrap;
+}
+
+th.rotate > div
+{
+  transform: 
+    /* Magic Numbers */
+    translate(25px, 51px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+
+th.rotate > div > span
+{
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+
+th.row-header
+{
+    padding: 0 10px;
+    border-bottom: 1px solid #ccc;
+}
 </style>"""
 
 #----------------------------------------------------------------------
@@ -236,51 +169,21 @@ class bttbConcert2017(bttbPage):
         bttbPage.__init__(self)
         # HACK
         #self.members_only = True
+        self.parts_available = []
         try:
             self.alumni = bttbAlumni()
         except Exception, ex:
             Error( 'Could not find concert information', ex )
 
-    #----------------------------------------------------------------------
-    def download_column(self, instrument_info):
-        '''
-        :param instrument_info: Instrument information tuple (instrument_link, instrument_name, instrument_id)
-        :return: HTML representing the column with a download link for the given instrument
-        '''
-        link = instrument_info[0]
-        name = instrument_info[1]
-        count = 0
-        if name is None:
-            return "<td></td>"
-
-        tooltip = ''
-        if instrument_info[2] in self.instrumentation:
-            for player_name,_ in self.instrumentation[instrument_info[2]]:
-                tooltip += '%s\n' % player_name
-                count += 1
-            tooltip = tooltip.replace( "'", "&quot;" )
-
-        return "<td><a title='%s' target='music' href='/Images70th/ConcertMusic/%s.pdf'>%s</a><span class='count'>&nbsp;(%d)</span></td>" % (tooltip, link, name.replace(' ','&nbsp;'), count)
-
-    #----------------------------------------------------------------------
-    def count_column(self, part_info):
-        '''
-        :param part_info: Part information tuple (part_link, part_name, part_id)
-        :return: HTML representing the column with no download link for the given part
-        '''
-        name = part_info[1]
-        count = 0
-        if name is None:
-            return "<td></td>"
-
-        tooltip = ''
-        if part_info[2] in self.instrumentation:
-            for player_name,_ in self.instrumentation[part_info[2]]:
-                tooltip += '%s\n' % player_name
-                count += 1
-            tooltip = tooltip.replace( "'", "&quot;" )
-
-        return "<td><a title='%s'>%s</a><span class='count'>&nbsp;(%d)</span></td>" % (tooltip, name.replace(' ','&nbsp;'), count)
+        # Read in the current instrumentation for the concert
+        self.instrumentation = {}
+        for concert_participant in self.alumni.get_concert_registration_2017():
+            first_name,nee_name,last_name,instrument_id = concert_participant
+            full_name = first_name
+            if len(nee_name) > 0:
+                full_name += " (%s)" % nee_name
+            full_name += " %s" % last_name
+            self.instrumentation[instrument_id] = self.instrumentation.get(instrument_id, []) + [full_name]
 
     #----------------------------------------------------------------------
     def title(self):
@@ -288,56 +191,177 @@ class bttbConcert2017(bttbPage):
         return 'BTTB Alumni Reunion Concert'
 
     #----------------------------------------------------------------------
+    @staticmethod
+    def get_sidebar():
+        ''':return: HTML code to show the instruction paragraph'''
+        return '<div class="main-image"><img src="/Images70th/Concert.jpg"></div>'
+
+    #----------------------------------------------------------------------
+    @staticmethod
+    def get_instructions():
+        ''':return: HTML code to show the instruction paragraph'''
+        return '''
+<div class="main-text">
+<p>
+Below is a list of the instrumentation available for the concert music.
+Select a part and download the music
+for that part in PDF format (see link:(http://www.adobe.com) for
+a File Reader called Acrobat if you don't already have it).
+</p>
+<p>
+The number beside each instrument's name indicates how many people
+have signed up for that particular part.
+</p>
+<p>
+Drums and Sousaphones will be provided by the BTTB. All other instruments
+required can be rented inexpensively (no, seriously, they're dirt cheap) from
+Long and McQuade as arranged by alumnus Steve Butterworth of Yamaha, Canada.
+</p>
+<p>
+At the concert the winning tickets will be drawn for the annual Band Raffle,
+and there will be features with the drumline, colour guard, and Junior Redcoats
+(formerly the Peanut Band).
+</p>
+'''
+
+    #----------------------------------------------------------------------
+    def get_signup(self, all_instruments, instrument_map):
+        '''
+        :param all_instruments: Sorted list of instrument keys
+        :param instrument_map: Map of instrument name to instrument ID
+        :return: HTML code to show the signup information so far and form to change it
+        '''
+        # Initialize status info as being not signed up
+        instrument_selected = 0
+        signup_status = 'Not Signed Up'
+        submit_string = 'Sign Up Now'
+        signup_class = 'status-not'
+
+        # If the member is signed up then change status strings to indicate that
+        signed_up = self.alumni.get_concert_part_2017( self.requestor.id )
+        if signed_up is not None:
+            signup_status = 'SIGNED UP'
+            submit_string = 'Edit My Info'
+            signup_class = 'status-in'
+            instrument_selected = signed_up
+
+        # Build the instrument selector from the list of available instruments,
+        # using slot 0 to indicate no selection
+        instrument_selector = '<select class="dropdown" name="instrument" id="instrument">'
+        instrument_selector += '<option id="position-query" value="0">-- Select Part --</option>'
+        for instrument in all_instruments:
+            select = ''
+            instrument_id = instrument_map[instrument]
+            try:
+                if instrument_id == instrument_selected:
+                    select = ' selected'
+                instrument_selector += '<option value="%s"%s>%s</option>' % ( instrument_id, select, instrument )
+            except Exception:
+                pass
+        instrument_selector += '</select>'
+
+        return """
+<div class='concert-info box_shadow'>
+<form method='POST' name='concert_form' id='concert_form' action='javascript:submit_to_concert();'>
+<input type='hidden' name='id' value='%d'>
+<p>
+Your Concert Status : <span id='concert-status' class='%s'>%s</span><br>
+</p><p>
+Instrument Choice : %s<br>
+</p><p>
+<input id='concert-action' class='shadow_button' type='submit' name='submit' value='%s'><br>
+</form>
+</div>""" % (self.requestor.id, signup_class, signup_status, instrument_selector, submit_string)
+
+    #----------------------------------------------------------------------
+    def download_header(self, instrument_id, instrument):
+        '''
+        :param instrument_id: ID of instrument in this row
+        :param instrument: Name of instrument in this row
+        :return: HTML content showing the instrument row header content
+                 including a tooltip with the players and a count
+        '''
+        # Calculate the tooltip as the names of the current players
+        tooltip = ''
+        count = 0
+        if instrument_id in self.instrumentation:
+            for player_name in self.instrumentation[instrument_id]:
+                tooltip += '%s\n' % player_name
+                count += 1
+            tooltip = tooltip.replace( "'", "&quot;" )
+
+        return "<a title='%s'>%s<span class='count'>&nbsp;(%d)</span></a></td>" % (tooltip, instrument.replace(' ','&nbsp;'), count)
+
+    #----------------------------------------------------------------------
     def content(self):
         ''':return: a string with the content for this web page.'''
         html = MapLinks("""
+        %s
+        %s
         <h1>Reunion Concert 7:00 pm - Sunday June 18<sup>th</sup>, 2017</h1>
-        """ )
+        """ % (page_css(), page_js()) )
 
+        # Read the playlist for the concert
+        # Construct the union of all instruments
+        # Write (vertically) the name of all songs
+        # For each instrument in the list
+        #   Write the instrument (with signup count in brackets)
+        #   For each song
+        #       Write out a download link
         music = BTTBMusic()
-        html += '<h2>Song Info</h2><p>%s</p>' % str(music.songs)
-        html += '<h2>Instrument Info</h2><p>%s</p>' % str(music.instruments)
-        html += '<h2>Sheet Music Info</h2><p>%s</p>' % str(music.sheet_music)
+        playlist = music.get_playlist(CONCERT_EVENT_ID)
 
-        html += MapLinks( """
-<p>
-Still to come - music download, instrument part signup, and rehearsal times. Watch for announcements on
-link:(#home, the home page!) or %s.
-</p>
+        # Gather up the union of all songs and instruments.
+        # Translate the ID information available into song and instrument names.
+        all_songs = {}
+        all_instruments = {}
+        instrument_map = {}
+        for song_info in playlist:
+            song_id = song_info[0]
+            song_name = song_info[1]
+            all_songs[song_name] = True
+            for instrument_id in music.sheet_music_lookup[song_id].keys():
+                instrument_map[music.instruments[instrument_id]] = instrument_id
 
-<p>
-We'll have percussion available, and keep in mind only one person can
-play the set. <br>To ensure you have any other instrument you need
-link:(http://www.longandmcquade.com/pdf/lmbandrentbrochure0607-insideON-FINAL.pdf, Long and McQuade in Burlington)
-is offering a rental program the alumni can take advantage of.
-</p>
+        # Since it's all automatic use alphabetical order to make parts easier to find
+        all_songs = all_songs.keys()
+        all_instruments = instrument_map.keys()
+        all_songs.sort()
+        all_instruments.sort()
 
-<h1>Tentative Concert Lineup</h1>
-<div class='indented'>
-    <li>Eric Ford Concert March</li>
-    <li><i>Drum line & Colour Guard enter.</i></li>
-    <li><i>M.C. Welcome and Please Stand</i></li>
-    <li>O Canada</li>
-    <li>Strike up the Band</li>
-    <li><i>Drum line & Colour Guard exit</i></li>
-    <li>Crown Imperial</li>
-    <li>Highlights from Brave</li>
-    <li><i>Raffle #1 (4 prizes)</i></li>
-    <li>Drum Line Feature</li>
-    <li>Russian Sailors Dance </li>
-    <li>Lassus Trombone (Trombone Section Feature)</li>
-    <li>Junior Redcoats Music ( 2 pieces) Conducted by Bill Rolfe</li>
-    <li>Big Noise (Colour Guard Feature)</li>
-    <li>A Night at the Movies</li>
-    <li>Raindrops Keep Falling on my Head (Alumni Majorette Feature)</li>
-    <li>Dvorak Symphony #9</li>
-    <li><i>Raffle #2 (3 prizes)</i></li>
-    <li>Highland Cathedral</li>
-    <li>Band of Brothers</li>
-    <li>World in Union - <i>Colour Guard / Drum Line / Drum Majors enter</i></li>
-    <li>Pride of Burlington</li>
-</div>
-""" % FacebookLink() )
+        # Show the sidebar, image and tentative lineup
+        html += MapLinks( self.get_sidebar() )
+
+        # Show the instructions
+        html += MapLinks( self.get_instructions() )
+
+        # Show the signup
+        html += MapLinks( self.get_signup( all_instruments, instrument_map ) )
+
+        # Close out the main-text area so that the table can extend across
+        html += '</div>'
+
+        # Print out the download table header (song names in columns, instruments in rows)
+        html += '<table>'
+        html += '<tr><th class="row-header">Instrument</th>'
+        for song in all_songs:
+            html += '<th class="rotate"><div><span>%s</span></div></th>' % song.replace(' ', '&nbsp;')
+        html += '</tr>'
+
+        # Build the rows, adding in download links only for the parts available
+        for instrument in all_instruments:
+            instrument_id = music.instrument_lookup[instrument]
+            html += '<tr><th class="row-header">%s</th>' % self.download_header(instrument_id,instrument)
+            for song in all_songs:
+                song_id = music.song_lookup[song]
+                song_link = '-'
+                if instrument_id in music.sheet_music_lookup[song_id]:
+                    song_link = '''<a href="%s" download="%s"><i class="fa fa-chevron-circle-down"></i></a>
+                    ''' % (music.sheet_music_lookup[song_id][instrument_id], song)
+                html += '<td align="center">%s</td>' % song_link
+            html += '</tr>'
+
+        html += '</table>'
 
         return html
 

@@ -354,8 +354,8 @@ class bttbParade2017(bttbPage):
 <h1>Alumni Band, 2017 Sound of Music Festival Parade</h1>
 <p>
 Below is a list of the instrumentation available for the parade.
-Select a part and you will be pointed to a download of the music
-for that part in format (see link:(http://www.adobe.com) for
+Select a part and then download the music
+for that part in PDF format (see link:(http://www.adobe.com) for
 a File Reader called Acrobat if you don't already have it).
 </p>
 <p>

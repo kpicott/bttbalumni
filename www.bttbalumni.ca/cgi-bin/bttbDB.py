@@ -816,6 +816,87 @@ class bttbDB( bttbData ):
         return self.process_query( "DELETE FROM 2017_parade WHERE alumni_id = %d" % alumni_id )
 
     #----------------------------------------------------------------------
+    def get_concert_registration_2017(self):
+        """
+        Return a list of tuples comprising the people who have signed up
+        for the concert so far the parts they have signed up for
+            [(alumni_name,instrument_name)]
+        """
+        try:
+            self.connect()
+            self.execute( """
+                SELECT
+                alumni.first,alumni.nee,alumni.last,instruments.id
+                FROM alumni INNER JOIN instruments,2017_concert
+                WHERE alumni.id=2017_concert.alumni_id
+                    AND instruments.id=2017_concert.instrument_id
+                ORDER by alumni.last""" )
+            playing = self.__cursor.fetchall()
+            self.close()
+        except Exception, ex:
+            Error(self.__stage, ex)
+
+        return playing
+
+    #----------------------------------------------------------------------
+    def get_concert_part_2017(self, alumni_id):
+        """
+        Return the instrument ID relevant to this member's participation in the concert.
+        """
+        try:
+            self.connect()
+            self.execute( """
+                SELECT instrument_id
+                FROM 2017_concert
+                WHERE alumni_id = %d
+                """ % alumni_id )
+            parts = self.__cursor.fetchone()
+            if parts and (len(parts) > 0):
+                return parts[0]
+            self.close()
+        except Exception, ex:
+            Error(self.__stage, ex)
+
+        return None
+
+    #----------------------------------------------------------------------
+    def set_concert_part_2017(self,alumni_id,instrument_id):
+        """
+        Set the concert part to be played by the given alumnus.
+        """
+        try:
+            self.connect()
+            select_cmd = "SELECT instrument_id FROM 2017_concert WHERE 2017_concert.alumni_id = %d" % alumni_id
+            self.execute( select_cmd )
+            has_part = self.__cursor.fetchone()
+            if has_part:
+                set_cmd = """
+                UPDATE 2017_concert SET instrument_id=%d
+                WHERE alumni_id = %d;
+                """ % (instrument_id, alumni_id)
+            else:
+                set_cmd = """
+                INSERT INTO 2017_concert (alumni_id, instrument_id)
+                VALUES (%d, %d);
+                """ % (alumni_id, instrument_id)
+
+            self.execute( set_cmd )
+
+            # Need a COMMIT since we're using InnoDB
+            self.execute( 'COMMIT' )
+            self.close()
+        except Exception, ex:
+            Error(self.__stage, ex)
+        return True
+
+    #----------------------------------------------------------------------
+    def delete_concert_part_2017(self,alumni_id):
+        """
+        Remove the alumnus from the concert database.
+        """
+        return self.process_query( "DELETE FROM 2017_concert WHERE alumni_id = %d" % alumni_id )
+
+    #----------------------------------------------------------------------
     def get_instruments(self):
         """
         Return the list of tuples of (instrument name, instrument id)
