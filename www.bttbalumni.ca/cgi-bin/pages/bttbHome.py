@@ -236,8 +236,6 @@ link:(/pages/javascript.html,To learn how to enable Javascript click here.)
             old_news = []
             html += ErrorMsg( "News articles not available", ex )
 
-        return html
-
         #===================================================================
         for when, title, article in news:
             html += "<div class='newsTitle'>"

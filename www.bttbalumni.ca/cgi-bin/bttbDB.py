@@ -739,6 +739,7 @@ class bttbDB( bttbData ):
         for the parade so far the parts they have signed up for
             [(alumni_name,instrument_name)]
         """
+        playing = None
         try:
             self.connect()
             self.execute( """

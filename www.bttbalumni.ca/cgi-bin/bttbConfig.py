@@ -31,6 +31,7 @@ __all__ = [ "ArchiveFormat",
             "CleanupXML",
             "CommitteeAccessRequired",
             "CommitteeMark",
+            "DatabasePath",
             "DataHref",
             "DataPath",
             "DbFormat",
@@ -421,6 +422,11 @@ def HomeHref():
 def DataPath():
     """ Return the path to the data (BTTB/Alumni) directory on this machine """
     return os.path.join( RootPath(), 'Alumni' )
+
+#======================================================================
+def DatabasePath():
+    """ Return the path to the database backup directory on this machine """
+    return os.path.join( RootPath(), 'Database' )
 
 #======================================================================
 def Pluralize(word, number):

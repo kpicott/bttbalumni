@@ -33,7 +33,6 @@ def process_query():
 
         ALUMNI_ID = get_int_param( 'id', -1 )
         INSTRUMENT_ID = get_int_param( 'instrument', 0 )
-        NEEDS_INSTRUMENT = get_int_param( 'needs_instrument', 0 )
 
         # Instrument ID of 0 means not participating
         if INSTRUMENT_ID == 0:
@@ -41,7 +40,7 @@ def process_query():
             print NOT_SIGNED_UP,
         # Any other instrument ID is assumed to be valid
         else:
-            DATABASE.set_parade_part_2017( ALUMNI_ID, INSTRUMENT_ID, NEEDS_INSTRUMENT )
+            DATABASE.set_parade_part_2017( ALUMNI_ID, INSTRUMENT_ID, False )
             print SIGNED_UP,
 
         DATABASE.Finalize()

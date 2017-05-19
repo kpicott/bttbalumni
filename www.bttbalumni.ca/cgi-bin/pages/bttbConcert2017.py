@@ -167,8 +167,7 @@ class bttbConcert2017(bttbPage):
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
-        # HACK
-        #self.members_only = True
+        self.members_only = True
         self.parts_available = []
         try:
             self.alumni = bttbAlumni()

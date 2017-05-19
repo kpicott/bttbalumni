@@ -217,8 +217,6 @@ function set_login_or_logout(user)
 	{
         op = 'login';
     }
-	// HACK
-    return '<button onclick="javascript:open_page(\\\'/#register\\\')"><i class="fa fa-user"></i>&nbsp;LOGIN UNAVAILABLE</button>';
     return '\t$("#login").html( \'<button onclick="javascript:do_' + op + '();"><i class="fa fa-key"></i>&nbsp;' + op.toUpperCase() + '</button>\' );\n';
 }
 
