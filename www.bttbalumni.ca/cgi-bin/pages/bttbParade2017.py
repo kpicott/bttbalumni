@@ -323,6 +323,14 @@ Instrument Choice : %s<br>
             for instrument_id in music.sheet_music_lookup[song_id].keys():
                 instrument_map[music.instruments[instrument_id]] = instrument_id
 
+        # Add the non-playing participants
+        instrument_map["Colour Guard"] = 19
+        instrument_map["Majorette"] = 20
+        instrument_map["Marching Without Instrument"] = 21
+        instrument_map["Drum Major"] = 29
+        instrument_map["Will Ride The Float"] = 31
+        instrument_map["Twirler"] = 40
+
         # Since it's all automatic use alphabetical order to make parts easier to find
         all_songs = all_songs.keys()
         all_instruments = instrument_map.keys()
