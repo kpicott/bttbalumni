@@ -355,8 +355,8 @@ Instrument Choice : %s<br>
                 song_id = music.song_lookup[song]
                 song_link = '-'
                 if instrument_id in music.sheet_music_lookup[song_id]:
-                    song_link = '''<a href="%s" download="%s"><i class="fa fa-chevron-circle-down"></i></a>
-                    ''' % (music.sheet_music_lookup[song_id][instrument_id], song)
+                    song_link = '''<a title="%s" href="%s" download="%s"><i class="fa fa-chevron-circle-down"></i></a>
+                    ''' % (song, music.sheet_music_lookup[song_id][instrument_id], song)
                 html += '<td align="center">%s</td>' % song_link
             html += '</tr>'
 
