@@ -202,6 +202,13 @@ class bttbParade2017(bttbPage):
         return '''
 <div class="main-text">
 <p>
+Join what we hope will be the largest alumni marching band we've ever
+assembled for the Sound of Music Parade. There will be a practice
+on Friday June 15th at 7pm at the Music Centre for those that need
+to dust their instruments off, followed by pizza and beverages in
+the arena.
+</p>
+<p>
 Below is a list of the instrumentation available for the parade music.
 Select a part and download the music
 for that part in PDF format (see link:(http://www.adobe.com) for
