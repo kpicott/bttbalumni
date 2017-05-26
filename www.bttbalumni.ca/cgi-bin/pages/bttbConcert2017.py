@@ -6,7 +6,7 @@ from bttbMember import bttbMember
 from bttbAlumni import bttbAlumni
 from pages.bttbPage import bttbPage
 from bttbMusic import BTTBMusic
-from bttbConfig import MapLinks, Error
+from bttbConfig import MapLinks, Error, HtmlifyName
 __all__ = ['bttbConcert2017']
 
 # Hardcoded value from the events table
@@ -169,6 +169,7 @@ class bttbConcert2017(bttbPage):
         bttbPage.__init__(self)
         self.members_only = True
         self.parts_available = []
+        self.total_players = 0
         try:
             self.alumni = bttbAlumni()
         except Exception, ex:
@@ -182,7 +183,9 @@ class bttbConcert2017(bttbPage):
             if len(nee_name) > 0:
                 full_name += " (%s)" % nee_name
             full_name += " %s" % last_name
+            full_name = HtmlifyName(full_name)
             self.instrumentation[instrument_id] = self.instrumentation.get(instrument_id, []) + [full_name]
+            self.total_players += 1
 
     #----------------------------------------------------------------------
     def title(self):
@@ -196,11 +199,17 @@ class bttbConcert2017(bttbPage):
         return '<div class="main-image"><img src="/Images70th/Concert.jpg"></div>'
 
     #----------------------------------------------------------------------
-    @staticmethod
-    def get_instructions():
+    def get_instructions(self):
         ''':return: HTML code to show the instruction paragraph'''
         return '''
 <div class="main-text">
+<p>
+Sit in with the current BTTB for their annual concert-in-the-park on
+Sunday June 18th! For those in town we have been invited to sit in on
+the two practices prior to dust off our instruments and warm up our
+chops! (For those who have forgotten that will be Sunday June 11th
+from 2-4pm and Wednesday June 14th from 7-9pm.)
+</p>
 <p>
 Below is a list of the instrumentation available for the concert music.
 Select a part and download the music
@@ -209,7 +218,8 @@ a File Reader called Acrobat if you don't already have it).
 </p>
 <p>
 The number beside each instrument's name indicates how many people
-have signed up for that particular part.
+have signed up for that particular part. (%d is the total number who
+have told us their intentions so far.)
 </p>
 <p>
 Drums and Sousaphones will be provided by the BTTB. All other instruments
@@ -221,7 +231,7 @@ At the concert the winning tickets will be drawn for the annual Band Raffle,
 and there will be features with the drumline, colour guard, and Junior Redcoats
 (formerly the Peanut Band).
 </p>
-'''
+''' % self.total_players
 
     #----------------------------------------------------------------------
     def get_signup(self, all_instruments, instrument_map):

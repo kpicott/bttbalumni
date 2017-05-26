@@ -3,7 +3,7 @@
 BTTB member profile information.
 """
 from datetime import datetime
-from bttbConfig import PhoneFormat
+from bttbConfig import PhoneFormat, HtmlifyName
 
 __all__ = ['html_name', 'bttbMember']
 
@@ -96,10 +96,10 @@ def html_name(first,nee,last):
     """
     full_name = ''
     if nee and (len(nee) > 0):
-        full_name = ('%s&nbsp;(%s)&nbsp;%s') % (first,nee,last)
+        full_name = ('%s (%s) %s') % (first,nee,last)
     else:
-        full_name = ('%s&nbsp;%s') % (first,last)
-    return full_name
+        full_name = ('%s %s') % (first,last)
+    return HtmlifyName(full_name)
 
 #----------------------------------------------------------------------
 class bttbMember(object):

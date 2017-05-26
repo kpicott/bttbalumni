@@ -5,7 +5,7 @@ signed in user sign up for a specific instrument.
 from bttbAlumni import bttbAlumni
 from bttbMember import bttbMember
 from pages.bttbPage import bttbPage
-from bttbConfig import MapLinks, Error
+from bttbConfig import MapLinks, Error, HtmlifyName
 __all__ = ['bttbSocial2017']
 
 #----------------------------------------------------------------------
@@ -109,6 +109,7 @@ class bttbSocial2017(bttbPage):
                     name = '%s (%s) %s' % (first,nee,last)
                 else:
                     name = '%s %s' % (first,last)
+                name = HtmlifyName(name)
                 mid = (join_year + quit_year) / 2
                 if mid < 1960:
                     self.alumni_40_50.append( name )
@@ -185,6 +186,7 @@ This is an event not to be missed.
         alumni_60_70 = '<br>'.join( self.alumni_60_70 )
         alumni_80_90 = '<br>'.join( self.alumni_80_90 )
         alumni_2000 = '<br>'.join( self.alumni_2000 )
+        total_count = self.guest_count + len(self.alumni_40_50) + len(self.alumni_60_70) +len(self.alumni_80_90) +len(self.alumni_2000)
 
         html += MapLinks( """
         <div class='saturday-social'>
@@ -208,10 +210,10 @@ This is an event not to be missed.
         </tr>
         </table>
         <p>
-        ...plus at least %d other guests ...
+        ...plus at least %d other guests for a total of %d...
         </p>
         </div>
-        """ % (alumni_40_50, alumni_60_70, alumni_80_90, alumni_2000, self.guest_count) )
+        """ % (alumni_40_50, alumni_60_70, alumni_80_90, alumni_2000, self.guest_count, total_count) )
 
         return html
 

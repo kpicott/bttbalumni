@@ -46,6 +46,7 @@ __all__ = [ "ArchiveFormat",
             "ErrorsInHtml",
             "FacebookLink",
             "HomeHref",
+            "HtmlifyName",
             "ImagePath",
             "InstrumentList",
             "InTestMode",
@@ -422,6 +423,17 @@ def HomeHref():
 def DataPath():
     """ Return the path to the data (BTTB/Alumni) directory on this machine """
     return os.path.join( RootPath(), 'Alumni' )
+
+#======================================================================
+def HtmlifyName(name):
+    """ Return the name, converted to HTML """
+    html_name = name.replace( ' ', '&nbsp;' )
+    html_name = html_name.replace( 'â', '&acirc;' )
+    html_name = html_name.replace( 'à', '&agrave;' )
+    html_name = html_name.replace( 'è', '&egrave;' )
+    html_name = html_name.replace( 'á', '&aacute;' )
+    html_name = html_name.replace( 'é', '&eacute;' )
+    return html_name
 
 #======================================================================
 def DatabasePath():
