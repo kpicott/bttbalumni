@@ -218,8 +218,9 @@ Long and McQuade as arranged by alumnus Steve Butterworth of Yamaha, Canada.
 </p>
 <p>
 Here are some of the songs you will be playing:<ol>
-<li>download:(/Images70th/ParadeMusic/TheEricFordConcertMarch.mp3,Eric Ford Concert March)</li>
-<li>download:(/Images70th/ParadeMusic/Singing In The Rain.mp3,Singing In The Rain)</li>
+<li>download:(/Music/TheEricFordConcertMarch.mp3,Eric Ford Concert March)</li>
+<li>download:(/Music/Singing In The Rain.mp3,Singing In The Rain)</li>
+<li>download:(/Music/PrinceOfThieves.mp3,Prince of Thieves)</li>
 </ol>
 </p>
 '''
