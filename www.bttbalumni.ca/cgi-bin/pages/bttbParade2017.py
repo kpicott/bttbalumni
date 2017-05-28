@@ -359,7 +359,7 @@ Instrument Choice : %s<br>
         html += MapLinks( self.get_signup( all_instruments, instrument_map ) )
 
         # Close out the main-text area so that the table can extend across
-        html += '</div>'
+        html += '</div><p>&nbsp;</p><p>&nbsp;</p>'
 
         # Print out the download table header (song names in columns, instruments in rows)
         html += '<table>'
