@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Placeholder for global configuration variables
 """
