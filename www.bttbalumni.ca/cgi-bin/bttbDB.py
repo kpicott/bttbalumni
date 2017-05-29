@@ -744,7 +744,7 @@ class bttbDB( bttbData ):
             self.connect()
             self.execute( """
                 SELECT
-                alumni.first,alumni.nee,alumni.last,instruments.id,2017_parade.needs_instrument
+                alumni.first,alumni.nee,alumni.last,instruments.id,2017_parade.registered
                 FROM alumni INNER JOIN instruments,2017_parade
                 WHERE alumni.id=2017_parade.alumni_id
                     AND instruments.id=2017_parade.instrument_id
@@ -766,7 +766,7 @@ class bttbDB( bttbData ):
         try:
             self.connect()
             self.execute( """
-                SELECT instrument_id,needs_instrument
+                SELECT instrument_id,registered
                 FROM 2017_parade
                 WHERE alumni_id = %d
                 """ % alumni_id )
@@ -780,7 +780,7 @@ class bttbDB( bttbData ):
         return None
 
     #----------------------------------------------------------------------
-    def set_parade_part_2017(self,alumni_id,instrument_id,needs_instrument):
+    def set_parade_part_2017(self,alumni_id,instrument_id,registered):
         """
         Set the parade part to be played by the given alumnus.
         """
@@ -791,14 +791,14 @@ class bttbDB( bttbData ):
             has_part = self.__cursor.fetchone()
             if has_part:
                 set_cmd = """
-                UPDATE 2017_parade SET instrument_id=%d, needs_instrument=%d
+                UPDATE 2017_parade SET instrument_id=%d, registered=%d
                 WHERE alumni_id = %d;
-                """ % (instrument_id, needs_instrument, alumni_id)
+                """ % (instrument_id, registered, alumni_id)
             else:
                 set_cmd = """
-                INSERT INTO 2017_parade (alumni_id, needs_instrument, instrument_id)
+                INSERT INTO 2017_parade (alumni_id, registered, instrument_id)
                 VALUES (%d, %d, %d);
-                """ % (alumni_id, needs_instrument, instrument_id)
+                """ % (alumni_id, registered, instrument_id)
 
             self.execute( set_cmd )
 

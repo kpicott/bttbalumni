@@ -24,7 +24,7 @@ class bttbDbQuery(bttbPage):
         queries = (
              ("All Profiles", "all", "Profile information for all of the alumni currently")
         ,    ("Committee Profiles", "committee", "Profile information for committee members")
-        #,    ("Missing Parade", "parade", "Contact info for everyone who signed up to be in the parade but has not downloaded their music and/or confirmed yet.")
+        ,    ("Parade Not Registered", "parade", "Contact info for everyone who signed up to be in the parade but has not registered through the store.")
         #,    ("Missing Friday", "friday", "Contact info for everyone who signed up to be at the social event but has not paid yet.")
         #,    ("Missing Saturday", "saturday", "Contact info for everyone who signed up to be at the homecoming but has not paid yet.")
         #,    ("Parade Drumline", "drumline", "The drumline for the parade.")

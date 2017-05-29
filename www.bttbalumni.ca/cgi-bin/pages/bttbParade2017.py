@@ -31,6 +31,7 @@ def page_js():
             data    :   $('#parade_form').serialize(),
             success :   function(data)
                         {
+                            // 0 = Not signed up, not registered
                             if( data[0] === "0" )
                             {
                                 $('#parade-status').attr( 'class', 'status-not' );
@@ -38,10 +39,27 @@ def page_js():
                                 $('#parade-action').attr( 'value', 'Sign Up Now' );
                                 $('#position-query').html( '-- Select Parade Part --' );
                             }
+                            // 1 = Signed up, not registered
                             else if( data[0] === "1" )
                             {
+                                $('#parade-status').attr( "class", "status-unpaid" );
+                                $('#parade-status').html( "Please Visit <a href='/#store2017'>Store</a> To Pay" );
+                                $('#parade-action').attr( "value", "Change Instrument" );
+                                $('#position-query').html( '-- Not Going To Play --' );
+                            }
+                            // 2 = Not signed up, registered
+                            else if( data[0] === "2" )
+                            {
+                                $('#parade-status').attr( 'class', 'status-unpaid' );
+                                $('#parade-status').html( 'Registered, Choose Part' );
+                                $('#parade-action').attr( 'value', 'Sign Up Now' );
+                                $('#position-query').html( '-- Select Parade Part --' );
+                            }
+                            // 3 = Signed up, registered
+                            else if( data[0] === "3" )
+                            {
                                 $('#parade-status').attr( "class", "status-in" );
-                                $('#parade-status').html( "Signed Up" );
+                                $('#parade-status').html( "Fully Signed Up" );
                                 $('#parade-action').attr( "value", "Change Instrument" );
                                 $('#position-query').html( '-- Not Going To Play --' );
                             }
@@ -70,6 +88,12 @@ def page_css():
     font-size:   16pt;
     font-weight: bold;
     color:       #AF4C50;
+}
+.status-unpaid /* Signed up for a part but not paid - yello */
+{
+    font-size:   16pt;
+    font-weight: bold;
+    color:       #DFAF50;
 }
 .status-in /* In the parade - green */
 {
@@ -159,6 +183,27 @@ th.row-header
     padding: 0 10px;
     border-bottom: 1px solid #ccc;
 }
+
+.asis a:link
+{
+    font-size:          16pt;
+    font-weight:        bold;
+    color:              #DFAF50;
+    text-decoration:    underline;
+}
+.asis a:active
+{
+    font-size:          16pt;
+    font-weight:        bold;
+    color:              #DFAF50;
+    text-decoration:    underline;
+}
+.asis a:visited
+{
+    font-size:          16pt;
+    color:              #DFAF50;
+    text-decoration:    underline;
+}
 </style>"""
 
 #----------------------------------------------------------------------
@@ -244,6 +289,7 @@ Here are some of the songs you will be playing:<ol>
         '''
         # Initialize status info as being not signed up
         instrument_selected = 0
+        registered = 0
         signup_status = 'Not Signed Up'
         submit_string = 'Sign Up Now'
         signup_class = 'status-not'
@@ -251,10 +297,15 @@ Here are some of the songs you will be playing:<ol>
         # If the member is signed up then change status strings to indicate that
         signed_up = self.alumni.get_parade_part_2017( self.requestor.id )
         if signed_up is not None:
-            signup_status = 'Signed Up'
             submit_string = 'Edit My Info'
-            signup_class = 'status-in'
             instrument_selected = signed_up[0]
+            registered = int(signed_up[1])
+            if registered == 0:
+                signup_class = 'status-unpaid'
+                signup_status = "Please Visit <span class='asis'><a href='/#store2017'>Store</a></span> To Pay"
+            else:
+                signup_class = 'status-in'
+                signup_status = 'Signed Up'
 
         # Build the instrument selector from the list of available instruments,
         # using slot 0 to indicate no selection
@@ -275,6 +326,7 @@ Here are some of the songs you will be playing:<ol>
 <div class='parade-info box_shadow'>
 <form method='POST' name='parade_form' id='parade_form' action='javascript:submit_to_parade();'>
 <input type='hidden' name='id' value='%d'>
+<input type='hidden' name='registered' value='%d'>
 <p>
 Your parade Status : <span id='parade-status' class='%s'>%s</span><br>
 </p><p>
@@ -282,7 +334,7 @@ Instrument Choice : %s<br>
 </p><p>
 <input id='parade-action' class='shadow_button' type='submit' name='submit' value='%s'><br>
 </form>
-</div>""" % (self.requestor.id, signup_class, signup_status, instrument_selector, submit_string)
+</div>""" % (self.requestor.id, registered, signup_class, signup_status, instrument_selector, submit_string)
 
     #----------------------------------------------------------------------
     def download_header(self, instrument_id, instrument):

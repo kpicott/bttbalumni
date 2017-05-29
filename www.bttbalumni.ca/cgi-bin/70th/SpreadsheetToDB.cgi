@@ -44,14 +44,16 @@ class SpreadsheetToDB(bttbCGI):
             return
 
         query = 'SELECT * from 2017_parade WHERE alumni_id = %d' % alumni_id
-        insert = 'INSERT INTO 2017_parade (alumni_id, instrument_id) VALUES (%d, %d)' % (alumni_id, UNSPECIFIED_INSTRUMENT)
 
-        # If already in the parade return
+        # If already in the parade then just set the registration status
         results,_ = self.alumni.process_query( query )
         if len(results) > 0:
+            update = 'UPDATE 2017_parade SET registered=1 WHERE alumni_id=%d' % alumni_id
+            self.alumni.process_query( update )
             return
 
         # Add to the parade
+        insert = 'INSERT INTO 2017_parade (alumni_id, instrument_id, registered) VALUES (%d, %d, 1)' % (alumni_id, UNSPECIFIED_INSTRUMENT)
         results, _ = self.alumni.process_query( insert )
         print '<p>%s<br><i>%s</i></p>' % (insert, str(results))
 

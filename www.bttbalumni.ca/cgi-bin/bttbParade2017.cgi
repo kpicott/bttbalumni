@@ -2,13 +2,17 @@
 """
 Process the 2017 parade sign-up information. The return value printed is:
 
-    NOT_SIGNED_UP    : The alumni is not signed up for the parade
-    SIGNED_UP        : The alumni is signed up for the parade
+    NOT_SIGNED_UP    : The alumni is not signed up for the parade and not registered on the store
+    NOT_REGISTERED   : The alumni is signed up for the parade and not registered on the store
+    NO_INSTRUMENT    : The alumni is not signed up for the parade but registered on the store
+    SIGNED_UP        : The alumni is signed up for the parade and registered on the store
     PROCESSING_ERROR : There was an error in processing
 """
 
 NOT_SIGNED_UP = 0
-SIGNED_UP = 1
+NOT_REGISTERED = 1
+NO_INSTRUMENT = 2
+SIGNED_UP = 3
 PROCESSING_ERROR = -1
 
 print 'Content-type: text/plain\n'
@@ -28,22 +32,29 @@ def get_int_param(name,default):
 #----------------------------------------------------------------------
 def process_query():
     try:
-        DATABASE = bttbDB()
-        DATABASE.Initialize()
+        database = bttbDB()
+        database.Initialize()
 
-        ALUMNI_ID = get_int_param( 'id', -1 )
-        INSTRUMENT_ID = get_int_param( 'instrument', 0 )
+        alumni_id = get_int_param( 'id', -1 )
+        instrument_id = get_int_param( 'instrument', 0 )
+        registered_id = get_int_param( 'registered', 0 )
 
         # Instrument ID of 0 means not participating
-        if INSTRUMENT_ID == 0:
-            DATABASE.delete_parade_part_2017( ALUMNI_ID )
-            print NOT_SIGNED_UP,
+        if instrument_id == 0:
+            database.delete_parade_part_2017( alumni_id )
+            if registered_id == 0:
+                print NOT_SIGNED_UP,
+            else:
+                print NO_INSTRUMENT,
         # Any other instrument ID is assumed to be valid
         else:
-            DATABASE.set_parade_part_2017( ALUMNI_ID, INSTRUMENT_ID, False )
-            print SIGNED_UP,
+            database.set_parade_part_2017( alumni_id, instrument_id, registered )
+            if registered_id == 0:
+                print NOT_REGISTERED,
+            else:
+                print SIGNED_UP,
 
-        DATABASE.Finalize()
+        database.Finalize()
 
     except Exception, ex:
         # Any exceptions will result in the database not being updated
