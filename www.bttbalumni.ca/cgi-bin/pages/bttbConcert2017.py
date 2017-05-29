@@ -229,7 +229,8 @@ Long and McQuade as arranged by alumnus Steve Butterworth of Yamaha, Canada.
 <p>
 At the concert the winning tickets will be drawn for the annual Band Raffle,
 and there will be features with the drumline, colour guard, and Junior Redcoats
-(formerly the Peanut Band).
+(formerly the Peanut Band). Here is the
+download:(/Images70th/ConcertOrder.pdf,full concert order).
 </p>
 ''' % self.total_players
 

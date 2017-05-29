@@ -1,0 +1,27 @@
+<script type='text/javascript' src='/js/bttbDownload.js'></script>
+<script type='text/javascript' src='/js/jquery-3.2.0.min.js'></script>
+<link rel='stylesheet' href='/css/bttbCookies.css' />
+
+
+<script>
+function clicked_me()
+{
+	download_all( [ ['bttbCookies.css', 'http://bttbalumni.ca/css/bttbCookies.css'],
+ 				    ['bttbHome.css',    '/css/bttbHome.css']
+ 				 ] );
+}
+</script>
+
+<button onclick='clicked_me();'>Click Me</button>
+
+
+
+<div class="cc_banner-wrapper ">
+	<div class="cc_banner cc_container cc_container--open">
+	<a data-cc-event="click:dismiss" target="_blank" class="cc_btn cc_btn_accept_all">Got it!</a>
+	<p class="cc_message">This website uses cookies to ensure you get the best experience
+	<a data-cc-if="options.link" target="_self" class="cc_more_info" href="http://bttbalumni.ca/#security">More info</a>
+	</p>
+	</div>
+</div>
+
