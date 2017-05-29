@@ -19,7 +19,7 @@ function output_type_changed()
 var queries = {
 		'all'           : 'SELECT * FROM alumni',
 		'committee'     : 'SELECT * FROM alumni WHERE onCommittee = 1',
-		'parade'       : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM 2017_parade WHERE registered = 0)',
+		'parade'        : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni INNER JOIN 2017_parade WHERE alumni.id = 2017_parade.alumni_id AND 2017_parade.registered = 0',
 		// 'friday'       : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 4) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 4)',
 		// 'saturday'     : 'SELECT alumni.first,alumni.last,alumni.email,alumni.phone FROM alumni WHERE alumni.id IN (SELECT alumni_id FROM attendance WHERE event_id = 5) AND alumni.id NOT IN (SELECT alumni_id FROM payments WHERE event_id = 5)',
 		// 'drumline'     : 'SELECT alumni.first,alumni.nee,alumni.last,alumni.email,alumni.firstYear,alumni.lastYear, alumni.instruments FROM parade INNER JOIN alumni ON alumni.id = parade.alumni_id WHERE instruments LIKE \'%ercussion%\' OR instruments LIKE \'%Snare%\' OR instruments LIKE \'%Cymbals%\'',
