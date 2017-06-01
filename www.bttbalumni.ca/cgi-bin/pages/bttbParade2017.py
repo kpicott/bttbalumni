@@ -43,7 +43,7 @@ def page_js():
                             else if( data[0] === "1" )
                             {
                                 $('#parade-status').attr( "class", "status-unpaid" );
-                                $('#parade-status').html( "Please Visit <a href='/#store2017'>Store</a> To Pay" );
+                                $('#parade-status').html( "Please Visit <span class='asis'><a href='/#store2017'>Store</a></span> To Pay" );
                                 $('#parade-action').attr( "value", "Change Instrument" );
                                 $('#position-query').html( '-- Not Going To Play --' );
                             }
@@ -66,13 +66,13 @@ def page_js():
                             else
                             {
                                 $('#parade-status').attr( "class", "status-err" );
-                                $('#parade-status').html( "ERR: Try Again" );
+                                $('#parade-status').html( "ERR " + data + ": Try Again" );
                             }
                         },
             error   :   function(data)
                         {
                             $('#parade-status').attr( "class", "status-err" );
-                            $('#parade-status').html( "ERR: Try Again" );
+                            $('#parade-status').html( "ERR " + data + ": Try Again" );
                         }
         } );
     }

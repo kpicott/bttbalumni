@@ -48,7 +48,7 @@ def process_query():
                 print NO_INSTRUMENT,
         # Any other instrument ID is assumed to be valid
         else:
-            database.set_parade_part_2017( alumni_id, instrument_id, registered )
+            database.set_parade_part_2017( alumni_id, instrument_id, registered_id )
             if registered_id == 0:
                 print NOT_REGISTERED,
             else:
