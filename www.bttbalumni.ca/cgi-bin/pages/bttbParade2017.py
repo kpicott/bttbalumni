@@ -68,6 +68,10 @@ def page_js():
                                 $('#parade-status').attr( "class", "status-err" );
                                 $('#parade-status').html( "ERR: Try Again" );
                             }
+                            if( $('#instrument option:selected').text() === 'Will Ride The Float' )
+                            {
+                                alert( "Please email info@bttbalumni.ca for more information regarding riding the float.");
+                            }
                         },
             error   :   function(data)
                         {
