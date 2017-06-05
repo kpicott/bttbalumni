@@ -1,6 +1,6 @@
 		Cost	CA$125.00	CA$145.00	CA$95.00	CA$45.00	CA$15.00	CA$35.00									
 		HST	CA$16.25	CA$18.85	CA$12.35	CA$5.85	CA$1.95	CA$4.55			Totals						
-		Net Cost	CA$141.25	CA$163.85	CA$107.35	CA$50.85	CA$16.95	CA$39.55			CA$502.37	CA$5,634.20	CA$48,974.20	CA$42,837.63			
+		Net Cost	CA$141.25	CA$163.85	CA$107.35	CA$50.85	CA$16.95	CA$39.55			CA$502.37	CA$8,927.75	CA$77,602.75	CA$68,172.63			
 Name	ID	Email	All-Inclusive (Early)	All-Inclusive	Social	Parade	Extra Hat	Extra Shirt	Shirt Size	Date Received	Paypal Fee	HST	Paid	Net To Us	Instructions		ShirtSizes
 Nancy Matte	2542	thefeenyclan@gmail.com	1						Women's Large	2017-03-09	CA$4.40	CA$16.25	CA$141.25	CA$120.60			Women's Extra Small
 Kevin Picott	0	bttb@picott.ca	1						Men's XL	2017-03-09	CA$4.25	CA$16.25	CA$141.25	CA$120.75			Women's Small
@@ -47,11 +47,11 @@ Don Gordon	257	dgordon@coopercon.com	1						Men's Medium	2017-04-04	CA$4.40	CA$1
 John Lucas	9	jrlookus1@hotmail.com	1						Men's Large	2017-04-04	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Phyllis McGuff	84	rmcguff@uwo.ca	1						Women's Medium	2017-04-03	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Caroline Lutyk	349	lutykc@gmail.com				1			Women's Small	2017-04-03	CA$1.77	CA$5.85	CA$50.85	CA$43.23	Thrilled to be part of this. Can't wait to see everyone. Caroline lutyk formerly Galea		
-Sierra Kernick		sierrakernick@gmail.com 				1	1		Women's Small	2017-04-03	CA$2.27	CA$7.80	CA$67.80	CA$57.73	Paid by Janet Kernick		
+Sierra Kernick	523	sierrakernick@gmail.com 				1	1		Women's Small	2017-04-03	CA$2.27	CA$7.80	CA$67.80	CA$57.73	Paid by Janet Kernick		
 Cheryl Jane Rodo 		brad_t99@hotmail.com			2					2017-04-05	CA$6.53	CA$24.70	CA$214.70	CA$183.47	Cheryl Stinson Rodo and Larry Rodo		
 Lary Rodo					0										Social only		
 Michael Quaglia	18724	maq0158@gmail.com	1						Men's 2XL	2017-04-05	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
-Kellie Buttenham		kelliebuttenham@hotmail.com	1						Women's XL	2017-04-05	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
+Kellie Buttenham	522	kelliebuttenham@hotmail.com	1						Women's XL	2017-04-05	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Eric Baby	493	eric.andrew.baby@gmail.com	1						Men's 2XL	2017-04-05	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Kellen Bucknall	455	kellen_bucknall@hotmail.com 	1						Men's Large	2017-04-05	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Jay Thomblison	28551	jay@jtca.ca	1		1				Men's 2XL	2017-04-05	CA$7.51	CA$28.60	CA$248.60	CA$212.49	Jennifer Thomblison - Social		
@@ -89,7 +89,7 @@ Daniel Picott	501	daniel@picott.ca 	1						Men's XL	2017-04-10	CA$4.40	CA$16.25	
 Natalya Smardon	453	nsmardon@live.com 	1						Women's Medium	2017-04-13	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Quentin Maini 	449	qpkmaini@gmail.com	1						Men's Large	2017-04-13	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Gary Parsons 	436	parsonsga@bell.net				1	1		Men's XL	2017-04-13	CA$2.27	CA$7.80	CA$67.80	CA$57.73	At this time I am thinking I will just ride the float, Will no better in a month.		
-Alexandra Fiola		allyfiola@hotmail.com				1			Men's XL	2017-04-16	CA$1.77	CA$5.85	CA$50.85	CA$43.23			
+Addison Sowery-Quinn	432	allyfiola@hotmail.com				1			Men's XL	2017-04-16	CA$1.77	CA$5.85	CA$50.85	CA$43.23	Paid by Alexandra Fiola		
 Celeste Cole	505	ccole0000@gmail.com		1					Women's XL	2017-04-16	CA$5.05	CA$18.85	CA$163.85	CA$139.95			
 Sue Marranca	233	asubtlemasquerade@hotmail.com	1						Women's XL	2017-04-15	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Sandy Hale	167	rmalhinha@cogeco.ca 	1						Women's Medium	2017-04-15	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
@@ -173,19 +173,19 @@ Stacy Goodale	5134	msgoodale@yahoo.com 		1					Women's 2XL	2017-05-23		CA$18.85	
 Mark Goodale 	5286	markcgoodale@gmail.com		1					Men's XL	2017-05-22		CA$18.85	CA$163.85	CA$145.00			
 Nicole Wright	100	Wrighty@cogeco.ca 				1			Women's Large	2017-05-20		CA$5.85	CA$50.85	CA$45.00			
 Paul Fitzgerald	26727	saltandpeppermediainc@gmail.com		1					Men's XL	2017-05-25		CA$18.85	CA$163.85	CA$145.00			
-PAUL CLOUTIER	283	pcpcpc2@yahoo.ca		1					Men's Medium	2017-05-25		CA$18.85	CA$163.85	CA$145.00			
+Paul Cloutier	283	pcpcpc2@yahoo.ca		1					Men's Medium	2017-05-25		CA$18.85	CA$163.85	CA$145.00			
 Katelyn Leece		katelyn.leece@hotmail.com				1			Women's Medium	2017-05-25		CA$5.85	CA$50.85	CA$45.00			
 Janice Neil 	13577	janice.neil@ryerson.ca		1					Women's Small	2017-05-24		CA$18.85	CA$163.85	CA$145.00			
 kristy moran	462	it_was_matt@hotmail.com				1			Women's Small	2017-05-24		CA$5.85	CA$50.85	CA$45.00			
 Bill Demopolis	3347	bill@durango-direct.com			1					2017-05-25		CA$0.00	CA$0.00	CA$0.00	Bill had issues with the website.  He asked to be registered and will pay later.		
 Bryan Ames	18946	amesbryanJ@gmail.com		1					Men's Large	2017-05-26		CA$18.85	CA$163.85	CA$145.00	Paid $170 cash - owe a drink or $5		
-Brad Hall	28253	bradely_hall5@hotmail.com		1					Men's XL	2017-05-26		CA$18.85	CA$163.85	CA$145.00			
+Brad Hall	28253	bradely_hall5@hotmail.com		1					Men's XL	2017-05-26		CA$18.85	CA$163.85	CA$145.00	Paid cheque		
 Jennifer Anderson	512	jenneanderson1@1gail.com		1					Women's Large	2017-05-26		CA$0.00	CA$0.00	CA$0.00	Sent form via email - will send in payment with form.		
 Kristen Nicol	518	cndtechnomum@gmail.com				1			Men's XL	2017-05-27		CA$5.85	CA$50.85	CA$45.00			
 Matt McNiven	151	matt.mcniven@gmail.com		1					Men's XL	2017-05-27		CA$18.85	CA$163.85	CA$145.00			
 Rebecca Schinkel	4594	becdave1898@sympatico.ca				1			Women's XL	2017-05-27		CA$5.85	CA$50.85	CA$45.00			
-Melanie Silva 	36	melly_pelly@hotmail.com				2	2		Women's Large	2017-05-26		CA$15.60	CA$135.60	CA$120.00	Paid for Melanie and Maria		
-Marie Silva	516								Women's Medium			CA$0.00	CA$0.00	CA$0.00	- paid by Melanie Silva		
+Melanie Silva 	517	melly_pelly@hotmail.com				2	2		Women's Large	2017-05-26		CA$15.60	CA$135.60	CA$120.00	Paid for Melanie and Maria		
+Marie Silva	516					0	0		Women's Medium			CA$0.00	CA$0.00	CA$0.00	- paid by Melanie Silva		
 Michael Pullen 		mpullen@liberal.ca						1	Men's 2XL	2017-05-26		CA$4.55	CA$39.55	CA$35.00			
 Andrea Grebenc 	4141	agrebenc@compustep.com				1	1		Women's Medium	2017-05-26		CA$7.80	CA$67.80	CA$60.00			
 Jeff Branch	121	JeffBranch06@gmail.com		1					Men's Large	2017-05-26		CA$18.85	CA$163.85	CA$145.00			
@@ -200,6 +200,20 @@ Laurie Dickinson (Munshaw)	11856	dickinsonl@hdsb.ca		1					Women's Medium	2017-0
 Cyndi Martin Conway	85	cyndimartinconway@gmail.com 			1					2017-05-25		CA$12.35	CA$107.35	CA$95.00	Paid twice - already paid for all in back in April - Refund		
 Mary Lee Todd	23	rtodd@cogeco.ca				1			Women's Small	2017-05-25		CA$5.85	CA$50.85	CA$45.00			
 Meagan Smith		meagan.f.smith@gmail.com 		1					Women's Extra Small	2017-05-25		CA$18.85	CA$163.85	CA$145.00			
+Susan Carrigan	14606	none				1			Women's Medium			CA$5.85	CA$50.85	CA$45.00	Send in - at Music Centre - cheque		
+Matthew Wicks	520	matthew_wicks@hotmail.com				1			Men's Small	2017-05-29		CA$5.85	CA$50.85	CA$45.00			
+Christine Zsiros (Campbell)	7	JZ1234@gmail.com			1					2017-05-28		CA$12.35	CA$107.35	CA$95.00			
+Sarah Smith	44	sarahannesmith_8@hotmail.com				1			Women's Large	2017-05-28		CA$5.85	CA$50.85	CA$45.00			
+Tom Quaglia	10432	maryannequaglia@gmail.com		1					Men's 2XL	2017-05-28		CA$18.85	CA$163.85	CA$145.00			
+Lee-Anne Richardson	31873	lee_annerichardson@hotmail.com		1					Women's Medium	2017-05-28		CA$18.85	CA$163.85	CA$145.00			
+Harmony Ebbers	4276	harmonyebbers@yahoo.ca				1			Women's Small	2017-05-29		CA$5.85	CA$50.85	CA$45.00			
+Mike Peachy	417	mike.peachey@me.com			1	1			Men's Medium	2017-05-31		CA$0.00	CA$0.00	CA$0.00	John will pay later		
+Cindy Gollinger	503	cgollinger@cogeco.ca				1			Women's Large	2017-05-29		CA$5.85	CA$50.85	CA$45.00	Paid Cash -picked up at the Music Centre		
+Jessica Fur	465	fur.jessica@yahoo.ca		1					Men's 2XL	2017-06-02		CA$18.85	CA$163.85	CA$145.00			
+Shelley Moody	17968	tmoody1@cogeco.ca 		2					Women's XL	2017-06-02		CA$37.70	CA$327.70	CA$290.00	Paid for both Moody's		
+Tim Moody	18811	tmoody1@cogeco.ca 							Men's XL			CA$0.00	CA$0.00	CA$0.00			
+Amy Thomblison 		balamy@sympatico.ca		1	1					2017-06-01		CA$31.20	CA$271.20	CA$240.00	Paid for self and Jeff		
+Jeff Thomblison	7563	balamy@sympatico.ca							Men's XL			CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
@@ -208,25 +222,11 @@ Meagan Smith		meagan.f.smith@gmail.com 		1					Women's Extra Small	2017-05-25		
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-Totals			101	27	35	37	8	4				CA$2,832.70	CA$24,622.70	CA$21,790.00			
-												CA$0.00	CA$0.00	CA$0.00			
+Totals			101	33	38	43	8	4				CA$3,017.95	CA$26,232.95	CA$23,215.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
+			181									CA$2,941.25	CA$25,566.25	CA$22,625.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			

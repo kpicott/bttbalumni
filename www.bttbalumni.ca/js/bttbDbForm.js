@@ -38,7 +38,7 @@ var queries = {
 						  'ORDER BY a1.last',
 		'remove'        : 'DELETE\n  FROM alumni\n WHERE id IN (XX, XX)',
 		'qname'         : 'SELECT *\n  FROM alumni\n WHERE last=\'XXX\'',
-		'reset'         : 'UPDATE alumni\n  SET password=Null\n WHERE id=XXX'
+		'reset'         : 'UPDATE alumni\n  SET password=\'bttb\'\n WHERE id=XXX'
 	};
 
 //
