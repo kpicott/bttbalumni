@@ -207,14 +207,22 @@ class bttbConcert2017(bttbPage):
 Sit in with the current BTTB for their annual concert-in-the-park on
 Sunday June 18th! For those in town we have been invited to sit in on
 the two practices prior to dust off our instruments and warm up our
-chops! (For those who have forgotten that will be Sunday June 11th
-from 2-4pm and Wednesday June 14th from 7-9pm.)
+chops! They will be on Wednesday June 14th from 7-9pm, and Sunday June 18th
+before the concert at 2pm.
 </p>
 <p>
 Below is a list of the instrumentation available for the concert music.
 Select a part and download the music
 for that part in PDF format (see link:(http://www.adobe.com) for
 a File Reader called Acrobat if you don't already have it).
+</p>
+<p>
+For the first time ever, drumline alumni will have the opportunity to participate in the
+Concert in the Park! For alumni from the drumline who wish to participate, there is the
+option to perform in a part of the BTTB drum feature. The music can be downloaded using
+the link below. Rehearsal times with the drumline will take place at the same time as the
+rest of the ensemble (Wednesday the 14th and Sunday the 18th).
+<a href="https://www.dropbox.com/s/l9m4xbfoewqldn8/ReunionFeature.zip?dl=0">https://www.dropbox.com/s/l9m4xbfoewqldn8/ReunionFeature.zip?dl=0</a>
 </p>
 <p>
 The number beside each instrument's name indicates how many people

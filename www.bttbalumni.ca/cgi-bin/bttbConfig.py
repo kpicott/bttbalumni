@@ -63,6 +63,7 @@ __all__ = [ "ArchiveFormat",
             "PagePath",
             "PhoneFormat",
             "PhoneParts",
+            "PhotoHref",
             "PhotoPath",
             "Pluralize",
             "PositionList",
@@ -148,6 +149,7 @@ def MapLinks(original):
                        .replace('__IMAGEPATH__',        ImagePath())        \
                        .replace('__PAGEPATH__',         PagePath())         \
                        .replace('__PHOTOPATH__',        PhotoPath())        \
+                       .replace('__PHOTOHREF__',        PhotoHref())        \
                        .replace('__AUDIOPATH__',        AudioPath())        \
                        .replace('__HOMEHREF__',         HomeHref())         \
                        .replace('__DATAHREF__',         DataHref())         \
@@ -341,9 +343,14 @@ def PagePath():
     return os.path.join( RootPath(), 'pages' )
 
 #======================================================================
-def PhotoPath():
-    """ Return the path to the photos directory """
+def PhotoHref():
+    """ Return the HTML path to the photos directory """
     return HOMEHREF + '/Photos'
+
+#======================================================================
+def PhotoPath():
+    """ Return the file system path to the photos directory """
+    return os.path.join( RootPath(), 'Photos' )
 
 #======================================================================
 def AudioPath():

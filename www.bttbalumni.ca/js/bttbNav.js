@@ -45,7 +45,12 @@ function load_content(hash_field, search_field)
 	var page = '/cgi-bin/view.cgi?' + url_params.join( '&' );
 
 	// Load the page into the content div
-	$('#content').load( page );
+	$('#content').load( page, function( response, status, xhr ) {
+	  if ( status == "error" ) {
+		var msg = "Sorry but there was an error, please try later";
+		msg += " or email web@bttbalumni.ca if the problem persists.: ";
+		$( "#content" ).html( msg + xhr.status + " " + xhr.statusText );
+	  } } );
 
 	// Selectively enable or disable all of the committee content
 	if( show_committee_content )

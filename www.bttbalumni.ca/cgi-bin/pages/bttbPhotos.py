@@ -1,10 +1,10 @@
 """
 Page that shows a bunch of submitted photos
 """
-
+import os
 from bttbPage import bttbPage
 from bttbPictures import displayCelebrationPictures
-from bttbConfig import MapLinks
+from bttbConfig import MapLinks, PhotoPath, PhotoHref
 __all__ = ['bttbPhotos']
 
 class bttbPhotos(bttbPage):
@@ -54,6 +54,19 @@ class bttbPhotos(bttbPage):
         ,    ("Photo8", "1981-05-05", "Philly '81, all bands on deck")
         ,    ("Photo9", "1980-01-01", "Rose Bowl '80 - hurry up and wait")
         ,    ("MarchingThroughTime", "1997-06-07", "The band marches through the ages")
+        ,    ("drums_and_horns_winter_96", "1996-01-01", "Drums and Horns")
+        ,    ("bttb_world_series_92", "1992-10-01", "World Series")
+        ,    ("bass_drums_baltimore_96", "1996-07-04", "Bass Drums in Baltimore")
+        ,    ("bttb_holland_95", "1995-03-11", "Band in Holland")
+        ,    ("drumline_hawaii_92", "1992-11-01", "Drumline in Hawaii")
+        ,    ("snares_and_cymbals_baltimore_93", "1993-07-04", "Snares and Cymbals in Baltimore")
+        ,    ("holland_appeldorn_taptoe_95", "1995-03-11", "Holland Appeldorn Taptoe")
+        ,    ("RoseBowl", "2008-01-01", "Rose Bowl 2008")
+        ,    ("Drumline", "1980-01-01", "Drumline late 1970's")
+        ,    ("Music Centre Fund Raising Photo", "1967-01-01", "Music Centre Fund Raising article")
+        ,    ("ColourGuard1980s_1", "1984-01-01", "Winter Guard Chi-Chi Uniforms")
+        ,    ("ColourGuard1980s_2", "1984-01-01", "Colour Guard at Bournemouth")
+        ,    ("ColourGuard1980s_3", "1984-01-01", "Colour Guard at L'Arc")
         ]
         html += MapLinks( """
         <p>
@@ -69,7 +82,21 @@ class bttbPhotos(bttbPage):
                 html += "</tr><tr>"
                 column = 0
             column = column + 1
-            html += MapLinks( "<th valign='top' width='100'><a target='photos' href='__PHOTOPATH__/%s.jpg'><img width='100' src='__PHOTOPATH__/%s_Small.jpg'></a>" % (photo_file, photo_file))
+            photo_path = os.path.join( PhotoPath(), photo_file )
+            images = [None,None] # HREF to the photo and its thumbnail
+            for ext in ['.jpg','.JPG','.png']:
+                if os.path.exists(photo_path + ext):
+                    images[0] = "%s/%s%s" % (PhotoHref(), photo_file, ext)
+                if os.path.exists(photo_path + "_Small" + ext):
+                    images[1] = "%s/%s_Small%s" % (PhotoHref(), photo_file, ext)
+
+            if images[0] is None:
+                continue
+
+            if images[1] is None:
+                images[1] = images[0]
+
+            html += MapLinks( "<th valign='top' width='100'><a target='photos' href='%s'><img width='100' src='%s'></a>" % (images[0], images[1]) )
             html += "<br>%s" % info
             html += "</th>"
         html += "</tr></table>"
