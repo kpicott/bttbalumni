@@ -98,9 +98,9 @@ class bttbDB( bttbData ):
 
         try:
             if os.getenv('USER') == 'Dad' or os.getenv('USER') == 'kpicott' or os.getenv('SERVER_NAME') == 'band.local':
-                self.__db = MySQLdb.connect( host='localhost', db='%s' % self.__db_name, user='Dad', passwd='mysql300Pins' )
+                self.__db = MySQLdb.connect( host='localhost', db='%s' % self.__db_name, user='Dad', passwd='bttbsql' )
             else:
-                self.__db = MySQLdb.connect( host='localhost', db='%s' % self.__db_name, user='bttb', passwd='bttb999' )
+                self.__db = MySQLdb.connect( host='localhost', db='%s' % self.__db_name, user='bttba', passwd='u2mgAw+tAtHD' )
 
             self.stage( 'Get cursor' )
             self.__cursor = self.__db.cursor()
