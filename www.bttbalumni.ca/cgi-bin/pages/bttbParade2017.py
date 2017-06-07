@@ -9,6 +9,8 @@ from bttbMusic import BTTBMusic
 from bttbConfig import MapLinks, Error, HtmlifyName
 __all__ = ['bttbParade2017']
 
+PAY_MESSAGE = "If You Haven't, Please Visit <span class='asis'><a href='/#store2017'>The Store</a></span> To Pay"
+
 # Hardcoded value from the events table
 PARADE_EVENT_ID = 12
 
@@ -35,15 +37,15 @@ def page_js():
                             if( data[0] === "0" )
                             {
                                 $('#parade-status').attr( 'class', 'status-not' );
-                                $('#parade-status').html( 'Not Signed Up' );
-                                $('#parade-action').attr( 'value', 'Sign Up Now' );
+                                $('#parade-status').html( 'No Part Chosen' );
+                                $('#parade-action').attr( 'value', 'Choose Part' );
                                 $('#position-query').html( '-- Select Parade Part --' );
                             }
                             // 1 = Signed up, not registered
                             else if( data[0] === "1" )
                             {
                                 $('#parade-status').attr( "class", "status-unpaid" );
-                                $('#parade-status').html( "Please Visit <span class='asis'><a href='/#store2017'>Store</a></span> To Pay" );
+                                $('#parade-status').html( "%s" );
                                 $('#parade-action').attr( "value", "Change Instrument" );
                                 $('#position-query').html( '-- Not Going To Play --' );
                             }
@@ -52,7 +54,7 @@ def page_js():
                             {
                                 $('#parade-status').attr( 'class', 'status-unpaid' );
                                 $('#parade-status').html( 'Registered, Choose Part' );
-                                $('#parade-action').attr( 'value', 'Sign Up Now' );
+                                $('#parade-action').attr( 'value', 'Choose Part' );
                                 $('#position-query').html( '-- Select Parade Part --' );
                             }
                             // 3 = Signed up, registered
@@ -80,7 +82,7 @@ def page_js():
                         }
         } );
     }
-</script>"""
+</script>""" % PAY_MESSAGE
 
 #----------------------------------------------------------------------
 def page_css():
@@ -306,7 +308,7 @@ Here are some of the songs you will be playing:<ol>
             registered = int(signed_up[1])
             if registered == 0:
                 signup_class = 'status-unpaid'
-                signup_status = "Please Visit <span class='asis'><a href='/#store2017'>Store</a></span> To Pay"
+                signup_status = PAY_MESSAGE
             else:
                 signup_class = 'status-in'
                 signup_status = 'Signed Up'
