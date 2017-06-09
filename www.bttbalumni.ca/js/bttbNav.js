@@ -87,6 +87,11 @@ function hash_changed()
 */
 function open_page(url)
 {
+	// Make sure the dropdown is dismissed (an issue on iPhone)
+	$('[name=dropdown-content]').each( function(index) {
+		$(this).hide();
+	} );
+
     // Links within this site go through AJAX, others work as usual
     //
     if( url[0] === '#' )
@@ -184,7 +189,7 @@ function build_navigation()
 			var submenu = menu_entry[1];
 			menu_html += '<div class="dropdown' + committee_class + '">\n';
 			menu_html += '  <button class="dropbtn">' + menu_name + '</button>\n';
-			menu_html += '  <div class="content">\n';
+			menu_html += '  <div name="dropdown-content" class="content">\n';
 
 			submenu.forEach( function(submenu_entry, subindex)
 			{
@@ -202,7 +207,7 @@ function build_navigation()
 				}
 				else
 				{
-					menu_html += '    <a class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
+					menu_html += '    <a name="DUH" class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
 				}
 			});
             menu_html += '  </div>\n';

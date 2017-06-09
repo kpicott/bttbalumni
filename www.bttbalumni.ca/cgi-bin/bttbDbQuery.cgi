@@ -84,7 +84,9 @@ class BTTBQuery(bttbCGI):
                     idx = 0
                     for item in result:
                         if is_password[idx]:
-                            if item:
+                            if item == 'bttb':
+                                item = '[DEFAULT]'
+                            elif item:
                                 item = '[SET]'
                         if output_web:
                             print "<td>"
