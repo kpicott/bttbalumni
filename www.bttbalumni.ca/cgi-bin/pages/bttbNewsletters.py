@@ -32,7 +32,8 @@ class bttbNewsletters(bttbPage):
 <p>
 Click on the newsletter to download the PDF file.
 </p><ol>
-link:(http://conta.cc/2qO0IFR, <div class='date'>April 2017</div>Volume 2 - Number 3)
+download:(__NEWSLETTERPATH__/Vol2No4.pdf, <div class='date'>June 2017</div>Volume 2 - Number 4)
+link:(http://conta.cc/2qO0IFR, <div class='date'>May 2017</div>Volume 2 - Number 3)
 link:(http://conta.cc/2papq29, <div class='date'>April 2017</div>Volume 2 - Number 2)
 download:(__NEWSLETTERPATH__/Vol2No1.pdf, <div class='date'>March 2017</div>Volume 2 - Number 1)
 download:(__NEWSLETTERPATH__/Vol1No6.pdf, <div class='date'>June 2007</div>Volume 1 - Number 6)

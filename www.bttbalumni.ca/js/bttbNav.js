@@ -87,11 +87,6 @@ function hash_changed()
 */
 function open_page(url)
 {
-	// Make sure the dropdown is dismissed (an issue on iPhone)
-	$('[name=dropdown-content]').each( function(index) {
-		$(this).hide();
-	} );
-
     // Links within this site go through AJAX, others work as usual
     //
     if( url[0] === '#' )
@@ -207,7 +202,7 @@ function build_navigation()
 				}
 				else
 				{
-					menu_html += '    <a name="DUH" class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
+					menu_html += '    <a class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
 				}
 			});
             menu_html += '  </div>\n';
