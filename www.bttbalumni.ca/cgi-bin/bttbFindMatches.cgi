@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
 """
 Process the query to find matches for a user.
 The form field to match is called "pattern" and it will do a "LIKE"
@@ -18,25 +19,29 @@ class BTTBFindMatches(bttbCGI):
         '''Read the registration info and add or modify it in the database'''
         self.read_cgi()
 
-        pattern = self.get_param('pattern', '*'):
+        pattern = self.get_param('pattern', '*').replace("'","\\'")
         alumni = bttbAlumni()
-        results,_ = alumni.process_query( '''SELECT first,nee,last,id,emal
-											 FROM alumni
-											 WHERE first like '%s'
-											    OR last like '%s'
-											    OR nee like '%s'
-											    OR user_id like '%s'
-											    OR email like '%s'
-											 ORDER BY last''' )
-        print '\n'.join( results )
+        user_query = '''SELECT first,nee,last,id,email
+                        FROM alumni
+                        WHERE (first like '%%%s%%'
+                              OR last like '%%%s%%'
+                              OR nee like '%%%s%%'
+                              OR user_id like '%%%s%%'
+                              OR email like '%%%s%%')
+                            AND make_public = 1
+                        ORDER BY last
+                        LIMIT 20''' % (pattern,pattern,pattern,pattern,pattern)
+        results,_ = alumni.process_query( user_query )
+        for result in results:
+            print '\t'.join([str(field) for field in result])
 
 #----------------------------------------------------------------------
 
 try:
-    PROCESSOR = BTTBQuery()
+    PROCESSOR = BTTBFindMatches()
     PROCESSOR.process_query()
 except Exception, ex:
-    Error( 'Could not process query', ex )
+    print 'ERR: %s' % str(ex)
 
 # ==================================================================
 # Copyright (C) Kevin Peter Picott. All rights reserved. These coded

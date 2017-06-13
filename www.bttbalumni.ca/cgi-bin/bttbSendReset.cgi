@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
 """
 Process a request to send a password reset link.
 The specified ID will have the 'reset_requested' field
@@ -48,7 +49,7 @@ a password reset please ignore this email.
 Click on this link to reset your password to the default password "bttb".
 Once you have reset your password, log in immediately to set a new password.
 
-http://bttbalumni.ca/cgi-bin/bttbResetPassword.cgi?id=%d
+http://bttbalumni.ca/?id=%d#resetPassword
                            ''' % alumni_id )
                 print MapLinks( '''<h1>Request Sent</h1>
                 <p>

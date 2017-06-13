@@ -1,6 +1,6 @@
 		Cost	CA$125.00	CA$145.00	CA$95.00	CA$45.00	CA$15.00	CA$35.00									
 		HST	CA$16.25	CA$18.85	CA$12.35	CA$5.85	CA$1.95	CA$4.55			Totals						
-		Net Cost	CA$141.25	CA$163.85	CA$107.35	CA$50.85	CA$16.95	CA$39.55			CA$502.37	CA$9,119.50	CA$79,269.50	CA$69,647.63			
+		Net Cost	CA$141.25	CA$163.85	CA$107.35	CA$50.85	CA$16.95	CA$39.55			CA$502.37	CA$12,898.60	CA$112,118.60	CA$98,717.63			
 Name	ID	Email	All-Inclusive (Early)	All-Inclusive	Social	Parade	Extra Hat	Extra Shirt	Shirt Size	Date Received	Paypal Fee	HST	Paid	Net To Us	Instructions		ShirtSizes
 Nancy Matte	2542	thefeenyclan@gmail.com	1						Women's Large	2017-03-09	CA$4.40	CA$16.25	CA$141.25	CA$120.60			Women's Extra Small
 Kevin Picott	0	bttb@picott.ca	1						Men's XL	2017-03-09	CA$4.25	CA$16.25	CA$141.25	CA$120.75			Women's Small
@@ -63,7 +63,7 @@ Robert Branch	26329	meridiaworld@gmail.com	1						Men's Medium	2017-04-06	CA$4.4
 Sheila Meyrink	175	smeyrink@gmail.com	1						Women's Large	2017-04-09	CA$4.40	CA$16.25	CA$141.25	CA$120.60	Originally bought by c.kowalski@live.com, transferred to Sheila		
 Camille Delahunt	514	yvonne.delahunt@gmail.com 				2			Women's Small	2017-04-09	CA$3.25	CA$11.70	CA$101.70	CA$86.75	John Delahunt paid for both Camille and Lauren		
 Lauren Delahunt	515	yvonne.delahunt@gmail.com 				0			Women's Small		CA$0.00	CA$0.00	CA$0.00	CA$0.00			
-Jacob Mitchell 		Jjmitchell@live.ca 				1			Men's Large	2017-04-09	CA$1.77	CA$5.85	CA$50.85	CA$43.23	Tuba player		
+Jacob Mitchell 	523	Jjmitchell@live.ca 				1			Men's Large	2017-04-09	CA$1.77	CA$5.85	CA$50.85	CA$43.23	Tuba player		
 Laura Di Matteo 	31	gabedimatteo@cogeco.ca 	1						Men's 2XL	2017-04-09	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
 Jodi Killen	452	jodiodio13@hotmail.com				1			Women's XL	2017-04-08	CA$1.77	CA$5.85	CA$50.85	CA$43.23			
 Brent Paszt	15887	brent@brentpaszt.com	1						Men's Large	2017-04-12	CA$4.40	CA$16.25	CA$141.25	CA$120.60			
@@ -219,30 +219,26 @@ Gordon Kerr	118	gord.kerr@mail.com		1					Men's 2XL	2017-06-05		CA$18.85	CA$163.
 Laura Fulton	360	lfulton127@gmail.com				1			Women's XL	2017-06-05		CA$5.85	CA$50.85	CA$45.00			
 Rachel Lacey	8084	rachelmarr@hotmail.com		1					Women's Large	2017-06-05		CA$18.85	CA$163.85	CA$145.00			
 Samuel Moffatt	525	sam_moffatt_626@hotmail.com				1			Men's Large	2017-06-05		CA$5.85	CA$50.85	CA$45.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-Totals			101	35	38	46	8	4				CA$3,073.20	CA$26,713.20	CA$23,640.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-Shirts to Order			186									CA$3,022.50	CA$26,272.50	CA$23,250.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
-												CA$0.00	CA$0.00	CA$0.00			
+Kim Campbell	191	khodawandik@sympatico.ca			1					2017-06-11		CA$12.35	CA$107.35	CA$95.00			
+Andrea Lack	371	jayandanj@cogeco.ca			2					2017-06-10		CA$24.70	CA$214.70	CA$190.00	Jay Lack		
+Jay Lack		jayandanj@cogeco.ca			0					2017-06-10							
+Lauren Delahunt	515	lmdelahunt@gmail.com 					1			2017-06-11		CA$1.95	CA$16.95	CA$15.00			
+Mabel Sowery-Quinn	487	emceemae@hotmail.com 					1			2017-06-11		CA$1.95	CA$16.95	CA$15.00			
+Lynda Unelli	15547	william.lyons@sympatico.ca 		1			1		Women's 2XL	2017-06-10		CA$20.80	CA$180.80	CA$160.00			
+Colin Sinclair	56	csinclair8@hotmail.com			1					2017-06-09		CA$12.35	CA$107.35	CA$95.00			
+Gabe DiMatteo		gabedimatteo@cogeco.ca			1					2017-06-12		CA$12.35	CA$107.35	CA$95.00	Laura's husband		
+Carolyn Whiskin	64	hugapharmacist@hotmail.com		2					Women's Medium	2017-06-12		CA$37.70	CA$327.70	CA$290.00	Paid for self and Alan		
+Alan Whiskin	63			0					Men's Large			CA$0.00	CA$0.00	CA$0.00			
+Candace Fitzgerald		candacefitzgerald17@gmail.com		1					Women's Medium	2017-06-11		CA$18.85	CA$163.85	CA$145.00			
+Emmanuel Valbuena	527	rubend2168@yahoo.com				1			Men's XL	2017-06-12		CA$5.85	CA$50.85	CA$45.00			
+Gillian Swanson		mike.jolliffe1@gmail.com			1					2017-06-11		CA$12.35	CA$107.35	CA$95.00			
+Phil Austin	26566	austinphil@yahoo.com				1			Men's XL	2017-06-11		CA$5.85	CA$50.85	CA$45.00			
+Jeffrey Greenhow	157	jeffreygreenhow@yahoo.ca		1					Men's 2XL	2017-06-11		CA$18.85	CA$163.85	CA$145.00			
+Bob Gordon	215	rwmegordon@rogers.com		1	1		1	1	Men's 2XL			CA$37.70	CA$327.70	CA$290.00	Mary Ellen Gordon - Social only		
+Mary Ellen Gordon					0				Men's XL			CA$0.00	CA$0.00	CA$0.00	2nd Shirt on order from Robert Gordon		
+Randall Keast 	18964	keastr@hdsb.ca		1					Men's 3XL	2017-06-12		CA$18.85	CA$163.85	CA$145.00	Dear Committee: I will be unable to march in the parade but am planning on attending the Saturday night Social and playing in the Sunday Alumni Concert. I will be at practice on Wednesday night.		
+Clay Holton	318	cholton@leevalley.com				1	1		Men's Large	2017-06-12		CA$7.80	CA$67.80	CA$60.00	I no longer play the 3rd Clarinet but I still would love to march in the parade		
+William Smiley	127	smileyhome@hotmail.com			1		1			2017-06-12		CA$14.30	CA$124.30	CA$110.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
@@ -280,6 +276,9 @@ Shirts to Order			186									CA$3,022.50	CA$26,272.50	CA$23,250.00
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
+Totals			101	42	46	49	14	5				CA$3,337.75	CA$29,012.75	CA$25,675.00			
+Shirts to Order			197									CA$3,201.25	CA$27,826.25	CA$24,625.00			
+Social			189									CA$3,071.25	CA$26,696.25	CA$23,625.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			
 												CA$0.00	CA$0.00	CA$0.00			

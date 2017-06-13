@@ -14,7 +14,7 @@ var subMenusUp = new Array();
 //
 function doLogin(name,isCommittee,id)
 {
-	$('login').innerHTML = "<label>Welcome " + unescape(name) + "</label><br/><div class='menuLink'><a href=\"javascript:openPage('/#register')\">Edit Profile</a></a><br/>";
+	$('login').innerHTML = "<label>Welcome " + unescape(name) + "</label><br/><div class='menuLink'><a href=\"javascript:open_page('/#register')\">Edit Profile</a></a><br/>";
 	if( isCommittee )
 	{
 		$('login').innerHTML += "<label>Committee Access</label>";
@@ -26,7 +26,7 @@ function doLogin(name,isCommittee,id)
 	newUrl = newUrl.replace( /:[0-9]*/, ":" + id );
 	BTTBUserId = id;
 	RegisterUserVisit();
-	openPage( '/#' + newUrl );
+	open_page( '/#' + newUrl );
 }
 
 //----------------------------------------------------------------------
@@ -43,8 +43,8 @@ function doLogout(wasBadLogin)
 		"<label>Password</label><br />" + 
 		"<input type='password' id='password' name='password' size='10' /><br />" + 
 		"<input class='label' border='1' type='submit' name='Submit' value='Login' /><br />" + 
-		"<div class='menuLink'><a title='Default user name is FIRST LAST, Password is blank' href='mailto:bttb@picott.ca?subject=Forgot My Login&body=I forgot my login information, please reset my password and mail back my id.'>Forgot Login?</a><br />" +
-		"<a title='Click here to register yourself' href='javascript:openPage(\"/#register\")'>Not Registered?</a></div>" +
+		"<div class='menuLink'><a title='Click here to request a password reset' href='javascript:open_page(\"#forgot\")'>Forgot Login?</a><br />" +
+		"<a title='Click here to register yourself' href='javascript:open_page(\"/#register\")'>Not Registered?</a></div>" +
 		"</td></tr></table></form>";
 	if( wasBadLogin )
 	{
@@ -55,7 +55,7 @@ function doLogout(wasBadLogin)
 		var newUrl = dhtmlHistory.getCurrentLocation();
 		newUrl = newUrl.replace( /:[0-9]*/, "" );
 		BTTBUserId = -1;
-		openPage( '/#' + newUrl );
+		open_page( '/#' + newUrl );
 	}
 }
 

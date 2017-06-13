@@ -814,7 +814,7 @@ def MailChair(subject='', text='', to='web@bttbalumni.ca'):
     subject = subject.replace( '&nbsp;', ' ' )
     text = text.replace( '&nbsp;', ' ' )
 
-    mailContent = """From: The BTTB Alumni Website (web@bttbalumni.ca)
+    mailContent = """From: web@bttbalumni.ca
 To: %s
 Subject: %s
 

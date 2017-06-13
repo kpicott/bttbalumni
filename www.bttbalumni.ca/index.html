@@ -82,7 +82,7 @@ to turn it back on.</p>
       <button type="button" onclick="javascript:close_login()" class="cancelbtn">Cancel</button>
       <span title='Default user name is FIRST LAST, password bttb' class="psw">
       <div style="display:none;" id='login-error'>Login not recognized</div>
-      <a href='mailto:bttb@picott.ca?subject=Forgot My Login&body=I forgot my login information, please reset my password and mail back my id.'href="">Forgot Login?</a></span>
+      <a title='Click here to request a password reset' href='javascript:close_login(); open_page("#forgot")'>Forgot Login?</a></span>
     </div>
   </form>
 </div>
@@ -141,6 +141,7 @@ to turn it back on.</p>
 <!-- --------------------------------------------------------------------- -->
 <!-- Cookie policy pull-up.                                                -->
 <!-- --------------------------------------------------------------------- -->
+<!--
 <style>
 .cookie-policy
 {
@@ -178,4 +179,6 @@ web browser if you wish but then our site may not work correctly.
     <button disabled="0" id="cookie_policy_hide" value="hide">Hide this message</button>
     </form>
 </div>
+-->
+
 </body>
