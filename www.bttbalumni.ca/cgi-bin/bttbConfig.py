@@ -634,7 +634,7 @@ def PageLink(newUrl, link=None, tooltip=None, colour=''):
     if link is None:
         link = newUrl
     if tooltip is None:
-        tooltip = link
+        tooltip = link.replace("'", '"')
     if len(colour) > 0:
         colour = "style='background:%s;'" % colour
     newUrl = re.sub("'", "\\'", newUrl)
