@@ -148,6 +148,29 @@ You may opt out at any time by sending an email indicating so to send:(info@bttb
         return html
 
     #----------------------------------------------------------------------
+    @staticmethod
+    def twitter_feed(hashtag):
+        '''
+        Return the code needed to embed the twitter feed on this page.
+        :param hashtag: Twitter hashtag to embed
+        '''
+        return '''
+            <a class="twitter-timeline"  href="https://twitter.com/hashtag/%s" data-widget-id="874810071489929216">#%s Tweets</a>
+            <div id="twitter-container"></div>
+            <script>
+            $(document).ready( function() {
+                {
+                    var container = $("#twitter-container");
+                    var twitter_script = document.createElement("script");
+                    twitter_script.id = "twitter-script";
+                    twitter_script.src = "http://platform.twitter.com/widgets.js";
+                    container.append( twitter_script );
+                }
+            } );
+            </script>
+          ''' % (hashtag, hashtag)
+
+    #----------------------------------------------------------------------
     def content(self):
         """
         Return a string with the content for this web page.
@@ -218,6 +241,10 @@ link:(/pages/javascript.html,To learn how to enable Javascript click here.)
             html += self.add_countdowns( countdowns )
         except Exception:
             pass
+
+        #===================================================================
+        # Add the Twitter feed
+        # html += self.twitter_feed('BTTB70')
 
         #===================================================================
         # Get the news articles
