@@ -7,6 +7,11 @@ from bttbPage import bttbPage
 from bttbConfig import MapLinks
 __all__ = ['bttbStore2017']
 
+# Enable this when the online registration is disabled
+ONLINE_REGISTRATION_CLOSED = '''<h2>Online registration is now closed but you can
+still print an order form here to bring with you to registration on Friday or Saturday!
+</h2>'''
+
 #======================================================================
 #
 # Compute the early-bird discounts
@@ -60,8 +65,9 @@ def title_html():
 <div class='store-header'>
     send:(info@bttbalumni.ca,<div class='contact-link box_shadow'></div>)
     send:(golf@bttbalumni.ca,<div class='golf-link box_shadow'></div>)
+    %s
     <div class='store-title box_shadow'></div>
-</div>''' )
+</div>''' % ONLINE_REGISTRATION_CLOSED )
 
 #======================================================================
 #
@@ -181,6 +187,17 @@ class bttbStore2017(bttbPage):
     #----------------------------------------
     def content(self):
         ''':return: a string with the content for this web page.'''
+
+        return MapLinks( """
+<h1>Thanks For Everything!</h1>
+<p>
+The reunion was a great success and there was no swag left over to purchase.
+If you have any great ideas for what you might like to see on the store in
+the future (the 75<sup>th</sup> or even sooner) then send them to
+send:(info@bttbalumni.ca)!
+</p>
+        """ )
+
         html = """
 <script type='text/javascript' src='/js/bttbStore2017.js'></script>
 <link rel='stylesheet' href='/css/bttbStore2017.css'>

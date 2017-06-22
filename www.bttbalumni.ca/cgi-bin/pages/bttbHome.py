@@ -127,6 +127,10 @@ You may opt out at any time by sending an email indicating so to send:(info@bttb
             return ''
         html = '<div class="ribbon-container">\n'
         for (days, title) in countdowns:
+            if days >= 0:
+                remaining = '%s days to go' % days
+            else:
+                remaining = 'It\'s Here!!!'
             html += '''
             <div class='ribbon one'>
                 <div class='bk l shadow'>
@@ -135,7 +139,7 @@ You may opt out at any time by sending an email indicating so to send:(info@bttb
                 </div>
                 <div class='skew l shadow'></div>
                 <div class='banner shadow'>
-                    <div>%s days to go : %s</div>
+                    <div>%s : %s</div>
                 </div>
                 <div class='skew r shadow'></div>
                 <div class='bk r shadow'>
@@ -143,7 +147,7 @@ You may opt out at any time by sending an email indicating so to send:(info@bttb
                     <div class='arrow bottom'></div>
                 </div>
             </div>
-            ''' % (days, title)
+            ''' % (remaining, title)
         html += "</div>\n"
         return html
 

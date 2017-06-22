@@ -115,7 +115,7 @@ function open_page(url)
 	Navigation menu configuration
 */
 var menus = [ ['#home', '<img src="/Images/icon-home.png">']
-	, ['70th Anniversary', [ ['#store2017', 'Buy Tickets']
+	, ['70th Anniversary', [ ['!store2017', 'Buy Tickets']
 						   , ['#calendar2017', 'Calendar of Events']
 						   , ['#parade2017', 'Parade']
 						   , ['#social2017', 'Saturday Social']
@@ -200,7 +200,8 @@ function build_navigation()
 				{
 					menu_html += '    <a class="coming-soon"><span>' + text + '</span></a>\n';
 				}
-				else
+				// Leading "!" means the link is defunct
+				else if( link[0] !== '!' )
 				{
 					menu_html += '    <a class="non-link" onclick="open_page(\'' + link + '\');">' + text + '</a>\n';
 				}

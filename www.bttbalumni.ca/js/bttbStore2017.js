@@ -1,6 +1,10 @@
 // Change these values to make Paypal live
 var PAYPAL_EMAIL = "bttb@burlington.ca";
 var PAYPAL_URL   = "https://www.paypal.com/cgi-bin/webscr";
+
+// Set this to true when paying by Paypal is not an option
+var PAYPAL_OFF = true;
+
 //var PAYPAL_EMAIL = "bttb-seller@picott.ca";
 //var PAYPAL_URL   = "https://www.sandbox.paypal.com/cgi-bin/webscr";
 
@@ -310,88 +314,98 @@ function rebuild_paypal_button()
 		return;
 	}
 
-	// Common cart boilerplate
-    var form  = document.createElement( "form" );
-	form.target = "_self";
-	form.className = "inline_form";
-	form.method = "post";
-	form.action = PAYPAL_URL;
-
-	var paypal_info = { "cmd"           : "_ext-enter"
-					  , "redirect_cmd"  : "_cart"
-    				  , "currency_code" : "CAD"
-    				  , "shipping"      : "0"
-    				  , "cancel_return" : "http://bttbalumni.ca/#store2017"
-    				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
-    				  , "return"        : "http://bttbalumni.ca/#thanks2017"
-    				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
-    				  , "shopping_url"  : "http://bttbalumni.ca/#store2017"
-
-					  , "email"         : member_info.email
-					  , "first_name"    : member_info.first_name
-					  , "last_name"     : member_info.last_name
-					  , "night_phone_a" : member_info.night_phone_a
-					  , "night_phone_b" : member_info.night_phone_b
-					  , "night_phone_c" : member_info.night_phone_c
-
-					  , "upload"        : "1"
-					  , "business"      : PAYPAL_EMAIL
-					  };
-
-	// First the boilerplate
-	for( var name in paypal_info )
+	// If the paypal option has been shut down then skip building the store info
+	var form;
+	if( ! PAYPAL_OFF )
 	{
-		if( paypal_info.hasOwnProperty(name) )
+		// Common cart boilerplate
+	    form  = document.createElement( "form" );
+		form.target = "_self";
+		form.className = "inline_form";
+		form.method = "post";
+		form.action = PAYPAL_URL;
+	
+		var paypal_info = { "cmd"           : "_ext-enter"
+						  , "redirect_cmd"  : "_cart"
+	    				  , "currency_code" : "CAD"
+	    				  , "shipping"      : "0"
+	    				  , "cancel_return" : "http://bttbalumni.ca/#store2017"
+	    				  , "cbt"           : "Return to the BTTB 70th Anniversary Reunion"
+	    				  , "return"        : "http://bttbalumni.ca/#thanks2017"
+	    				  , "image_url"     : "http://bttbalumni.ca/Images/SiteLogoSmall.png"
+	    				  , "shopping_url"  : "http://bttbalumni.ca/#store2017"
+	
+						  , "email"         : member_info.email
+						  , "first_name"    : member_info.first_name
+						  , "last_name"     : member_info.last_name
+						  , "night_phone_a" : member_info.night_phone_a
+						  , "night_phone_b" : member_info.night_phone_b
+						  , "night_phone_c" : member_info.night_phone_c
+	
+						  , "upload"        : "1"
+						  , "business"      : PAYPAL_EMAIL
+						  };
+	
+		// First the boilerplate
+		for( var name in paypal_info )
 		{
-			form.appendChild( hidden_input_element( name, paypal_info[name] ) );
+			if( paypal_info.hasOwnProperty(name) )
+			{
+				form.appendChild( hidden_input_element( name, paypal_info[name] ) );
+			}
 		}
+	
+	    for( var idx=1; idx<=cart_contents.length; ++idx )
+	    {
+	        var cart_info = cart_contents[idx-1];
+	
+			form.appendChild( hidden_input_element( "amount_" + idx, cart_info.amount ) );
+			form.appendChild( hidden_input_element( "item_name_" + idx, cart_info.item_name ) );
+			form.appendChild( hidden_input_element( "tax_rate_" + idx, cart_info.tax_rate ) );
+	
+			// Optional discount amount
+			if( cart_info.hasOwnProperty("discount_amount") )
+			{
+				form.appendChild( hidden_input_element( "discount_amount_" + idx, cart_info.discount_amount ) );
+			}
+	
+			// Optional option 0
+			if( cart_info.hasOwnProperty("on0") )
+			{
+				form.appendChild( hidden_input_element( "on0_" + idx, cart_info.on0 ) );
+				form.appendChild( hidden_input_element( "os0_" + idx, cart_info.os0 ) );
+			}
+	
+			// Optional option 1
+			if( cart_info.hasOwnProperty("on1") )
+			{
+				form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on1 ) );
+				form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os1 ) );
+			}
+		}
+	
+		// Instructions cannot be sent as a separate field in Paypal so they
+		// have to be packaged up as a free item.
+		var instructions = get_instructions();
+		var instructions_idx = cart_contents.length + 1;
+	
+		form.appendChild( hidden_input_element( "item_name_" + instructions_idx, instructions_id ) );
+		form.appendChild( hidden_input_element( "amount_" + instructions_idx, 0 ) );
+		form.appendChild( hidden_input_element( "on0_" + instructions_idx, "Note" ) );
+		form.appendChild( hidden_input_element_with_id( "os0_" + instructions_idx, instructions, "paypal_instructions" ) );
+	
+		// Payment button
+		var form_button = document.createElement( "button" );
+		form_button.className = "shadow_button";
+		form_button.name = "submit";
+		form_button.innerHTML = 'Pay Online With Paypal';
+		form.appendChild( form_button );
 	}
-
-    for( var idx=1; idx<=cart_contents.length; ++idx )
-    {
-        var cart_info = cart_contents[idx-1];
-
-		form.appendChild( hidden_input_element( "amount_" + idx, cart_info.amount ) );
-		form.appendChild( hidden_input_element( "item_name_" + idx, cart_info.item_name ) );
-		form.appendChild( hidden_input_element( "tax_rate_" + idx, cart_info.tax_rate ) );
-
-		// Optional discount amount
-		if( cart_info.hasOwnProperty("discount_amount") )
-		{
-			form.appendChild( hidden_input_element( "discount_amount_" + idx, cart_info.discount_amount ) );
-		}
-
-		// Optional option 0
-		if( cart_info.hasOwnProperty("on0") )
-		{
-			form.appendChild( hidden_input_element( "on0_" + idx, cart_info.on0 ) );
-			form.appendChild( hidden_input_element( "os0_" + idx, cart_info.os0 ) );
-		}
-
-		// Optional option 1
-		if( cart_info.hasOwnProperty("on1") )
-		{
-			form.appendChild( hidden_input_element( "on1_" + idx, cart_info.on1 ) );
-			form.appendChild( hidden_input_element( "os1_" + idx, cart_info.os1 ) );
-		}
+	else
+	{
+		form = document.createElement( "p" );
+		form.innerHTML = "Paypal no longer available. Print the form and bring it to registration!";
 	}
-
-	// Instructions cannot be sent as a separate field in Paypal so they
-	// have to be packaged up as a free item.
-	var instructions = get_instructions();
-	var instructions_idx = cart_contents.length + 1;
-
-	form.appendChild( hidden_input_element( "item_name_" + instructions_idx, instructions_id ) );
-	form.appendChild( hidden_input_element( "amount_" + instructions_idx, 0 ) );
-	form.appendChild( hidden_input_element( "on0_" + instructions_idx, "Note" ) );
-	form.appendChild( hidden_input_element_with_id( "os0_" + instructions_idx, instructions, "paypal_instructions" ) );
-
-	// Payment button
-	var form_button = document.createElement( "button" );
-	form_button.className = "shadow_button";
-	form_button.name = "submit";
-	form_button.innerHTML = 'Pay Online With Paypal';
-	form.appendChild( form_button );
 
 	// Replace the contents of the paypal button div with the new button
     while( paypal_button.hasChildNodes() )
@@ -583,10 +597,24 @@ function print_cart()
     print_wnd.document.write( "</style>" );
     print_wnd.document.write( "<script type='text/javascript' src='/js/jquery-3.2.0.min.js'></script>" );
 	print_wnd.document.write( '<script>$(document).ready(function() {\n' );
-	print_wnd.document.write( "alert( 'NOTE: You are not registered yet. You must print the generated form and mail it to the address indicated with your cheque in order to complete your registration!' );" );
+	if( PAYPAL_OFF )
+	{
+		print_wnd.document.write( "alert( 'NOTE: You are not registered yet. You must print the generated form and bring it and your cheque or cash to the event in order to complete your registration!' );" );
+	}
+	else
+	{
+		print_wnd.document.write( "alert( 'NOTE: You are not registered yet. You must print the generated form and mail it to the address indicated with your cheque in order to complete your registration!' );" );
+	}
 	print_wnd.document.write( '});</script>\n' );
     print_wnd.document.write( "</head>" );
-    print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeader.jpg'/>\n" );
+	if( PAYPAL_OFF )
+	{
+		print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeaderNoMail.jpg'/>\n" );
+	}
+	else
+	{
+		print_wnd.document.write( "<body><img width='90%' src='/Images70th/PrintableFormHeader.jpg'/>\n" );
+	}
 
     // Get the values of the hidden fields containing the logged-in member's
     // information. The odd format is to be consistent with the way PayPal
@@ -698,7 +726,7 @@ function print_cart()
     	print_wnd.document.write( "<p><i>You saved $" + discount.toFixed(2) + " by being an early-bird!</i></p>\n" );
 	}
 
-	print_wnd.document.write( "<h2><font color='#af4c50'>Thank you for your order, see you in June!</font></h2>\n" );
+	print_wnd.document.write( "<h2><font color='#af4c50'>Thank you for your order, see you soon!</font></h2>\n" );
 
     print_wnd.document.write( "</body></html>" );
     print_wnd.document.close();
