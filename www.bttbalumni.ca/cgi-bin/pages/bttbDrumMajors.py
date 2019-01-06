@@ -1,16 +1,67 @@
 """
 Page that shows the current list of known drum majors
 """
-from bttbPage import bttbPage
-from bttbConfig import MapLinks
+from pages.bttbPage import bttbPage
+from bttbAlumni import bttbAlumni
+from bttbConfig import Error
 __all__ = ['bttbDrumMajors']
 
+#----------------------------------------------------------------------
+def page_css():
+    ''':return: A string with the CSS specific to this page'''
+    return """<style>
+.approved
+{
+    background-image:   url("__IMAGEPATH__/Plaque.jpg");
+    background-color:   #888822;
+    height:             60px;
+    width:              155px;
+    text-align:         center;
+    padding-top:        10px;
+    font-weight:        bold;
+    float:              left;
+    margin:             5px;
+}
+.pending
+{
+    background-image:   url("__IMAGEPATH__/PlaquePending.jpg");
+    background-color:   #888888;
+    height:             60px;
+    width:              155px;
+    text-align:         center;
+    padding-top:        10px;
+    font-weight:        bold;
+    float:              left;
+    margin:             5px;
+}
+</style>"""
+
+#----------------------------------------------------------------------
 class bttbDrumMajors(bttbPage):
     '''Class that generates the Former Drum Major page'''
     def __init__(self):
         '''Set up the page'''
         bttbPage.__init__(self)
         self.members_only = True
+        try:
+            self.alumni = bttbAlumni()
+        except Exception, ex:
+            Error( 'Could not find alumni information', ex )
+
+        # Get all of the drum major information from the database
+        self.drum_majors,_ = self.alumni.process_query( """
+                SELECT first_name,nee,last_name,alumni_id,first_year,last_year,approved
+                FROM drum_majors""" )
+
+        # Get any alumni information referenced by the drum major database
+        known_alumni,_ = self.alumni.process_query( """
+                SELECT alumni.first_name,alumni.nee,alumni.last_name,alumni.id
+                FROM alumni
+                INNER JOIN drum_majors
+                WHERE alumni.id=drum_majors.alumni_id""" )
+        self.alumni_info = {}
+        for (first_name,nee,last_name,alumni_id) in known_alumni:
+            self.alumni_info[id] = (first_name,nee,last_name,alumni_id)
 
     def title(self):
         ''':return: The page title'''
@@ -18,64 +69,8 @@ class bttbDrumMajors(bttbPage):
 
     def content(self):
         ''':return: a string with the content for this web page.'''
-        drum_majors = [
-             ("Kerig",       "",            "Ahearn")
-        ,    ("Jeff",        "",            "Allen")
-        ,    ("George",      "",            "Ashfield")
-        ,    ("Phil",        "",            "Austin")
-        ,    ("Rob",         "",            "Bennett")
-        ,    ("Ashley",      "",            "Benton")
-        ,    ("Miles",       "",            "Benton")
-        ,    ("Sarah",       "",            "Benton")
-        ,    ("Ron",         "",            "Bigelow")
-        ,    ("Bob",         "",            "Branch")
-        ,    ("Carol",       "Corlett",     "Broadhurst")
-        ,    ("Paul",        "",            "Burnip")
-        ,    ("Christine",   "Campbell",    "Zsiros")
-        ,    ("Cathy",       "Carr",        "Paszt")
-        ,    ("Peter",       "",            "Clarke")
-        ,    ("Lindsey",     "",            "Crampton")
-        ,    ("Gerry",       "",            "Dearing")
-        ,    ("Bob",         "",            "Gentile")
-        ,    ("Gary",        "",            "Gentile")
-        ,    ("Anne",        "Goodyear",    "DeFoa")
-        ,    ("Phyllis",     "",            "Gordon")
-        ,    ("Brad",        "",            "Hall")
-        ,    ("Lea",         "",            "Harrington")
-        ,    ("Heather",     "",            "Harris")
-        ,    ("Megan",       "",            "Hebert")
-        ,    ("John",        "",            "Holman")
-        ,    ("Jenny",       "",            "Johnson")
-        ,    ("Heather",     "",            "Keenleyside")
-        ,    ("MaryAnne",    "Lyons",       "Quaglia")
-        ,    ("Sarah",       "",            "MacLeod")
-        ,    ("Lorrie-Anne", "",            "Maitland")
-        ,    ("Simon",       "",            "Matthews")
-        ,    ("Sarah",       "",            "McCleary")
-        ,    ("Dave",        "",            "McPetrie")
-        ,    ("Bev",         "McCune",      "Norman")
-        ,    ("Lisa",        "",            "Nicol")
-        ,    ("Nick",        "",            "Quaglia")
-        ,    ("Tom",         "",            "Quaglia")
-        ,    ("Carol",       "",            "Radford")
-        ,    ("Carolyn",     "Ridge",       "Whiskin")
-        ,    ("Mike",        "",            "Sharpe")
-        ,    ("Scott",       "",            "Shepherd")
-        ,    ("Colin",       "",            "Sinclair")
-        ,    ("Neal",        "",            "Sinclair")
-        ,    ("Kellie",      "",            "Skerett")
-        ,    ("Ted",         "",            "Slavin")
-        ,    ("Francis",     "",            "Smith")
-        ,    ("Alexandra",   "",            "Smyth")
-        ,    ("Paul",        "",            "Snyder")
-        ,    ("Dustin",      "",            "Steplock")
-        ,    ("Gary",        "",            "Stock")
-        ,    ("Jeff",        "",            "Thomblison")
-        ,    ("Dave",        "",            "Wallace")
-        ,    ("Carol",       "",            "Webb")
-        ,    ("Allan",       "",            "Whiskin")
-        ]
-        html = """<h1>Past Drum Majors</h1>
+        html = page_css()
+        html += """<h1>Past Drum Majors</h1>
         <p>
         It's a big responsibility, to be in charge of such a large group of
         kids in a performance situation, but these people did it consistently.
@@ -83,20 +78,31 @@ class bttbDrumMajors(bttbPage):
         the help they gave to us all.
         </p>
         """
-        column = 0
-        html += "<table cellspacing='5'><tr>"
-        for first, nee, last in drum_majors:
-            if column == 4:
-                html += "</tr><tr>"
-                column = 0
-            column = column + 1
-            html += MapLinks( "<th width='155' height='60' valign='center' background='__IMAGEPATH__/Plaque.jpg'>" )
+        for (first_name, nee, last_name, alumni_id, first_year, last_year, approved) in self.drum_majors:
+            html += "<div class='%s'>" % ['pending','approved'][approved]
             if len(nee) > 0:
-                html += "%s (%s) %s" % (first, nee, last)
+                name = "%s (%s) %s" % (first_name, nee, last_name)
             else:
-                html += "%s %s" % (first, last)
-            html += "</th>"
-        html += "</tr></table>"
+                name = "%s %s" % (first_name, last_name)
+
+            # At a certain length the names overflow
+            if len(name) > 18:
+                html += "<span style='font-size: 8pt'>%s</span>" % name
+            else:
+                html += name
+
+            # If either year is defined then add that information
+            if first_year == 0:
+                first_year = last_year
+            if last_year == 0:
+                last_year = first_year
+            if first_year > 0:
+                if first_year == last_year:
+                    html += "<br>%d" % first_year
+                else:
+                    html += "<br>%d %d" % (first_year, last_year)
+
+            html += "</div>"
         return html
 
 # ==================================================================
